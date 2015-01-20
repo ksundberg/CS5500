@@ -5,6 +5,6 @@
 int main(int argc, char* argv[])
 {
     init_log(argc, argv);
-    LOG(INFO) << hello() << "\n";
+    LOG(INFO) << hello();
     return 0;
 }
