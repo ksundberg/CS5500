@@ -37,13 +37,18 @@ set(test_srcs
 )
 source_group("test" FILES ${test_srcs})
 
+set(wxWidgets_CONFIGURATION mswu)
+find_package(wxWidgets COMPONENTS core base REQUIRED)
+include(${wxWidgets_USE_FILE})
+
+
 add_library(common SHARED ${common_srcs})
 
 add_executable(dwfort ${client_srcs})
 add_executable(dwfort_test ${test_srcs})
 
-target_link_libraries(dwfort common)
-target_link_libraries(dwfort_test common)
+target_link_libraries(dwfort common ${wxWidgets_LIBRARIES})
+target_link_libraries(dwfort_test common ${wxWidgets_LIBRARIES})
 
 enable_testing()
 add_test(unit_tests dwfort_test)
