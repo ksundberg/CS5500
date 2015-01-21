@@ -4,19 +4,18 @@ project(dwfort)
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/client
-  ${CMAKE_CURRENT_SOURCE_DIR}/noise
   ${CMAKE_CURRENT_SOURCE_DIR}/client/forms
   ${CMAKE_CURRENT_SOURCE_DIR}/client/src
   ${CMAKE_CURRENT_SOURCE_DIR}/common
   ${CMAKE_CURRENT_SOURCE_DIR}/common/log
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/noise
   ${CMAKE_CURRENT_SOURCE_DIR}/test
   ${CMAKE_CURRENT_SOURCE_DIR}/log
 )
 
-# Use C++11
 add_definitions( -std=c++0x )
 
-set(EXTRA_COMPILE_FLAGS "-Wall -Wextra -Weror -g")
+set(EXTRA_COMPILE_FLAGS "-Wall -Wextra -Werror -Wno-missing-braces -g")
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS})
 set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
 
@@ -33,6 +32,8 @@ set(common_srcs
   common/sample.cpp
   common/log/logger.h
   common/log/logger.cpp
+  common/noise/PerlinNoise.cpp
+  common/noise/PerlinNoise.h
 )
 source_group("common" FILES ${common_srcs})
 
