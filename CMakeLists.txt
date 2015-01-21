@@ -9,8 +9,9 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/common
   ${CMAKE_CURRENT_SOURCE_DIR}/common/log
   ${CMAKE_CURRENT_SOURCE_DIR}/common/noise
-  ${CMAKE_CURRENT_SOURCE_DIR}/test
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/log
+  ${CMAKE_CURRENT_SOURCE_DIR}/test
 )
 
 add_definitions( -std=c++0x )
@@ -21,9 +22,9 @@ set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
 
 set(client_srcs
   client/src/main.cpp
-  client/src/wxwidget.h
   client/forms/MainWindow.cpp
   client/forms/MainWindow.h
+  include/wxwidget.h
 )
 source_group("client" FILES ${client_srcs})
 
@@ -39,7 +40,7 @@ source_group("common" FILES ${common_srcs})
 
 set(test_srcs
   test/main.cpp
-  test/catch/catch.hpp
+  include/catch.hpp
   test/unit/sample.cpp
 )
 source_group("test" FILES ${test_srcs})

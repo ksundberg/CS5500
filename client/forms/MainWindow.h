@@ -3,15 +3,16 @@
 
 #include "wxwidget.h"
 
-class MainWindow: public wxFrame
+class MainWindow : public wxFrame
 {
-  public:
-    MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
-  private:
-    void OnHello(wxCommandEvent& event);
-    void OnExit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    wxDECLARE_EVENT_TABLE();
+public:
+  MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
+
+private:
+  void OnHello(wxCommandEvent& event);
+  void OnExit(wxCommandEvent& event);
+  void OnAbout(wxCommandEvent& event);
+  wxDECLARE_EVENT_TABLE();
 };
 
 enum

@@ -2,8 +2,8 @@
 
 // Unit testing header
 #define CATCH_CONFIG_RUNNER
-#include "catch/catch.hpp"
-#include "logger.h"
+#include <catch.hpp>
+#include <logger.h>
 
 int main(int argc, char* argv[])
 {
