@@ -105,6 +105,50 @@ double PerlinNoise::turbulence3D(double x, double y, double z, int depth) const
   return sum;
 }
 
+std::shared_ptr<matrix3d> PerlinNoise::createMatrix3D(int width, int height, int depth, int perlinDepth) const{
+  auto matrix = std::make_shared<matrix3d>(width, std::vector<std::vector<double>>(height, std::vector<double>(depth)));
+
+  for (int i = 0; i < width; i++){
+    for (int j = 0; j < height; j++){
+      for (int k = 0; k < depth; k++){
+        double x = (double)i/(double)width;
+        x = (x * 2) - 1.0;
+
+        double y = (double)j/(double)height;
+        y = (y * 2) - 1.0;
+        
+        double z = (double)k/(double)depth;
+        z = (z * 2) - 1.0;
+        
+        (*matrix)[i][j][k] = this->turbulence3D(x, y, z, perlinDepth);
+      }
+    }    
+  }
+
+  return matrix;
+
+}
+
+std::shared_ptr<matrix2d> PerlinNoise::createMatrix2D(int width, int height, int perlinDepth) const{
+  auto matrix = std::make_shared<matrix2d>(width, std::vector<double>(height));
+
+  for (int i = 0; i < width; i++){
+    for (int j = 0; j < height; j++){
+      double x = (double)i/(double)width;
+      x = (x * 2) - 1.0;
+
+      double y = (double)j/(double)height;
+      y = (y * 2) - 1.0;
+
+      (*matrix)[i][j] = this->turbulence2D(x, y, perlinDepth);
+      
+    }    
+  }
+
+  return matrix;
+
+}
+
 double PerlinNoise::noise(const vector3d& p) const
 {
   int fi, fj, fk;

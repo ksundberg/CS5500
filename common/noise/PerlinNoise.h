@@ -5,8 +5,11 @@
 #include <vector>
 #include <array>
 #include <random>
+#include <memory>
 
 typedef std::array<double, 3> vector3d;
+typedef std::vector<std::vector<std::vector<double>>> matrix3d;
+typedef std::vector<std::vector<double>> matrix2d; 
 
 class PerlinNoise
 {
@@ -15,8 +18,12 @@ public:
   PerlinNoise(uint seed);
   ~PerlinNoise();
 
+
   double turbulence2D(double x, double y, int depth) const;
   double turbulence3D(double x, double y, double z, int depth) const;
+
+  std::shared_ptr<matrix3d> createMatrix3D(int width, int height, int depth, int perlinDepth) const;
+  std::shared_ptr<matrix2d> createMatrix2D(int width, int height, int perlinDepth) const;
 
 private:
   void initialize(std::default_random_engine generator);
