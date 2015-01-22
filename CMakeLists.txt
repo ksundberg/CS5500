@@ -24,6 +24,10 @@ set(client_srcs
   client/src/main.cpp
   client/forms/MainWindow.cpp
   client/forms/MainWindow.h
+  client/forms/GridPane.cpp
+  client/forms/GridPane.h
+  client/src/Grid.hpp
+  client/src/Grid.cpp
   include/wxwidget.h
 )
 source_group("client" FILES ${client_srcs})

@@ -1305,7 +1305,7 @@ namespace base
       ss << std::this_thread::get_id();
       return ss.str();
     }
-    static inline void msleep(int ms)
+    static inline void msleep(int)
     {
 // Only when async logging enabled - this is because async is strict on compiler
 #if ELPP_ASYNC_LOGGING
