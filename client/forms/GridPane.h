@@ -1,5 +1,5 @@
-#ifndef _DRAWPANE_H_
-#define _DRAWPANE_H_
+#ifndef _GRIDPANE_H_
+#define _GRIDPANE_H_
 
 #include "wxwidget.h"
 #include "Grid.hpp"
@@ -20,4 +20,4 @@ public:
   DECLARE_EVENT_TABLE()
 };
 
-#endif //_DRAWPANE_H_
+#endif //_GRIDPANE_H_

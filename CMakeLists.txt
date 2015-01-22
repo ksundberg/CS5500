@@ -28,13 +28,12 @@ set(client_srcs
   client/forms/GridPane.h
   client/src/Grid.hpp
   client/src/Grid.cpp
+  client/src/Point.hpp
   include/wxwidget.h
 )
 source_group("client" FILES ${client_srcs})
 
 set(common_srcs
-  common/sample.h
-  common/sample.cpp
   common/log/logger.h
   common/log/logger.cpp
   common/noise/PerlinNoise.cpp
