@@ -10,13 +10,14 @@ END_EVENT_TABLE()
 const double COLOR_MAX = 255;
 const int GRID_TILES = 20;
 
-GridPane::GridPane(wxFrame* parent) : wxPanel(parent), grid(new Grid(GRID_TILES, GRID_TILES))
+GridPane::GridPane(wxFrame* parent)
+  : wxPanel(parent), grid(new Grid(GRID_TILES, GRID_TILES))
 {
   for (double x = 0; x < grid->width; x++)
   {
     for (double y = 0; y < grid->height; y++)
     {
-      double c = std::min(COLOR_MAX, x*y);
+      double c = std::min(COLOR_MAX, x * y);
       grid->set(x, y, {c, c, c});
     }
   }

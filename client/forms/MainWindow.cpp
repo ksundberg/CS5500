@@ -3,7 +3,7 @@
 
 enum
 {
-    ID_Help = 1
+  ID_Help = 1
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
