@@ -1,5 +1,4 @@
 #include "GridPane.h"
-
 #include "logger.h"
 
 #include <algorithm>
@@ -8,11 +7,20 @@ BEGIN_EVENT_TABLE(GridPane, wxPanel)
 EVT_PAINT(GridPane::PaintEvent)
 END_EVENT_TABLE()
 
-GridPane::GridPane(wxFrame* parent) : wxPanel(parent), grid(new Grid(20, 20))
+const double COLOR_MAX = 255;
+const int GRID_TILES = 20;
+
+GridPane::GridPane(wxFrame* parent)
+  : wxPanel(parent), grid(new Grid(GRID_TILES, GRID_TILES))
 {
-  for (int x = 0; x < 20; x++)
-    for (int y = 0; y < 20; y++)
-      grid->set(x, y, std::min(255, x * y));
+  for (double x = 0; x < grid->width; x++)
+  {
+    for (double y = 0; y < grid->height; y++)
+    {
+      double c = std::min(COLOR_MAX, x * y);
+      grid->set(x, y, {c, c, c});
+    }
+  }
 }
 
 void GridPane::PaintEvent(wxPaintEvent&)
@@ -29,5 +37,6 @@ void GridPane::paintNow()
 
 void GridPane::Render(wxDC& dc)
 {
-  grid->draw(dc);
+  auto size = this->GetSize();
+  grid->draw(dc, size.GetWidth(), size.GetHeight());
 }

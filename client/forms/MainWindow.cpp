@@ -1,7 +1,12 @@
 #include "MainWindow.h"
 #include "logger.h"
 
-wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Hello, MainWindow::OnHello)
+enum
+{
+  ID_Help = 1
+};
+
+wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   EVT_MENU(wxID_EXIT, MainWindow::OnExit)
   EVT_MENU(wxID_ABOUT, MainWindow::OnAbout) wxEND_EVENT_TABLE()
 
@@ -10,10 +15,10 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Hello, MainWindow::OnHello)
                          const wxSize& size)
   : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
-  LOG(DEBUG) << "Making main window frame";
+  LOG(DEBUG) << "Creating main window";
   wxMenu* menuFile = new wxMenu;
-  menuFile->Append(ID_Hello,
-                   "&Hello...\tCtrl-H",
+  menuFile->Append(ID_Help,
+                   "&Help...\tCtrl-H",
                    "Help string shown in status bar for this menu item");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
@@ -35,13 +40,12 @@ void MainWindow::OnExit(wxCommandEvent&)
 void MainWindow::OnAbout(wxCommandEvent&)
 {
   LOG(DEBUG) << "About dialog prompt";
-  wxMessageBox("This is a wxWidgets' Hello world sample",
-               "About Hello World",
+  wxMessageBox("This is a remake of dwarf fortress",
+               "About DwFort",
                wxOK | wxICON_INFORMATION);
 }
 
-void MainWindow::OnHello(wxCommandEvent&)
+void MainWindow::OnHelp(wxCommandEvent&)
 {
-  LOG(DEBUG) << "Hello world message";
-  wxLogMessage("Hello world from wxWidgets!");
+  LOG(DEBUG) << "Help message";
 }

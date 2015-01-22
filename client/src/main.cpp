@@ -3,7 +3,6 @@
 #include "GridPane.h"
 
 #include "logger.h"
-#include "sample.h"
 
 class DwFort : public wxApp
 {
@@ -17,9 +16,9 @@ public:
 bool DwFort::OnInit()
 {
   init_log(argc, argv);
-  LOG(INFO) << hello();
+  LOG(INFO) << "Initializing";
 
-  frame = new MainWindow("Hello World", wxPoint(50, 50), wxSize(200, 200));
+  frame = new MainWindow("Hello World", wxPoint(50, 50), wxSize(300, 400));
 
   wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 
