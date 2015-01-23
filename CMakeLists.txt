@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(dwfort)
+project(TorusWorld)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
@@ -55,14 +55,14 @@ include(${wxWidgets_USE_FILE})
 
 add_library(common SHARED ${common_srcs})
 
-add_executable(dwfort ${client_srcs})
-add_executable(dwfort_test ${test_srcs})
+add_executable(torus ${client_srcs})
+add_executable(torus_test ${test_srcs})
 
-target_link_libraries(dwfort common ${wxWidgets_LIBRARIES})
-target_link_libraries(dwfort_test common)
+target_link_libraries(torus common ${wxWidgets_LIBRARIES})
+target_link_libraries(torus_test common)
 
 enable_testing()
-add_test(unit_tests dwfort_test)
+add_test(unit_tests torus_test)
 
 # Copy log directory
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/log/log.conf DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/log)
