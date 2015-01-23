@@ -29,9 +29,11 @@ public:
   int getDurability() const;
   void setDurability(int);
   ItemProperty getItemProperty() const;
-  const std::string name;
+  std::string getName() const;
+
 
 private:
+  const std::string name;
   ItemProperty defaultItemProperty() const;
   int count;
   int durability;
@@ -55,9 +57,10 @@ public:
   Wearable(std::string name_, int defense_, WearType bodyPart_);
   int getDefense() const;
   void setDefense(int);
-  const WearType bodyPart;
+  WearType getBodyPart() const;
 
 private:
+  const WearType bodyPart;
   int defense;
 };
 
