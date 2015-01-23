@@ -22,17 +22,16 @@ SCENARIO(" All Items have a name, ItemProperty, count, and durability.", "[Item]
   }
 }
 
-SCENARIO(" The durability and count of Items can change. ")
-{
-  GIVEN(" An Item named 'Cantaloupe' with count 3 and durability 8.")
-  {
-    Item item("Cantaloupe", 3, 8);
-    REQUIRE(item.getCount() == 3);
-    item.setCount(5);
-    REQUIRE(item.getCount() == 5);
 
-    REQUIRE(item.getDurability() == 8);
-    item.setDurability(100);
-    REQUIRE(item.getDurability() == 100);
+SCENARIO(" All Wearables have a defense stat bigger than or equal to 0. " )
+{
+  GIVEN("　A Wearable named 'T-Shirt'. ")
+  {
+    Armor shirt("T-Shirt");
+    REQUIRE(shirt.getDefense() >= 0);
+
+    Armor sweater("Turtleneck", 1, 100, -20);
+    REQUIRE(sweater.getDefense() >= 0);
+
   }
 }
