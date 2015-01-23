@@ -1,5 +1,6 @@
 #include <iostream>
 #include "PerlinNoise.h"
+#include "tbb/tbb.h"
 
 PerlinNoise::PerlinNoise(uint seed)
 {
@@ -105,48 +106,115 @@ double PerlinNoise::turbulence3D(double x, double y, double z, int depth) const
   return sum;
 }
 
-std::shared_ptr<matrix3d> PerlinNoise::createMatrix3D(int width, int height, int depth, int perlinDepth) const{
-  auto matrix = std::make_shared<matrix3d>(width, std::vector<std::vector<double>>(height, std::vector<double>(depth)));
+std::mutex matrixMutex3D;
 
-  for (int i = 0; i < width; i++){
-    for (int j = 0; j < height; j++){
-      for (int k = 0; k < depth; k++){
-        double x = (double)i/(double)width;
-        x = (x * 2) - 1.0;
+void setOneCell3D(const PerlinNoise* perlin,
+                  std::shared_ptr<matrix3d> matrix,
+                  int i,
+                  int j,
+                  int k,
+                  int width,
+                  int height,
+                  int depth,
+                  int perlinDepth)
+{
+  double x = (double)i / (double)width;
+  x = (x * 2) - 1.0;
 
-        double y = (double)j/(double)height;
-        y = (y * 2) - 1.0;
-        
-        double z = (double)k/(double)depth;
-        z = (z * 2) - 1.0;
-        
-        (*matrix)[i][j][k] = this->turbulence3D(x, y, z, perlinDepth);
-      }
-    }    
-  }
+  double y = (double)j / (double)height;
+  y = (y * 2) - 1.0;
 
-  return matrix;
+  double z = (double)k / (double)depth;
+  z = (z * 2) - 1.0;
 
+  auto p = perlin->turbulence3D(x, y, z, perlinDepth);
+
+  (*matrix)[i][j][k] = p;
 }
 
-std::shared_ptr<matrix2d> PerlinNoise::createMatrix2D(int width, int height, int perlinDepth) const{
-  auto matrix = std::make_shared<matrix2d>(width, std::vector<double>(height));
+std::shared_ptr<matrix3d> PerlinNoise::createMatrix3D(int width,
+                                                      int height,
+                                                      int depth,
+                                                      int perlinDepth) const
+{
+  auto matrix = std::make_shared<matrix3d>(
+    width,
+    std::vector<std::vector<double>>(height, std::vector<double>(depth)));
 
-  for (int i = 0; i < width; i++){
-    for (int j = 0; j < height; j++){
-      double x = (double)i/(double)width;
-      x = (x * 2) - 1.0;
+  tbb::parallel_for(tbb::blocked_range<int>(0, width),
+                    [=](const tbb::blocked_range<int>& ri)
+                    {
+    for (int i = ri.begin(); i != ri.end(); i++)
+    {
+      tbb::parallel_for(tbb::blocked_range<int>(0, height),
+                        [=](const tbb::blocked_range<int>& rj)
+                        {
+        for (int j = rj.begin(); j < rj.end(); j++)
+        {
+          tbb::parallel_for(tbb::blocked_range<int>(0, depth),
+                            [=](const tbb::blocked_range<int>& rk)
+                            {
+            for (int k = rk.begin(); k != rk.end(); k++)
+            {
+              setOneCell3D(
+                this, matrix, i, j, k, width, height, depth, perlinDepth);
+            }
+          });
+        }
+      });
+    }
 
-      double y = (double)j/(double)height;
-      y = (y * 2) - 1.0;
-
-      (*matrix)[i][j] = this->turbulence2D(x, y, perlinDepth);
-      
-    }    
-  }
+  });
 
   return matrix;
+}
 
+std::mutex matrixMutex2D;
+void setOneCell2D(const PerlinNoise* perlin,
+                  std::shared_ptr<matrix2d> matrix,
+                  int i,
+                  int j,
+                  int width,
+                  int height,
+                  int perlinDepth)
+{
+  double x = (double)i / (double)width;
+  x = (x * 2) - 1.0;
+
+  double y = (double)j / (double)height;
+  y = (y * 2) - 1.0;
+
+  double noise = perlin->turbulence2D(x, y, perlinDepth);
+  {
+    std::lock_guard<std::mutex> locker(matrixMutex2D);
+    (*matrix)[i][j] = noise;
+  }
+}
+
+std::shared_ptr<matrix2d> PerlinNoise::createMatrix2D(int width,
+                                                      int height,
+                                                      int perlinDepth) const
+{
+  auto matrix = std::make_shared<matrix2d>(width, std::vector<double>(height));
+  std::default_random_engine generator;
+  std::uniform_real_distribution<double> distribution(-1.0, 1.0);
+
+  tbb::parallel_for(tbb::blocked_range<int>(0, width),
+                    [=](const tbb::blocked_range<int>& ri)
+                    {
+    for (int i = ri.begin(); i != ri.end(); i++)
+    {
+      tbb::parallel_for(tbb::blocked_range<int>(0, height),
+                        [=](const tbb::blocked_range<int>& rj)
+                        {
+        for (int j = rj.begin(); j != rj.end(); j++)
+          setOneCell2D(this, matrix, i, j, width, height, perlinDepth);
+
+      });
+    }
+  });
+
+  return matrix;
 }
 
 double PerlinNoise::noise(const vector3d& p) const

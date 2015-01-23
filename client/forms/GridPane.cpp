@@ -1,5 +1,6 @@
 #include "GridPane.h"
 #include "logger.h"
+#include "PerlinNoise.h"
 
 #include <algorithm>
 
@@ -8,16 +9,21 @@ EVT_PAINT(GridPane::PaintEvent)
 END_EVENT_TABLE()
 
 const double COLOR_MAX = 255;
-const int GRID_TILES = 20;
+const int GRID_TILES = 50;
 
 GridPane::GridPane(wxFrame* parent)
   : wxPanel(parent), grid(new Grid(GRID_TILES, GRID_TILES))
 {
+  PerlinNoise p;
+
+  std::shared_ptr<matrix2d> noiseMap =
+    p.createMatrix2D(grid->width, grid->height, 5);
   for (double x = 0; x < grid->width; x++)
   {
     for (double y = 0; y < grid->height; y++)
     {
-      double c = std::min(COLOR_MAX, x * y);
+      double p = (*noiseMap)[x][y];
+      double c = std::min(COLOR_MAX, p * 255);
       grid->set(x, y, {c, c, c});
     }
   }

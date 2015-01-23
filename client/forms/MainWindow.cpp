@@ -29,7 +29,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   menuBar->Append(menuHelp, "&Help");
   SetMenuBar(menuBar);
   CreateStatusBar();
-  SetStatusText("Welcome to dwfort!");
+  SetStatusText("Welcome to Torus World!");
 }
 
 void MainWindow::OnExit(wxCommandEvent&)
@@ -40,8 +40,8 @@ void MainWindow::OnExit(wxCommandEvent&)
 void MainWindow::OnAbout(wxCommandEvent&)
 {
   LOG(DEBUG) << "About dialog prompt";
-  wxMessageBox("This is a remake of dwarf fortress",
-               "About DwFort",
+  wxMessageBox("This is an awesome project with a torus world",
+               "About Torus World",
                wxOK | wxICON_INFORMATION);
 }
 
