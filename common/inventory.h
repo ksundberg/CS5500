@@ -42,7 +42,7 @@ private:
   static std::unordered_map<std::string, ItemProperty> properties;
 };
 
-enum class WearType
+enum class BodyPart
 {
   HEAD,
   BODY,
@@ -54,13 +54,13 @@ enum class WearType
 class Wearable : Item
 {
 public:
-  Wearable(std::string name_, int defense_, WearType bodyPart_);
+  Wearable(std::string name_, int defense_, BodyPart bodyPart_);
   int getDefense() const;
   void setDefense(int);
-  WearType getBodyPart() const;
+  BodyPart getBodyPart();
 
 private:
-  const WearType bodyPart;
+  const BodyPart bodyPart;
   int defense;
 };
 

@@ -21,3 +21,8 @@ ItemProperty Item::defaultItemProperty() const
 {
   return ItemProperty(0, 0, "Unknown Item.", "unknown.png");
 }
+
+std::string Item::getName() const
+{
+  return this->name;
+}
