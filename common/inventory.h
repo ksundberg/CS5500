@@ -23,6 +23,7 @@ class Item
 {
 public:
   Item(std::string name_);
+  Item(std::string name_, int count_, int durability_);
   ~Item();
   int getCount() const;
   void setCount(int);
