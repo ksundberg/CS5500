@@ -2,19 +2,18 @@
 #include "item.h"
 #include "item_property.h"
 
-Item::Item(std::string name_) : name(name_), count(1), durability(DUR_MAX)
+Item::Item(std::string name_)
+  : name(name_), count(COUNT_MIN), durability(DUR_MAX)
 {
-
 }
 
-Item::Item(std::string name_, int count_, int durability_)
-: name(name_)
+Item::Item(std::string name_, int count_, int durability_) : name(name_)
 {
   this->count = (count_ >= COUNT_MIN) ? count_ : COUNT_MIN;
   if (DUR_MIN <= durability_ && durability_ <= DUR_MAX)
-	  this->durability = durability_;
+    this->durability = durability_;
   else
-	  this->durability = DUR_MAX;
+    this->durability = DUR_MAX;
 }
 
 Item::~Item()
@@ -40,6 +39,3 @@ int Item::getDurability() const
 {
   return this->durability;
 }
-
-
-

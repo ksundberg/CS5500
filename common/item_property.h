@@ -11,9 +11,7 @@
 struct WeaponProperty
 {
   const int default_attack;
-  WeaponProperty(int default_attack_)
-  : default_attack(default_attack_)
-  {}
+  WeaponProperty(int default_attack_) : default_attack(default_attack_) {}
 };
 
 enum class BodyPart
@@ -30,23 +28,42 @@ struct ArmorProperty
   const BodyPart body_part;
 
   ArmorProperty(int default_defense_, BodyPart body_part_)
-  : default_defense(default_defense_), body_part(body_part_)
-  {}
+    : default_defense(default_defense_), body_part(body_part_)
+  {
+  }
 };
 
 struct ConsumableProperty
 {
   const int health_points;
-  ConsumableProperty(int health_points_)
-  : health_points(health_points_)
-  {}
+  ConsumableProperty(int health_points_) : health_points(health_points_) {}
 };
 
 struct ItemProperty
 {
-  ItemProperty(int v, int r, float w, std::string d, std::string i)
-    : value(v), rarity(r), weight(w), description(d), image_file(i)
+  ItemProperty(int v,
+               int r,
+               float w,
+               std::string d,
+               std::string i,
+               WeaponProperty* wp,
+               ArmorProperty* ap,
+               ConsumableProperty* cp)
+    : value(v)
+    , rarity(r)
+    , weight(w)
+    , description(d)
+    , image_file(i)
+    , weapon_property(wp)
+    , armor_property(ap)
+    , consumable_property(cp)
   {
+  }
+  ~ItemProperty()
+  {
+    delete weapon_property;
+    delete armor_property;
+    delete consumable_property;
   }
   const int value;
   const int rarity;
@@ -55,16 +72,16 @@ struct ItemProperty
   const std::string image_file;
 
   // May be set to nullptr if undefined for particular item.
-  WeaponProperty* weapon_property;
-  ArmorProperty* armor_property;
-  ConsumableProperty* consumable_property;
-
+  const WeaponProperty* weapon_property;
+  const ArmorProperty* armor_property;
+  const ConsumableProperty* consumable_property;
 };
 
 class ItemManage
 {
 public:
   static ItemProperty getItemProperty(std::string name);
+
 private:
   void initializeData();
   std::unordered_map<std::string, ItemProperty> properties;

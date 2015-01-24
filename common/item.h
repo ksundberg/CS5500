@@ -16,16 +16,13 @@ public:
   int getCount() const;
   int getDurability() const;
 
-
 private:
   const std::string name;
   int count;
   int durability;
-  const int DUR_MAX = 100;
-  const int DUR_MIN = 0;
-  const int COUNT_MIN = 1;
+  static const int DUR_MAX = 100;
+  static const int DUR_MIN = 0;
+  static const int COUNT_MIN = 1;
 };
-
-
 
 #endif
