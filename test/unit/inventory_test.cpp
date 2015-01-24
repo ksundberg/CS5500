@@ -80,4 +80,16 @@ SCENARIO(" Can add Items to an inventory. ")
     REQUIRE(inv.addItem(a) == true);
     REQUIRE(inv.addItem(b) == false);
   }
+  GIVEN("An Inventory is indexed out of bounds.")
+  {
+    Inventory inv(5);
+    try
+    {
+        Item a = inv.takeItem(5);
+    }
+    catch(std::string errMsg)
+    {
+        REQUIRE(errMsg.compare("Error inventory item does not exist") == 0);
+    }
+   }
 }
