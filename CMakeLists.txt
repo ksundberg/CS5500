@@ -40,6 +40,10 @@ set(common_srcs
   common/noise/PerlinNoise.h
   common/inventory.h
   common/inventory.cpp
+  common/item.h
+  common/item.cpp
+  common/item_property.h
+  common/item_property.cpp
 )
 source_group("common" FILES ${common_srcs})
 
