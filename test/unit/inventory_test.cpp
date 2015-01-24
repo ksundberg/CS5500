@@ -77,7 +77,7 @@ SCENARIO(" Can add Items to an inventory. ")
     Inventory inv(1);
     Item a("Apple");
     Item b("Banana");
-    REQUIRE(inv.add(a) == true);
-    REQUIRE(inv.add(b) == false);
+    REQUIRE(inv.addItem(a) == true);
+    REQUIRE(inv.addItem(b) == false);
   }
 }
