@@ -1,8 +1,8 @@
 #include <iostream>
 #include <mutex>
+#include <tbb/tbb.h>
 
 #include "PerlinNoise.h"
-#include "tbb/tbb.h"
 
 PerlinNoise::PerlinNoise(uint seed)
 {
@@ -203,7 +203,6 @@ std::shared_ptr<matrix2d> PerlinNoise::createMatrix2D(int width,
                                                       int perlinDepth) const
 {
   auto matrix = std::make_shared<matrix2d>(width, std::vector<double>(height));
-  std::default_random_engine generator;
   std::uniform_real_distribution<double> distribution(-1.0, 1.0);
 
   tbb::parallel_for(tbb::blocked_range<int>(0, width),
@@ -245,7 +244,6 @@ std::shared_ptr<matrix1d> PerlinNoise::createMatrix1D(int width,
                                                       int perlinDepth) const
 {
   auto matrix = std::make_shared<matrix1d>(width);
-  std::default_random_engine generator;
   std::uniform_real_distribution<double> distribution(-1.0, 1.0);
 
   tbb::parallel_for(tbb::blocked_range<int>(0, width),
