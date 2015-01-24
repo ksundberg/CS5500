@@ -3,22 +3,16 @@
 #include "item.h"
 #include "logger.h"
 
-ItemManage::PropMap ItemManage::initMap()
+Item::PropMap Item::initMap()
 {
   PropMap map;
   ItemProperty w = Weapon(10, 4.0, "A sword.", "sword.png", 10);
   map.insert(std::pair<std::string, ItemProperty>("Sword", w));
   return map;
 }
-ItemManage::PropMap ItemManage::properties = initMap();
-ItemProperty ItemManage::default_property =
+Item::PropMap Item::properties = initMap();
+ItemProperty Item::default_property =
     ItemProperty(0, 0.0, "Unknown.", "unknown.png");
-
-ItemProperty ItemManage::getProperty(std::string name)
-{
-  auto iter = properties.find(name);
-  return (iter != properties.end()) ? iter->second : default_property;
-}
 
 
 Item::Item(std::string name_)
@@ -37,7 +31,8 @@ Item::Item(std::string name_, int count_, int durability_) : name(name_)
 
 ItemProperty Item::getProperty() const
 {
-  return ItemManage::getProperty(name);
+  auto iter = properties.find(name);
+  return (iter != properties.end()) ? iter->second : default_property;
 }
 
 

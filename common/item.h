@@ -76,22 +76,6 @@ struct Usable : ItemProperty
 
 };
 
-class ItemManage
-{
-public:
-  typedef std::map<std::string, ItemProperty> PropMap;
-  static ItemProperty getProperty(std::string);
-private:
-  static PropMap properties;
-  static ItemProperty default_property;
-  static PropMap initMap();
-
-};
-
-
-
-
-
 class Item
 {
 public:
@@ -104,6 +88,8 @@ public:
   int getCount() const;
   int getDurability() const;
 
+  typedef std::map<std::string, ItemProperty> PropMap;
+
 private:
   const std::string name;
   int count;
@@ -111,8 +97,9 @@ private:
   static const int DUR_MAX = 100;
   static const int DUR_MIN = 0;
   static const int COUNT_MIN = 1;
-  static void initializeItems();
-
+  static PropMap properties;
+  static ItemProperty default_property;
+  static PropMap initMap();
 };
 
 #endif
