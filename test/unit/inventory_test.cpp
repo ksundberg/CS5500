@@ -2,7 +2,7 @@
 #include <catch.hpp>
 #include <item.h>
 #include <inventory.h>
-
+#include <vector>
 SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
 {
   GIVEN("An Item with 'Sword' as its name.")
@@ -66,10 +66,15 @@ SCENARIO(" Can add Items to an inventory. ")
 {
   GIVEN("An Inventory and an Item.")
   {
+
     Item shield("Shield");
     Inventory inv(30);
+    REQUIRE(inv.getSize() == 0);
     inv.addItem(shield);
+    REQUIRE(inv.getSize() == 1);
+    REQUIRE(inv.getItem(0).getName() == "Shield");
     REQUIRE(inv.takeItem(0).getName() == "Shield");
+    REQUIRE(inv.getSize() == 0);
   }
 
   GIVEN("An Inventory with a small capacity.")
@@ -91,5 +96,19 @@ SCENARIO(" Can add Items to an inventory. ")
     {
         REQUIRE(errMsg.compare("Error inventory item does not exist") == 0);
     }
+   }
+   GIVEN("We want all items from an Inventory")
+   {
+        Inventory inv(3);
+        Item a("Apple");
+        Item b("Banana");
+        Item c("Coconut");
+        inv.addItem(a);
+        inv.addItem(b);
+        inv.addItem(c);
+        std::vector<Item> copied = inv.getAllItems();
+        REQUIRE(copied[0].getName().compare("Apple") == 0);
+        REQUIRE(copied[1].getName().compare("Banana") == 0);
+        REQUIRE(copied[2].getName().compare("Coconut") == 0);
    }
 }
