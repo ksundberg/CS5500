@@ -1,6 +1,0 @@
-#ifndef ITEM_PROPERTY_HEADER
-#define ITEM_PROPERTY_HEADER
-
-
-
-#endif
