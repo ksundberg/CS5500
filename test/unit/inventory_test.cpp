@@ -19,7 +19,11 @@ SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
     REQUIRE(item2.getCount() == 1);
     REQUIRE(item2.getDurability() == 100);
 
-    auto prop = item.getProperty();
+    Item item3;
+    item3 = item2;
+    REQUIRE(item2.getName() == item3.getName());
+    REQUIRE(item2.getCount() == item3.getCount());
+    REQUIRE(item2.getDurability() == item3.getDurability());
 
   }
 

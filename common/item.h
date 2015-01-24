@@ -78,8 +78,10 @@ struct Usable : ItemProperty
 class Item
 {
 public:
+  Item();
   Item(std::string name_);
   Item(std::string name_, int count_, int durability_);
+  void operator=(const Item &incoming);
 
   // An item property can be either a Weapon, Armor, or Usable.
   ItemProperty getProperty() const;
@@ -90,7 +92,7 @@ public:
   typedef std::unordered_map<std::string, ItemProperty> PropMap;
 
 private:
-  const std::string name;
+  std::string name;
   int count;
   int durability;
   static const int DUR_MAX = 100;

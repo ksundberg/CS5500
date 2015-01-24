@@ -13,7 +13,11 @@ Item::PropMap Item::properties = initMap();
 ItemProperty Item::default_property =
     ItemProperty(0, 0.0, "Unknown.", "unknown.png");
 
+Item::Item()
+: name("Unknown"), count(COUNT_MIN), durability(DUR_MAX)
+{
 
+}
 Item::Item(std::string name_)
   : name(name_), count(COUNT_MIN), durability(DUR_MAX)
 {
@@ -26,6 +30,13 @@ Item::Item(std::string name_, int count_, int durability_) : name(name_)
     this->durability = durability_;
   else
     this->durability = DUR_MAX;
+}
+
+void Item::operator=(const Item &incoming)
+{
+  name = incoming.getName();
+  count = incoming.getCount();
+  durability = incoming.getDurability();
 }
 
 ItemProperty Item::getProperty() const
