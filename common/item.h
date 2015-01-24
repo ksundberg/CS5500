@@ -2,12 +2,42 @@
 #define ITEM_HEADER
 
 #include <string>
+#include <map>
 #include <unordered_map>
 
-struct Weapon
+// An ItemProperty contains information true across all instances of an
+// Item. For instance, all swords have the same description, so
+// this sort of information can be shared across all items.
+struct ItemProperty
+{
+  ItemProperty(int v,
+               float w,
+               std::string d,
+               std::string i)
+    : value(v)
+    , weight(w)
+    , description(d)
+    , image_file(i)
+  {
+  }
+
+  const int value;
+  const float weight;
+  const std::string description;
+  const std::string image_file;
+};
+
+struct Weapon : ItemProperty
 {
   const int default_attack;
-  Weapon(int default_attack_) : default_attack(default_attack_) {}
+  Weapon(int v,
+         float w,
+         std::string d,
+         std::string i,
+         int da)
+  : ItemProperty(v, w, d, i), default_attack(da)
+  {}
+
 };
 
 enum class BodyPart
@@ -18,56 +48,50 @@ enum class BodyPart
   FEET
 };
 
-struct Armor
+struct Armor : ItemProperty
 {
   const int default_defense;
   const BodyPart body_part;
+  Armor(int v,
+         float w,
+         std::string d,
+         std::string i,
+         int dd,
+         BodyPart b)
+  : ItemProperty(v, w, d, i), default_defense(dd), body_part(b)
+  {}
 
-  Armor(int default_defense_, BodyPart body_part_)
-    : default_defense(default_defense_), body_part(body_part_)
-  {
-  }
 };
 
-struct Usable
+struct Usable : ItemProperty
 {
   const int health_points;
-  Usable(int health_points_) : health_points(health_points_) {}
+  Usable(int v,
+         float w,
+         std::string d,
+         std::string i,
+         int hp)
+  : ItemProperty(v, w, d, i), health_points(hp)
+  {}
+
 };
 
-// An ItemProperty contains information true across all instances of an
-// Item. For instance, all swords have the same description, so
-// this sort of information can be shared across all items.
-template <class T>
-struct ItemProperty
+class ItemManage
 {
-  ItemProperty(int v,
-               int r,
-               float w,
-               std::string d,
-               std::string i,
-               T* s)
-    : value(v)
-    , rarity(r)
-    , weight(w)
-    , description(d)
-    , image_file(i)
-    , spec(s)
-  {
-  }
-  ~ItemProperty()
-  {
-    delete spec;
-  }
-  const int value;
-  const int rarity;
-  const float weight;
-  const std::string description;
-  const std::string image_file;
-  const T* spec;
+public:
+  typedef std::map<std::string, ItemProperty> PropMap;
+  static ItemProperty getProperty(std::string);
+private:
+  static PropMap properties;
+  static ItemProperty default_property;
+  static PropMap initMap();
+
 };
 
-template <class T>
+
+
+
+
 class Item
 {
 public:
@@ -75,7 +99,7 @@ public:
   Item(std::string name_, int count_, int durability_);
 
   // An item property can be either a Weapon, Armor, or Usable.
-  ItemProperty<T> getItemProperty() const;
+  ItemProperty getProperty() const;
   std::string getName() const;
   int getCount() const;
   int getDurability() const;
@@ -88,9 +112,7 @@ private:
   static const int DUR_MIN = 0;
   static const int COUNT_MIN = 1;
   static void initializeItems();
-  static std::unordered_map<std::string, ItemProperty<Weapon>> weapon_specs;
-  static std::unordered_map<std::string, ItemProperty<Armor>> armor_specs;
-  static std::unordered_map<std::string, ItemProperty<Usable>> usable_specs;
+
 };
 
 #endif

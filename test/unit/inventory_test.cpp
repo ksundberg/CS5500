@@ -6,31 +6,31 @@ SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
 {
   GIVEN("An Item with 'Sword' as its name.")
   {
-    Item<Weapon> item("Sword");
+    Item item("Sword");
     REQUIRE(item.getName().compare("Sword") == 0);
 
     REQUIRE(item.getCount() > 0);
     REQUIRE(0 <= item.getDurability());
     REQUIRE(item.getDurability() <= 100);
 
-    Item<Weapon> item2("Sword", 1, 100);
+    Item item2("Sword", 1, 100);
 
     REQUIRE(item2.getCount() == 1);
     REQUIRE(item2.getDurability() == 100);
 
-    auto prop = item.getItemProperty();
+    auto prop = item.getProperty();
 
   }
 
   GIVEN("An Item with incorrect arguments to it's constructor.")
   {
-    Item<Usable> item("Cantaloupe", -30, 200);
+    Item item("Cantaloupe", -30, 200);
 
     REQUIRE(item.getCount() > 0);
     REQUIRE(0 <= item.getDurability());
     REQUIRE(item.getDurability() <= 100);
 
-    Item<Usable> item2("Orange", -1000, -200);
+    Item item2("Orange", -1000, -200);
 
     REQUIRE(item2.getCount() > 0);
     REQUIRE(0 <= item2.getDurability());
@@ -42,10 +42,15 @@ SCENARIO(" All Items have a proper ItemProperty. ")
 {
   GIVEN("An Item without a defined property.")
   {
-    Item<Armor> item("Undefined item with a strange name");
-    auto prop = item.getItemProperty();
+    Item item("Undefined item with a strange name");
+    auto prop = item.getProperty();
     REQUIRE(prop.value == 0);
-    REQUIRE(prop.rarity == 0);
-    REQUIRE(prop.spec == nullptr);
+  }
+
+  GIVEN("An Item with a defined property.")
+  {
+    Item item("Sword");
+    auto prop = item.getProperty();
+    REQUIRE(prop.value==10);
   }
 }
