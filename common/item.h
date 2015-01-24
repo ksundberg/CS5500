@@ -2,7 +2,6 @@
 #define ITEM_HEADER
 
 #include <string>
-#include <map>
 #include <unordered_map>
 
 // An ItemProperty contains information true across all instances of an
@@ -88,7 +87,7 @@ public:
   int getCount() const;
   int getDurability() const;
 
-  typedef std::map<std::string, ItemProperty> PropMap;
+  typedef std::unordered_map<std::string, ItemProperty> PropMap;
 
 private:
   const std::string name;
