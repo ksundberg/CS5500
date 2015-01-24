@@ -1,6 +1,7 @@
 #include <string>
 #include <catch.hpp>
 #include <item.h>
+#include <inventory.h>
 
 SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
 {
@@ -52,5 +53,27 @@ SCENARIO(" All Items have a proper ItemProperty. ")
     Item item("Sword");
     auto prop = item.getProperty();
     REQUIRE(prop.value==10);
+    REQUIRE(prop.image_file.compare("sword.png") == 0);
+  }
+}
+
+
+SCENARIO(" Can add Items to an inventory. ")
+{
+  GIVEN("An Inventory and an Item.")
+  {
+    Item shield("Shield");
+    Inventory inv(30);
+    inv.addItem(shield);
+    REQUIRE(inv.takeItem(0).getName() == "Shield");
+  }
+
+  GIVEN("An Inventory with a small capacity.")
+  {
+    Inventory inv(1);
+    Item a("Apple");
+    Item b("Banana");
+    REQUIRE(inv.add(a) == true);
+    REQUIRE(inv.add(b) == false);
   }
 }
