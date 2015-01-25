@@ -4,6 +4,7 @@
 #include "item.h"
 #include "inventory.h"
 #include "itemgen.h"
+#include "tbb/tbb.h"
 
 // Very basic item generation for now.
 Inventory ItemGen::genItems()
@@ -25,10 +26,15 @@ std::vector<Item> ItemGen::genNItems(unsigned int n)
 {
   std::vector<Item> items;
   items.resize(n);
-  auto func = [](Item& i)
+
+  auto names = Item::getPropertyKeys();
+  auto func = [names, &items](const tbb::blocked_range<int>& r)
   {
-    i = Item("Balloon");
+    for (int i = r.begin(); i < r.end(); ++i)
+    {
+      items[i] = Item(names[std::rand() % names.size()]);
+    }
   };
-  for_each(items.begin(), items.end(), func);
+  tbb::parallel_for(tbb::blocked_range<int>(0, items.size()), func);
   return items;
 }

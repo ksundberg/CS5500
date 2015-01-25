@@ -4,6 +4,7 @@
 #include <item.h>
 #include <inventory.h>
 #include <itemgen.h>
+#include <logger.h>
 
 SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
 {
