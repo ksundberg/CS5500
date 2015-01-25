@@ -1,12 +1,14 @@
 #include "Grid.hpp"
 
+#define DEPTH 5
+
 void Grid::generateTerrain()
 {
-  PerlinNoise p;
+  PerlinNoise perlin;
   std::shared_ptr<matrix2d> noiseMap = 
-	  p.createMatrix2D(width, height, 5);
+	  perlin.createMatrix2D(width, height, DEPTH);
 
-  p.smooth(noiseMap);
+  perlin.smooth(noiseMap);
 
   for (double x = 0; x < width; x++)
   {
