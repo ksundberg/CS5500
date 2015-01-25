@@ -7,5 +7,7 @@
 namespace ItemGen
 {
 Inventory genItems();
+std::vector<Item> genNItems(unsigned int n);
+std::vector<Item> genNItems(unsigned int n);
 };
 #endif

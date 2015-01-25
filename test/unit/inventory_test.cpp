@@ -1,8 +1,10 @@
 #include <string>
+#include <vector>
 #include <catch.hpp>
 #include <item.h>
 #include <inventory.h>
-#include <vector>
+#include <itemgen.h>
+
 SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
 {
   GIVEN("An Item with 'Sword' as its name.")
@@ -108,5 +110,17 @@ SCENARIO(" Can add Items to an inventory. ")
     REQUIRE(copied[0].getName().compare("Apple") == 0);
     REQUIRE(copied[1].getName().compare("Banana") == 0);
     REQUIRE(copied[2].getName().compare("Coconut") == 0);
+  }
+}
+
+SCENARIO("We want to generate items in parallel.")
+{
+  GIVEN("A large number of items to generate.")
+  {
+    std::vector<Item> items = ItemGen::genNItems(1000);
+
+    REQUIRE(items.size() == 1000);
+    REQUIRE(items[0].getName().size() > 0);
+    REQUIRE(items[999].getName().size() > 0);
   }
 }
