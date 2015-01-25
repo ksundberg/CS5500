@@ -124,3 +124,9 @@ SCENARIO("We want to generate items in parallel.")
     REQUIRE(items[999].getName().size() > 0);
   }
 }
+
+TEST_CASE(" There is at least one name that maps to an ItemProperty ")
+{
+  auto keys = Item::getPropertyKeys();
+  REQUIRE(keys.size() > 0);
+}

@@ -2,6 +2,7 @@
 #define ITEM_HEADER
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 // An ItemProperty contains information true across all instances of an
@@ -73,6 +74,8 @@ public:
 
   // Hash ItemProperty values by an Item's name.
   typedef std::unordered_map<std::string, ItemProperty> PropMap;
+
+  static std::vector<std::string> getPropertyKeys();
 
 private:
   std::string name;

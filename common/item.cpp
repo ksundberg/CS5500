@@ -10,14 +10,28 @@ Item::PropMap Item::initMap()
   ItemProperty sword = Weapon(10, 4.0, "A sword.", "sword.png", 10);
   map.insert(std::pair<std::string, ItemProperty>("Sword", sword));
 
-  ItemProperty shield = Armor(20, 3.0, "A shield.", "shield.png", 5, BodyPart::ARM);
+  ItemProperty shield =
+    Armor(20, 3.0, "A shield.", "shield.png", 5, BodyPart::ARM);
   map.insert(std::pair<std::string, ItemProperty>("Shield", shield));
 
-  ItemProperty cantaloupe = Usable(1, 1.0, "A cantaloupe.", "cantaloupe.png", 2);
+  ItemProperty cantaloupe =
+    Usable(1, 1.0, "A cantaloupe.", "cantaloupe.png", 2);
   map.insert(std::pair<std::string, ItemProperty>("Cantaloupe", cantaloupe));
   return map;
 }
+
 Item::PropMap Item::properties = initMap();
+
+std::vector<std::string> Item::getPropertyKeys()
+{
+  std::vector<std::string> keys;
+  for (auto pair : properties)
+  {
+    keys.push_back(pair.first);
+  }
+  return keys;
+}
+
 ItemProperty Item::default_property =
   ItemProperty(0, 0.0, "Unknown.", "unknown.png");
 
