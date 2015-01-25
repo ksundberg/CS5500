@@ -24,7 +24,6 @@ SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
     REQUIRE(item2.getName() == item3.getName());
     REQUIRE(item2.getCount() == item3.getCount());
     REQUIRE(item2.getDurability() == item3.getDurability());
-
   }
 
   GIVEN("An Item with incorrect arguments to it's constructor.")
@@ -56,11 +55,10 @@ SCENARIO(" All Items have a proper ItemProperty. ")
   {
     Item item("Sword");
     auto prop = item.getProperty();
-    REQUIRE(prop.value==10);
+    REQUIRE(prop.value == 10);
     REQUIRE(prop.image_file.compare("sword.png") == 0);
   }
 }
-
 
 SCENARIO(" Can add Items to an inventory. ")
 {
@@ -90,25 +88,25 @@ SCENARIO(" Can add Items to an inventory. ")
     Inventory inv(5);
     try
     {
-        Item a = inv.takeItem(5);
+      Item a = inv.takeItem(5);
     }
-    catch(std::string errMsg)
+    catch (std::string errMsg)
     {
-        REQUIRE(errMsg.compare("Error inventory item does not exist") == 0);
+      REQUIRE(errMsg.compare("Error inventory item does not exist") == 0);
     }
-   }
-   GIVEN("We want all items from an Inventory")
-   {
-        Inventory inv(3);
-        Item a("Apple");
-        Item b("Banana");
-        Item c("Coconut");
-        inv.addItem(a);
-        inv.addItem(b);
-        inv.addItem(c);
-        std::vector<Item> copied = inv.getAllItems();
-        REQUIRE(copied[0].getName().compare("Apple") == 0);
-        REQUIRE(copied[1].getName().compare("Banana") == 0);
-        REQUIRE(copied[2].getName().compare("Coconut") == 0);
-   }
+  }
+  GIVEN("We want all items from an Inventory")
+  {
+    Inventory inv(3);
+    Item a("Apple");
+    Item b("Banana");
+    Item c("Coconut");
+    inv.addItem(a);
+    inv.addItem(b);
+    inv.addItem(c);
+    std::vector<Item> copied = inv.getAllItems();
+    REQUIRE(copied[0].getName().compare("Apple") == 0);
+    REQUIRE(copied[1].getName().compare("Banana") == 0);
+    REQUIRE(copied[2].getName().compare("Coconut") == 0);
+  }
 }

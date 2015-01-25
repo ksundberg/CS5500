@@ -6,6 +6,6 @@
 
 namespace ItemGen
 {
-  Inventory genItems();
+Inventory genItems();
 };
 #endif

@@ -9,14 +9,8 @@
 // this sort of information can be shared across all items.
 struct ItemProperty
 {
-  ItemProperty(int v,
-               float w,
-               std::string d,
-               std::string i)
-    : value(v)
-    , weight(w)
-    , description(d)
-    , image_file(i)
+  ItemProperty(int v, float w, std::string d, std::string i)
+    : value(v), weight(w), description(d), image_file(i)
   {
   }
 
@@ -29,14 +23,10 @@ struct ItemProperty
 struct Weapon : ItemProperty
 {
   const int default_attack;
-  Weapon(int v,
-         float w,
-         std::string d,
-         std::string i,
-         int da)
-  : ItemProperty(v, w, d, i), default_attack(da)
-  {}
-
+  Weapon(int v, float w, std::string d, std::string i, int da)
+    : ItemProperty(v, w, d, i), default_attack(da)
+  {
+  }
 };
 
 enum class BodyPart
@@ -44,35 +34,27 @@ enum class BodyPart
   HEAD,
   BODY,
   LEGS,
-  FEET
+  FEET,
+  ARM
 };
 
 struct Armor : ItemProperty
 {
   const int default_defense;
   const BodyPart body_part;
-  Armor(int v,
-         float w,
-         std::string d,
-         std::string i,
-         int dd,
-         BodyPart b)
-  : ItemProperty(v, w, d, i), default_defense(dd), body_part(b)
-  {}
-
+  Armor(int v, float w, std::string d, std::string i, int dd, BodyPart b)
+    : ItemProperty(v, w, d, i), default_defense(dd), body_part(b)
+  {
+  }
 };
 
 struct Usable : ItemProperty
 {
   const int health_points;
-  Usable(int v,
-         float w,
-         std::string d,
-         std::string i,
-         int hp)
-  : ItemProperty(v, w, d, i), health_points(hp)
-  {}
-
+  Usable(int v, float w, std::string d, std::string i, int hp)
+    : ItemProperty(v, w, d, i), health_points(hp)
+  {
+  }
 };
 
 class Item
@@ -81,7 +63,7 @@ public:
   Item();
   Item(std::string name_);
   Item(std::string name_, int count_, int durability_);
-  void operator=(const Item &incoming);
+  void operator=(const Item& incoming);
 
   // An item property can be either a Weapon, Armor, or Usable.
   ItemProperty getProperty() const;
@@ -89,6 +71,7 @@ public:
   int getCount() const;
   int getDurability() const;
 
+  // Hash ItemProperty values by an Item's name.
   typedef std::unordered_map<std::string, ItemProperty> PropMap;
 
 private:
