@@ -6,12 +6,14 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/client
   ${CMAKE_CURRENT_SOURCE_DIR}/client/forms
   ${CMAKE_CURRENT_SOURCE_DIR}/client/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/client/src/voxel_rendering
   ${CMAKE_CURRENT_SOURCE_DIR}/common
   ${CMAKE_CURRENT_SOURCE_DIR}/common/log
   ${CMAKE_CURRENT_SOURCE_DIR}/common/noise
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/log
   ${CMAKE_CURRENT_SOURCE_DIR}/test
+  ${CMAKE_CURRENT_SOURCE_DIR}/test/voxel_rendering_tests
 )
 
 add_definitions( -std=c++0x )
@@ -29,6 +31,14 @@ set(client_srcs
   client/src/Grid.hpp
   client/src/Grid.cpp
   client/src/Point.hpp
+  client/src/voxel_rendering/block.cpp
+  client/src/voxel_rendering/block.h
+  client/src/voxel_rendering/vector3f.cpp
+  client/src/voxel_rendering/vector3f.h
+  client/src/voxel_rendering/chunk.cpp
+  client/src/voxel_rendering/chunk.h
+  client/src/voxel_rendering/chunkmanager.cpp
+  client/src/voxel_rendering/chunkmanager.h
   include/wxwidget.h
 )
 source_group("client" FILES ${client_srcs})
@@ -45,6 +55,8 @@ set(test_srcs
   test/main.cpp
   include/catch.hpp
   test/unit/sample.cpp
+  test/voxel_rendering_tests/chunkmanager_test
+  test/voxel_rendering_tests/vector3f_test
 )
 source_group("test" FILES ${test_srcs})
 
