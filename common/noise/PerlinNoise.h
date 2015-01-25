@@ -20,6 +20,7 @@ public:
 
   double turbulence2D(double x, double y, int depth) const;
   double turbulence3D(double x, double y, double z, int depth) const;
+  void smooth(std::shared_ptr<matrix2d> noiseMap);
 
   std::shared_ptr<matrix3d> createMatrix3D(int width,
                                            int height,

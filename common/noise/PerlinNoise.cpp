@@ -2,6 +2,11 @@
 #include "PerlinNoise.h"
 #include "tbb/tbb.h"
 
+#define wrap_left  ( i==0 ? width-1 : i-1 )
+#define wrap_right ( i==width-1 ? 0 : i+1 )
+#define wrap_up    ( j==0 ? height-1 : j-1 )
+#define wrap_down  ( j==height-1 ? 0 : j+1 )
+
 PerlinNoise::PerlinNoise(uint seed)
 {
   std::default_random_engine generator;
@@ -11,7 +16,6 @@ PerlinNoise::PerlinNoise(uint seed)
 
 PerlinNoise::PerlinNoise()
 {
-
   std::random_device rd;
   std::default_random_engine generator(rd());
   initialize(generator);
@@ -259,4 +263,31 @@ double PerlinNoise::noise(const vector3d& p) const
   sum += knot(fi + 1, fj + 1, fk + 1, v);
 
   return sum;
+}
+
+//This is an interpolating smoothing function. Can be implemented as a substitute, or with Perlin function for better smoothing.
+void smooth(std::shared_ptr<matrix2d> noiseMap)
+{
+  int width = (*noiseMap).size();
+  int height = (*noiseMap)[0].size();
+  for (int i = 0; i < width; i++)
+  {
+    for (int j = 0; j < height; j++)
+	{
+	  double new = 0.0;
+	  new += (*noiseMap)[i][j] / 4;
+
+	  new += (*noiseMap)[wrap_left][j] / 8;
+	  new += (*noiseMap)[wrap_right][j] / 8;
+	  new += (*noiseMap)[i][wrap_up] / 8;
+	  new += (*noiseMap)[i][wrap_down] / 8;
+
+	  new += (*noiseMap)[wrap_left][wrap_up] / 16;
+	  new += (*noiseMap)[wrap_left][wrap_down] / 16;
+	  new += (*noiseMap)[wrap_right][wrap_up] / 16;
+	  new += (*noiseMap)[wrap_right][wrap_down] / 16;
+
+      (*noiseMap)[i][j] = new;
+	}
+  }
 }
