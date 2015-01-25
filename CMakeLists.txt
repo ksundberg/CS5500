@@ -42,6 +42,8 @@ set(common_srcs
   common/inventory.cpp
   common/item.h
   common/item.cpp
+  common/itemgen.h
+  common/itemgen.cpp
 )
 source_group("common" FILES ${common_srcs})
 
