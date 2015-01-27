@@ -1,4 +1,6 @@
 #include <iostream>
+#include <mutex>
+
 #include "PerlinNoise.h"
 #include "tbb/tbb.h"
 
