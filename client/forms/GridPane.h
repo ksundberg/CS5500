@@ -4,6 +4,8 @@
 #include "wxwidget.h"
 #include "Grid.hpp"
 
+#include <memory>
+
 class GridPane : public wxPanel
 {
 
@@ -15,7 +17,7 @@ public:
 
   void Render(wxDC& dc);
 
-  Grid* grid;
+  std::shared_ptr<Grid> grid;
 
   DECLARE_EVENT_TABLE()
 };

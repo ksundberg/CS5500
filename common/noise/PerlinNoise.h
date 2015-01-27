@@ -10,6 +10,7 @@
 typedef std::array<double, 3> vector3d;
 typedef std::vector<std::vector<std::vector<double>>> matrix3d;
 typedef std::vector<std::vector<double>> matrix2d;
+typedef std::vector<double> matrix1d;
 
 class PerlinNoise
 {
@@ -18,6 +19,7 @@ public:
   PerlinNoise(uint seed);
   ~PerlinNoise();
 
+  double turbulence1D(double x, int depth) const;
   double turbulence2D(double x, double y, int depth) const;
   double turbulence3D(double x, double y, double z, int depth) const;
 
@@ -27,6 +29,8 @@ public:
                                            int perlinDepth) const;
   std::shared_ptr<matrix2d> createMatrix2D(int width,
                                            int height,
+                                           int perlinDepth) const;
+  std::shared_ptr<matrix1d> createMatrix1D(int width,
                                            int perlinDepth) const;
 
 private:
