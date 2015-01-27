@@ -21,18 +21,31 @@ Inventory ItemGen::genItems()
   return inventory;
 }
 
-// Extra gen function to demo a map pattern.
+// Randomly generate valid items.
+// Demos a parallel map pattern.
 std::vector<Item> ItemGen::genNItems(unsigned int n)
 {
   std::vector<Item> items;
   items.resize(n);
+  std::vector<int> indexes;
+  indexes.resize(n);
 
   auto names = Item::getPropertyKeys();
-  auto func = [names, &items](const tbb::blocked_range<int>& r)
+
+  // Generate indices.
+  std::srand(std::time(0));
+  auto rand_select = [&]()
+  {
+    return std::rand() % names.size();
+  };
+  std::generate(indexes.begin(), indexes.end(), rand_select);
+
+  // Generate items.
+  auto func = [&](const tbb::blocked_range<int>& r)
   {
     for (int i = r.begin(); i < r.end(); ++i)
     {
-      items[i] = Item(names[std::rand() % names.size()]);
+      items[i] = Item(names[indexes[i]]);
     }
   };
   tbb::parallel_for(tbb::blocked_range<int>(0, items.size()), func);
