@@ -2,11 +2,6 @@
 #include "PerlinNoise.h"
 #include "tbb/tbb.h"
 
-#define wrap_left  ( i==0 ? width-1 : i-1 )
-#define wrap_right ( i==width-1 ? 0 : i+1 )
-#define wrap_up    ( j==0 ? height-1 : j-1 )
-#define wrap_down  ( j==height-1 ? 0 : j+1 )
-
 PerlinNoise::PerlinNoise(uint seed)
 {
   std::default_random_engine generator;
@@ -274,20 +269,20 @@ void smooth(std::shared_ptr<matrix2d> noiseMap)
   {
     for (int j = 0; j < height; j++)
 	{
-	  double new = 0.0;
-	  new += (*noiseMap)[i][j] / 4;
+	  double new_height = 0.0;
+	  new_height += (*noiseMap)[i][j] / 4;
 
-	  new += (*noiseMap)[wrap_left][j] / 8;
-	  new += (*noiseMap)[wrap_right][j] / 8;
-	  new += (*noiseMap)[i][wrap_up] / 8;
-	  new += (*noiseMap)[i][wrap_down] / 8;
+	  new_height += (*noiseMap)[i==0 ? width-1 : i-1][j] / 8;
+	  new_height += (*noiseMap)[i==width-1 ? 0 : i+1][j] / 8;
+	  new_height += (*noiseMap)[i][j==0 ? height-1 : j-1] / 8;
+	  new_height += (*noiseMap)[i][j==height-1 ? 0 : j+1] / 8;
 
-	  new += (*noiseMap)[wrap_left][wrap_up] / 16;
-	  new += (*noiseMap)[wrap_left][wrap_down] / 16;
-	  new += (*noiseMap)[wrap_right][wrap_up] / 16;
-	  new += (*noiseMap)[wrap_right][wrap_down] / 16;
+	  new_height += (*noiseMap)[i==0 ? width-1 : i-1][j==0 ? height-1 : j-1] / 16;
+	  new_height += (*noiseMap)[i==0 ? width-1 : i-1][j==height-1 ? 0 : j+1] / 16;
+	  new_height += (*noiseMap)[i==width-1 ? 0 : i+1][j==0 ? height-1 : j-1] / 16;
+	  new_height += (*noiseMap)[i==width-1 ? 0 : i+1][j==height-1 ? 0 : j+1] / 16;
 
-      (*noiseMap)[i][j] = new;
+      (*noiseMap)[i][j] = new_height;
 	}
   }
 }
