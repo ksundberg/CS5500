@@ -38,6 +38,12 @@ set(common_srcs
   common/log/logger.cpp
   common/noise/PerlinNoise.cpp
   common/noise/PerlinNoise.h
+  common/inventory.h
+  common/inventory.cpp
+  common/item.h
+  common/item.cpp
+  common/itemgen.h
+  common/itemgen.cpp
 )
 source_group("common" FILES ${common_srcs})
 
@@ -45,6 +51,7 @@ set(test_srcs
   test/main.cpp
   include/catch.hpp
   test/unit/sample.cpp
+  test/unit/inventory_test.cpp
 )
 source_group("test" FILES ${test_srcs})
 

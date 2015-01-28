@@ -12,6 +12,7 @@ private:
   void OnHelp(wxCommandEvent& event);
   void OnExit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
+  void OnInventory(wxCommandEvent& event);
   wxDECLARE_EVENT_TABLE();
 };
 
