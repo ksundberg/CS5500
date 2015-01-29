@@ -13,7 +13,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/log
   ${CMAKE_CURRENT_SOURCE_DIR}/test
-  ${CMAKE_CURRENT_SOURCE_DIR}/test/voxel_rendering_tests
 )
 
 add_definitions( -std=c++0x )
