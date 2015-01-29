@@ -62,8 +62,8 @@ set(test_srcs
   include/catch.hpp
   test/unit/sample.cpp
   test/unit/inventory_test.cpp
-  test/voxel_rendering_tests/chunkmanager_test
-  test/voxel_rendering_tests/vector3f_test
+  test/unit/chunkmanager_test.cpp
+  test/unit/vector3f_test.cpp
 )
 source_group("test" FILES ${test_srcs})
 
