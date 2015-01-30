@@ -7,19 +7,19 @@ class Vector3f
 	float X;
 	float Y;
 	float Z;
-	
+
 	public:
 	Vector3f();
 	Vector3f(const float x, const float y, const float z);
 	Vector3f(const float vect[3]);
-	
-	const float getX();
+
+	float getX();
 	void setX(const float newX);
-	
-	const float getY();
+
+	float getY();
 	void setY(const float newY);
-	
-	const float getZ();
+
+	float getZ();
 	void setZ(const float newZ);
 
 	bool equals(Vector3f compare_to);

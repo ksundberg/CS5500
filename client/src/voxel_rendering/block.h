@@ -18,7 +18,7 @@ class Block
 	private:
 		bool mActive;
 
-		BlockType mBlockType;
+//		BlockType mBlockType;
 };
 
 #endif

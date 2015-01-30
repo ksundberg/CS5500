@@ -82,7 +82,7 @@ Vector3f * Chunk::getPosition()
 	return (new Vector3f(X, Y, Z));
 }
 
-void Chunk::Update(float dt)
+void Chunk::Update(float /*dt*/)
 {
 	//A function stub for Chunk update code to be called from the Chunk Manager
 }

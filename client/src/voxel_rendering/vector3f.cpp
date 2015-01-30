@@ -22,7 +22,7 @@ Vector3f::Vector3f(const float vect[3])
 	Z = vect[2];
 }
 
-const float Vector3f::getX()
+float Vector3f::getX()
 {
 	return X;
 }
@@ -32,7 +32,7 @@ void Vector3f::setX(const float newX)
 	X = newX;
 }
 
-const float Vector3f::getY()
+float Vector3f::getY()
 {
 	return Y;
 }
@@ -42,7 +42,7 @@ void Vector3f::setY(const float newY)
 	Y = newY;
 }
 
-const float Vector3f::getZ()
+float Vector3f::getZ()
 {
 	return Z;
 }
