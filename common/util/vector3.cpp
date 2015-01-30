@@ -1,16 +1,16 @@
-#include "Vector3D.h"
+#include "Vector3.h"
 #include <math.h>
 
-Vector3D::Vector3D()
+Vector3::Vector3() : x(0), y(0), z(0)
 {}
 
-Vector3D::Vector3D(float newX, float newY, float newZ)
+Vector3::Vector3(float newX, float newY, float newZ)
     :x(newX),
     y(newY),
     z(newZ)
 {}
 
-Vector3D& Vector3D::Set(float newX, float newY, float newZ)
+Vector3& Vector3::Set(float newX, float newY, float newZ)
 {
     x = newX;
     y = newY;
@@ -18,7 +18,7 @@ Vector3D& Vector3D::Set(float newX, float newY, float newZ)
     return (*this);
 }
 
-Vector3D& Vector3D::operator +=(const Vector3D& vector)
+Vector3& Vector3::operator +=(const Vector3& vector)
 {
     x += vector.x;
     y += vector.y;
@@ -26,7 +26,7 @@ Vector3D& Vector3D::operator +=(const Vector3D& vector)
     return (*this);
 }
 
-Vector3D& Vector3D::operator -=(const Vector3D& vector)
+Vector3& Vector3::operator -=(const Vector3& vector)
 {
     x -= vector.x;
     y -= vector.y;
@@ -34,7 +34,7 @@ Vector3D& Vector3D::operator -=(const Vector3D& vector)
     return (*this);
 }
 
-Vector3D& Vector3D::operator *=(float t)
+Vector3& Vector3::operator *=(float t)
 {
     x *= t;
     y *= t;
@@ -42,7 +42,7 @@ Vector3D& Vector3D::operator *=(float t)
     return (*this);
 }
 
-Vector3D& Vector3D::operator /=(float t)
+Vector3& Vector3::operator /=(float t)
 {
     float f = 1.0F / t;
     x *= f;
@@ -51,7 +51,7 @@ Vector3D& Vector3D::operator /=(float t)
     return (*this);
 }
 
-Vector3D& Vector3D::operator &=(const Vector3D& vector)
+Vector3& Vector3::operator &=(const Vector3& vector)
 {
     x *= vector.x;
     y *= vector.y;
@@ -59,63 +59,63 @@ Vector3D& Vector3D::operator &=(const Vector3D& vector)
     return (*this);
 }
         
-Vector3D Vector3D::operator -() const
+Vector3 Vector3::operator -() const
 {
-    return (Vector3D(-x, -y, -z));
+    return (Vector3(-x, -y, -z));
 }
         
-Vector3D Vector3D::operator +(const Vector3D& vector) const
+Vector3 Vector3::operator +(const Vector3& vector) const
 {
-    return (Vector3D(x + vector.x, y + vector.y, z + vector.z));
+    return (Vector3(x + vector.x, y + vector.y, z + vector.z));
 }
         
-Vector3D Vector3D::operator -(const Vector3D& vector) const
+Vector3 Vector3::operator -(const Vector3& vector) const
 {
-    return (Vector3D(x - vector.x, y - vector.y, z - vector.z));
+    return (Vector3(x - vector.x, y - vector.y, z - vector.z));
 }
         
-Vector3D Vector3D::operator *(float t) const
+Vector3 Vector3::operator *(float t) const
 {
-    return (Vector3D(x * t, y * t, z * t));
+    return (Vector3(x * t, y * t, z * t));
 }
         
-Vector3D Vector3D::operator /(float t) const
+Vector3 Vector3::operator /(float t) const
 {
     float f = 1.0F / t;
-    return (Vector3D(x * f, y * f, z * f));
+    return (Vector3(x * f, y * f, z * f));
 }
         
-float Vector3D::operator *(const Vector3D& vector) const
+float Vector3::operator *(const Vector3& vector) const
 {
     return (x * vector.x + y * vector.y + z * vector.z);
 }
         
-Vector3D Vector3D::operator %(const Vector3D& vector) const
+Vector3 Vector3::operator %(const Vector3& vector) const
 {
-    return (Vector3D(y * vector.z - z * vector.y, z * vector.x - x * vector.z, x * vector.y - y * vector.x));
+    return (Vector3(y * vector.z - z * vector.y, z * vector.x - x * vector.z, x * vector.y - y * vector.x));
 }
         
-Vector3D Vector3D::operator &(const Vector3D& vector) const
+Vector3 Vector3::operator &(const Vector3& vector) const
 {
-    return (Vector3D(x * vector.x, y * vector.y, z * vector.z));
+    return (Vector3(x * vector.x, y * vector.y, z * vector.z));
 }
         
-bool Vector3D::operator ==(const Vector3D& vector) const
+bool Vector3::operator ==(const Vector3& vector) const
 {
     return ((x == vector.x) && (y == vector.y) && (z == vector.z));
 }
         
-bool Vector3D::operator !=(const Vector3D& vector) const
+bool Vector3::operator !=(const Vector3& vector) const
 {
     return ((x != vector.x) || (y != vector.y) || (z != vector.z));
 }
         
-Vector3D& Vector3D::Normalize()
+Vector3& Vector3::Normalize()
 {
     return (*this /= sqrtf(x * x + y * y + z * z));
 }
         
-Vector3D& Vector3D::RotateAboutX(float angle)
+Vector3& Vector3::RotateAboutX(float angle)
 {
     float angleSin = sinf(angle);
     float angleCos = cosf(angle);
@@ -129,7 +129,7 @@ Vector3D& Vector3D::RotateAboutX(float angle)
     return (*this);
 }
 
-Vector3D& Vector3D::RotateAboutY(float angle)
+Vector3& Vector3::RotateAboutY(float angle)
 {
     float angleSin = sinf(angle);
     float angleCos = cosf(angle);
@@ -143,7 +143,7 @@ Vector3D& Vector3D::RotateAboutY(float angle)
     return (*this);
 }
 
-Vector3D& Vector3D::RotateAboutZ(float angle)
+Vector3& Vector3::RotateAboutZ(float angle)
 {
     float angleSin = sinf(angle);
     float angleCos = cosf(angle);
@@ -157,7 +157,7 @@ Vector3D& Vector3D::RotateAboutZ(float angle)
     return (*this);
 }
 
-Vector3D& Vector3D::RotateAboutAxis(float angle, const Vector3D& axis)
+Vector3& Vector3::RotateAboutAxis(float angle, const Vector3& axis)
 {
     float angleSin = sinf(angle);
     float angleCos = cosf(angle);

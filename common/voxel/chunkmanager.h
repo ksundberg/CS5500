@@ -1,14 +1,10 @@
 #ifndef CHUNKMANAGER_H
 #define CHUNKMANAGER_H
 
-//forward declared dependencies
-class Chunk;
-class Vector3f;
-
 //Class dependencies
 #include <vector>
 #include "chunk.h"
-#include "vector3f.h"
+#include "vector3.h"
 #include "tbb/concurrent_vector.h"
 #include "tbb/blocked_range.h"
 
@@ -20,8 +16,8 @@ class ChunkManager
 {
 	private:
 		
-		Vector3f * pCameraPosition;//the previous camera position
-		Vector3f * pCameraRotation;//the previous camera rotation
+		Vector3 * pCameraPosition;//the previous camera position
+		Vector3 * pCameraRotation;//the previous camera rotation
 		bool forceVisibilityUpdate = false;
 		void insert(ChunkList, int index, Chunk *to_insert);
 		//The following 4 constants will later be stored in a configuration file per world and set on world load.
@@ -45,11 +41,11 @@ class ChunkManager
 		
 		ChunkManager();//A constructor stub, in future it will accept a game context(specifically a game seed and save file)
 	
-		void Update(float deltaTime, Vector3f cameraPosition, Vector3f cameraRotation);//An game update function for the rendering engine, it accepts the change in time since the last frame, a camera position, and a camera view angle as a Vector3 of floats
+		void Update(float deltaTime, Vector3 cameraPosition, Vector3 cameraRotation);//An game update function for the rendering engine, it accepts the change in time since the last frame, a camera position, and a camera view angle as a Vector3 of floats
 
-		int translatePositionToIndex(Vector3f chunkPosition);
-		Vector3f * translateIndexToPosition(int chunkIndex);
-		Vector3f translateCameraPositionToChunk(Vector3f cameraPosition);
+		int translatePositionToIndex(Vector3 chunkPosition);
+		Vector3 * translateIndexToPosition(int chunkIndex);
+		Vector3 translateCameraPositionToChunk(Vector3 cameraPosition);
 };
 
 

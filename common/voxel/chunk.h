@@ -2,7 +2,7 @@
 #define CHUNK_H
 
 #include "block.h"
-#include "vector3f.h"
+#include "vector3.h"
 
 class Chunk
 {
@@ -19,7 +19,7 @@ class Chunk
 		void setIndex(int ind);
 		bool getRebuild();
 		void setRebuild();
-		Vector3f * getPosition();
+		Vector3 * getPosition();
 		
 		/*
 		** Assuming the use of OpenGLRenderer class from JUCE  Currently commented out to prevent compile errors

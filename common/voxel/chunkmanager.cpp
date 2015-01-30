@@ -1,8 +1,6 @@
 #include "chunkmanager.h"
 #include <vector>
 #include <math.h>
-#include "chunk.h"
-#include "vector3f.h"
 #include "tbb/parallel_for.h"
 #include "tbb/task_scheduler_init.h"
 
@@ -15,24 +13,24 @@ arrays does not happen doing this assumes that it is safe to overwrite an index.
 ChunkManager::ChunkManager()
 {
 	tbb::task_scheduler_init init;//Initializing the the tbb task scheduler using the automatic thread count
-	pCameraPosition = new Vector3f(-(16 * (MAX_CHUNKS_INDEX_X/2)) -1,-(16 * (MAX_CHUNKS_INDEX_Y/2)) -1,-(16 * (MAX_CHUNKS_INDEX_Z/2)) -1);//Initializing the camera to an invalid position to guarantee the Visibility list is generated on entering the world
-	pCameraRotation = new Vector3f();
+	pCameraPosition = new Vector3(-(16 * (MAX_CHUNKS_INDEX_X/2)) -1,-(16 * (MAX_CHUNKS_INDEX_Y/2)) -1,-(16 * (MAX_CHUNKS_INDEX_Z/2)) -1);//Initializing the camera to an invalid position to guarantee the Visibility list is generated on entering the world
+	pCameraRotation = new Vector3();
 }
 
-void ChunkManager::Update(float /*deltaTime*/, Vector3f cameraPosition, Vector3f cameraRotation)
+void ChunkManager::Update(float /*deltaTime*/, Vector3 cameraPosition, Vector3 cameraRotation)
 {
 	//Code to designate which chunks should be processed below.
 	int numChunksLoaded = 0;
 
-	Vector3f cChunk = translateCameraPositionToChunk(cameraPosition);//Getting which chunk the camera is currently in
-	if (pCameraPosition->equals(cameraPosition) == false || pCameraRotation->equals(cameraRotation) == false)//The camera has changed, therefore the Visiblity lists and load/unload lists must be updated
+	Vector3 cChunk = translateCameraPositionToChunk(cameraPosition);//Getting which chunk the camera is currently in
+	if (*(pCameraPosition) != cameraPosition || *(pCameraRotation) != cameraRotation)//The camera has changed, therefore the Visiblity lists and load/unload lists must be updated
 	{
-		for(int i = cChunk.getX() - MAX_VIEW_DISTANCE; i < cChunk.getX() - MAX_VIEW_DISTANCE; i++)//i = x, j = y, k = z
+		for(int i = cChunk.x - MAX_VIEW_DISTANCE; i < cChunk.x - MAX_VIEW_DISTANCE; i++)//i = x, j = y, k = z
 		{
-			for(int j = cChunk.getY() - MAX_VIEW_DISTANCE; j < cChunk.getY() + MAX_VIEW_DISTANCE; j++)
+			for(int j = cChunk.y - MAX_VIEW_DISTANCE; j < cChunk.y + MAX_VIEW_DISTANCE; j++)
 			{
 				tbb::parallel_for(//adds the area around the player to the Chunk Visiblity list
-					tbb::blocked_range<int>(cChunk.getZ() - MAX_VIEW_DISTANCE, cChunk.getZ() + MAX_VIEW_DISTANCE),
+					tbb::blocked_range<int>(cChunk.z - MAX_VIEW_DISTANCE, cChunk.z + MAX_VIEW_DISTANCE),
 					[&](const tbb::blocked_range<int>& r)
 					{
 						for(int k = r.begin(); k < r.end(); k++)
@@ -162,16 +160,16 @@ void ChunkManager::Update(float /*deltaTime*/, Vector3f cameraPosition, Vector3f
 	*pCameraRotation = cameraRotation;//setting the previous camera rotation to the current camera rotation for the next updates calculation purposes
 }
 
-int ChunkManager::translatePositionToIndex(Vector3f chunkPosition)//Accepts the X,Y,Z coordinates of a chunk and translates it to and one dimensional index position based upon the size limits of the world
+int ChunkManager::translatePositionToIndex(Vector3 chunkPosition)//Accepts the X,Y,Z coordinates of a chunk and translates it to and one dimensional index position based upon the size limits of the world
 {
-	float x = chunkPosition.getX();
-	float y = chunkPosition.getY();
-	float z = chunkPosition.getZ();
+	float x = chunkPosition.x;
+	float y = chunkPosition.y;
+	float z = chunkPosition.z;
 	return (x + (MAX_CHUNKS_INDEX_X/2)) + ((y + (MAX_CHUNKS_INDEX_Y/2)) * MAX_CHUNKS_INDEX_X) + ((z + (MAX_CHUNKS_INDEX_Z/2)) * MAX_CHUNKS_INDEX_X * MAX_CHUNKS_INDEX_Y);//This assumes a zero based index and that
 		//the negative range and the non-negative range(this includes 0 as non-negative) are of equal size
 }
 
-Vector3f * ChunkManager::translateIndexToPosition(int chunkIndex)//Accepts the one dimensional index position of a Chunk and returns the Vector3f coordinates in the world space.
+Vector3 * ChunkManager::translateIndexToPosition(int chunkIndex)//Accepts the one dimensional index position of a Chunk and returns the Vector3 coordinates in the world space.
 {
 	//Some of the math bellow may require require casting the values to doubles or floats to avoid truncation
 //	float cIndex = (double) chunkIndex;
@@ -179,14 +177,14 @@ Vector3f * ChunkManager::translateIndexToPosition(int chunkIndex)//Accepts the o
 	ara[0] = chunkIndex % MAX_CHUNKS_INDEX_X -(MAX_CHUNKS_INDEX_X / 2); //Calculating the X position of the chunk in the world
 	ara[1] = floor((chunkIndex % (MAX_CHUNKS_INDEX_X * MAX_CHUNKS_INDEX_Y)) / MAX_CHUNKS_INDEX_X) - (MAX_CHUNKS_INDEX_Y/2);//Calculating the Y position of the Chunk in the World
 	ara[2] = floor(chunkIndex / (MAX_CHUNKS_INDEX_X * MAX_CHUNKS_INDEX_Y)) - (MAX_CHUNKS_INDEX_Z/2);//Calculating the Z position of the Chunk in the World
-	return new Vector3f(ara);
+	return new Vector3(ara[0], ara[1], ara[2]);
 }
 
-Vector3f ChunkManager::translateCameraPositionToChunk(Vector3f cameraPosition)
+Vector3 ChunkManager::translateCameraPositionToChunk(Vector3 cameraPosition)
 {
-	float x_position = floor(cameraPosition.getX() + (16 * (MAX_CHUNKS_INDEX_X / 2)) / 16) - (MAX_CHUNKS_INDEX_X / 2);
-	float y_position = floor(cameraPosition.getY() + (16 * (MAX_CHUNKS_INDEX_Y / 2)) / 16) - (MAX_CHUNKS_INDEX_Y / 2);
-	float z_posiiton = floor(cameraPosition.getZ() + (16 * (MAX_CHUNKS_INDEX_Z / 2)) / 16) - (MAX_CHUNKS_INDEX_Z / 2);
-	Vector3f chunk(x_position, y_position, z_posiiton);
+	float x_position = floor(cameraPosition.x + (16 * (MAX_CHUNKS_INDEX_X / 2)) / 16) - (MAX_CHUNKS_INDEX_X / 2);
+	float y_position = floor(cameraPosition.y + (16 * (MAX_CHUNKS_INDEX_Y / 2)) / 16) - (MAX_CHUNKS_INDEX_Y / 2);
+	float z_posiiton = floor(cameraPosition.z + (16 * (MAX_CHUNKS_INDEX_Z / 2)) / 16) - (MAX_CHUNKS_INDEX_Z / 2);
+	Vector3 chunk(x_position, y_position, z_posiiton);
 	return chunk;
 }

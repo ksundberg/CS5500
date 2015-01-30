@@ -77,9 +77,9 @@ void Chunk::setIndex(int ind)
 	index = ind;
 }
 
-Vector3f * Chunk::getPosition()
+Vector3 * Chunk::getPosition()
 {
-	return (new Vector3f(X, Y, Z));
+	return (new Vector3(X, Y, Z));
 }
 
 void Chunk::Update(float /*dt*/)
