@@ -1,90 +1,89 @@
 #include "block.h"
 #include "chunk.h"
 
-
 Chunk::Chunk(int x, int y, int z)
 {
-	X = x;
-	Y = y;
-	Z = z;
-    // Block array creation
-    mBlocks = new Block**[CHUNK_SIZE];
-    for(int i = 0; i < CHUNK_SIZE; i++)
-    {
-        mBlocks[i] = new Block*[CHUNK_SIZE];
+  X = x;
+  Y = y;
+  Z = z;
+  // Block array creation
+  mBlocks = new Block** [CHUNK_SIZE];
+  for (int i = 0; i < CHUNK_SIZE; i++)
+  {
+    mBlocks[i] = new Block* [CHUNK_SIZE];
 
-        for(int j = 0; j < CHUNK_SIZE; j++)
-        {
-            mBlocks[i][j] = new Block[CHUNK_SIZE];
-        }
+    for (int j = 0; j < CHUNK_SIZE; j++)
+    {
+      mBlocks[i][j] = new Block[CHUNK_SIZE];
     }
+  }
 }
 
 Chunk::~Chunk()
 {
-    // Block array deletion
-    for (int i = 0; i < CHUNK_SIZE; ++i)
+  // Block array deletion
+  for (int i = 0; i < CHUNK_SIZE; ++i)
+  {
+    for (int j = 0; j < CHUNK_SIZE; ++j)
     {
-        for (int j = 0; j < CHUNK_SIZE; ++j)
-        {
-            delete [] mBlocks[i][j];
-        }
-
-        delete [] mBlocks[i];
+      delete[] mBlocks[i][j];
     }
-    delete [] mBlocks;
+
+    delete[] mBlocks[i];
+  }
+  delete[] mBlocks;
 }
 
 bool Chunk::IsLoaded()
 {
-	return loaded;
+  return loaded;
 }
 
 void Chunk::load()
 {
-	//A stub for chunk loading code
-	loaded = true;//Assumes successful load to advance program test
+  // A stub for chunk loading code
+  loaded = true; // Assumes successful load to advance program test
 }
 
 bool Chunk::IsSetup()
 {
-	return setupd;
+  return setupd;
 }
 
 void Chunk::setup()
 {
-	//A stub for chunk loading code
-	setupd = true;//Assumes successful setup to advance program test
+  // A stub for chunk loading code
+  setupd = true; // Assumes successful setup to advance program test
 }
 
 bool Chunk::getRebuild()
 {
-	return rebuild;
+  return rebuild;
 }
 
 void Chunk::setRebuild()
 {
-	rebuild = true;
+  rebuild = true;
 }
 
 int Chunk::getIndex()
 {
-	return index;
+  return index;
 }
 
 void Chunk::setIndex(int ind)
 {
-	index = ind;
+  index = ind;
 }
 
-Vector3 * Chunk::getPosition()
+Vector3* Chunk::getPosition()
 {
-	return (new Vector3(X, Y, Z));
+  return (new Vector3(X, Y, Z));
 }
 
 void Chunk::Update(float /*dt*/)
 {
-	//A function stub for Chunk update code to be called from the Chunk Manager
+  // A function stub for Chunk update code to be called from the Chunk Manager
 }
 
 /*

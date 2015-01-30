@@ -3,22 +3,22 @@
 
 enum BlockType
 {
-	BlockTypeDefault
+  BlockTypeDefault
 };
 
 class Block
 {
-	public:
-		Block();
-		~Block();
+public:
+  Block();
+  ~Block();
 
-		bool IsActive();
-		void SetActive(bool active);
+  bool IsActive();
+  void SetActive(bool active);
 
-	private:
-		bool mActive;
+private:
+  bool mActive;
 
-//		BlockType mBlockType;
+  //		BlockType mBlockType;
 };
 
 #endif
