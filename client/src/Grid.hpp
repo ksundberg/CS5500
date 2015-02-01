@@ -4,6 +4,7 @@
 #include <vector>
 #include "wxwidget.h"
 #include "Point.hpp"
+#include "PerlinNoise.h"
 
 class Grid
 {
@@ -13,6 +14,7 @@ public:
   void set(int x, int y, const Point& v) { grid[idx(x, y)] = v; }
   int idx(int x, int y) { return x + y * width; }
 
+  void generateTerrain();
   void draw(wxDC&, int w, int h);
 
   std::vector<Point> grid;
