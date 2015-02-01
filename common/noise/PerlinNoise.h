@@ -34,8 +34,6 @@ public:
   std::shared_ptr<matrix1d> createMatrix1D(int width,
                                            int perlinDepth) const;
 
-  void smooth(std::shared_ptr<matrix2d> noiseMap);
-
 private:
   void initialize(std::default_random_engine generator);
   double dot(vector3d left, vector3d right) const;
