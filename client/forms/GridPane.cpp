@@ -12,7 +12,7 @@ const double COLOR_MAX = 255;
 const int GRID_TILES = 50;
 
 GridPane::GridPane(wxFrame* parent)
-  : wxPanel(parent), grid(new Grid(GRID_TILES, GRID_TILES))
+  : wxPanel(parent), grid(std::make_shared<Grid>(GRID_TILES, GRID_TILES))
 {
   PerlinNoise p;
 
