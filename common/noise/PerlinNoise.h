@@ -22,6 +22,7 @@ public:
   double turbulence1D(double x, int depth) const;
   double turbulence2D(double x, double y, int depth) const;
   double turbulence3D(double x, double y, double z, int depth) const;
+  void smooth(std::shared_ptr<matrix2d> noiseMap);
 
   std::shared_ptr<matrix3d> createMatrix3D(int width,
                                            int height,
@@ -30,8 +31,7 @@ public:
   std::shared_ptr<matrix2d> createMatrix2D(int width,
                                            int height,
                                            int perlinDepth) const;
-  std::shared_ptr<matrix1d> createMatrix1D(int width,
-                                           int perlinDepth) const;
+  std::shared_ptr<matrix1d> createMatrix1D(int width, int perlinDepth) const;
 
 private:
   void initialize(std::default_random_engine generator);

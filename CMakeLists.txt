@@ -6,10 +6,15 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/client
   ${CMAKE_CURRENT_SOURCE_DIR}/client/forms
   ${CMAKE_CURRENT_SOURCE_DIR}/client/src
-  ${CMAKE_CURRENT_SOURCE_DIR}/client/src/voxel_rendering
   ${CMAKE_CURRENT_SOURCE_DIR}/common
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/item
   ${CMAKE_CURRENT_SOURCE_DIR}/common/log
   ${CMAKE_CURRENT_SOURCE_DIR}/common/noise
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/player
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/util
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/materialContainer
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/Controls
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/log
   ${CMAKE_CURRENT_SOURCE_DIR}/test
@@ -29,30 +34,51 @@ set(client_srcs
   client/forms/GridPane.h
   client/src/Grid.hpp
   client/src/Grid.cpp
-  client/src/Point.hpp
-  client/src/voxel_rendering/block.cpp
-  client/src/voxel_rendering/block.h
-  client/src/voxel_rendering/vector3f.cpp
-  client/src/voxel_rendering/vector3f.h
-  client/src/voxel_rendering/chunk.cpp
-  client/src/voxel_rendering/chunk.h
-  client/src/voxel_rendering/chunkmanager.cpp
-  client/src/voxel_rendering/chunkmanager.h
   include/wxwidget.h
+
 )
 source_group("client" FILES ${client_srcs})
 
 set(common_srcs
   common/log/logger.h
   common/log/logger.cpp
+
+  common/noise/elevation.cpp
+  common/noise/elevation.h
   common/noise/PerlinNoise.cpp
   common/noise/PerlinNoise.h
-  common/inventory.h
-  common/inventory.cpp
-  common/item.h
-  common/item.cpp
-  common/itemgen.h
-  common/itemgen.cpp
+
+  common/player/inventory.h
+  common/player/inventory.cpp
+  common/player/Camera.cpp
+  common/player/Camera.h
+
+  common/item/item.h
+  common/item/item.cpp
+  common/item/itemgen.h
+  common/item/itemgen.cpp
+
+  common/util/vector3.cpp
+  common/util/vector3.h
+  common/util/Point.hpp
+
+  common/voxel/block.cpp
+  common/voxel/block.h
+  common/voxel/chunk.cpp
+  common/voxel/chunk.h
+  common/voxel/chunkmanager.cpp
+  common/voxel/chunkmanager.h
+  
+  common/materialContainer/MaterialContainer.cpp
+  common/materialContainer/MaterialContainer.h
+  
+  common/object.cpp
+  common/object.h
+  common/world.cpp
+  common/world.h
+  
+  common/Controls/DisplayHelper.cpp
+  common/Controls/DisplayHelper.h
 )
 source_group("common" FILES ${common_srcs})
 
