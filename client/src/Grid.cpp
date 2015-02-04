@@ -1,5 +1,7 @@
 #include "Grid.hpp"
 
+const double COLOR_MAX = 255;
+
 void Grid::generateTerrain()
 {
   PerlinNoise perlin;
