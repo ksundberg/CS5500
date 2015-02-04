@@ -1,5 +1,5 @@
-#include "World.h"
-#include "Object.h"
+#include "world.h"
+#include "object.h"
 #include <vector>
 #include <algorithm>
 Coordinate::Coordinate(int ax = 0, int ay = 0, int az = 0)

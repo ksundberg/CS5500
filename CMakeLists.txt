@@ -71,6 +71,8 @@ set(common_srcs
   
   common/object.cpp
   common/object.h
+  common/world.cpp
+  common/world.h
 )
 source_group("common" FILES ${common_srcs})
 

@@ -1,7 +1,7 @@
 #ifndef World_h
 #define World_h
 #include <vector>
-#include "Object.h"
+#include "object.h"
 
 // thread unsafe
 class Coordinate
