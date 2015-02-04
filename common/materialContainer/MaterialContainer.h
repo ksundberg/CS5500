@@ -32,14 +32,14 @@ public:
   static Material Diamond();
   static Material Stone();
   static Material Gold();
-  Material getMaterial(int x, int y, int z);
+  Material getMaterial();
 };
 
 template <class T> class MaterialContainer
 {
 protected:
   // temp PerlinNoise until intergration with project PerlinNoise
-  double PerlinNoise(int x, int y, int z, double smoothness)
+  double PerlinNoise()
   {
     return (static_cast<double>(rand()) / static_cast<double>(RAND_MAX));
   }
@@ -98,18 +98,18 @@ public:
   double getRarity() { return 1 - freq; };
 
   // Get the material type of a block at an (x,y,z) coordinate
-  virtual Material getMaterial(int x, int y, int z)
+  virtual Material getMaterial()
   {
-    double noise = PerlinNoise(x, y, z, smoothness);
+    double noise = PerlinNoise();
     T content = getElement(noise);
-    return content.getMaterial(x, y, z);
+    return content.getMaterial();
   }
 };
 
 class Ground : public MaterialContainer<Material>
 {
 public:
-  Material getMaterial(int x, int y, int z);
+  Material getMaterial();
   static Ground sand();
   static Ground oasis();
 

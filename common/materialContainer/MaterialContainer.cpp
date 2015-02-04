@@ -160,9 +160,9 @@ Ground Ground::sandySoil()
   return g;
 }
 
-Material Ground::getMaterial(int x, int y, int z)
+Material Ground::getMaterial()
 {
-  double noise = PerlinNoise(x, y, z, smoothness);
+  double noise = PerlinNoise();
   return getElement(noise);
 }
 
@@ -199,7 +199,7 @@ Material Material::Gold()
   return Material("Gold", .1);
 }
 
-Material Material::getMaterial(int x, int y, int z)
+Material Material::getMaterial()
 {
   return Material(*this);
 }

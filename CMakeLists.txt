@@ -13,6 +13,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/common/player
   ${CMAKE_CURRENT_SOURCE_DIR}/common/util
   ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/materialContainer
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/log
   ${CMAKE_CURRENT_SOURCE_DIR}/test
@@ -62,6 +63,9 @@ set(common_srcs
   common/voxel/chunk.h
   common/voxel/chunkmanager.cpp
   common/voxel/chunkmanager.h
+  
+  common/materialContainer/MaterialContainer.cpp
+  common/materialContainer/MaterialContainer.h
 )
 source_group("common" FILES ${common_srcs})
 
