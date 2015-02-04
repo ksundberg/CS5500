@@ -1,11 +1,11 @@
 #include "Camera.h"
 
-Camera::Camera(float x, float y)
+Camera::Camera(float x, float y, float z)
 {
   CameraPosition.x = x;
   CameraPosition.y = y;
-  CameraPosition.z = GetHeight(x, y);
-  CameraRotation = Vector3D(0.0, 0.0, 0.0);
+  CameraPosition.z = z;
+  CameraRotation = Vector3(0.0, 0.0, 0.0);
 }
 
 void Camera::RotateCamera(Axis axis, float angle)
@@ -24,7 +24,3 @@ void Camera::RotateCamera(Axis axis, float angle)
   }
 }
 
-float Camera::GetHeight(float x, float y)
-{
-  return OtherGroupsClass.GetHeight(x, y);
-}

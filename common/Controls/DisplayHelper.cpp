@@ -1,3 +1,4 @@
+#include <chunkmanager.h>
 #include "DisplayHelper.h"
 
 DisplayHelper::DisplayHelper()
@@ -5,8 +6,8 @@ DisplayHelper::DisplayHelper()
 }
 
 void DisplayHelper::Render(float dt,
-                           Vector3D cameraPosisiton,
-                           Vector3D cameraRotation)
+                           Vector3 cameraPosisiton,
+                           Vector3 cameraRotation)
 {
   auto chunkManager = ChunkManager();
   chunkManager.Update(dt, cameraPosisiton, cameraRotation);
