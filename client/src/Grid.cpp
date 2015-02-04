@@ -5,8 +5,7 @@ const double COLOR_MAX = 255;
 void Grid::generateTerrain()
 {
   PerlinNoise perlin;
-  std::shared_ptr<matrix2d> noiseMap =
-    perlin.createMatrix2D(width, height, 5);
+  std::shared_ptr<matrix2d> noiseMap = perlin.createMatrix2D(width, height, 5);
 
   perlin.smooth(noiseMap);
 
