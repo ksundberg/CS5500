@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
+#include <ctime>
 #include "item.h"
 #include "inventory.h"
 #include "itemgen.h"

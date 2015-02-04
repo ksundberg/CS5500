@@ -30,8 +30,7 @@ public:
   std::shared_ptr<matrix2d> createMatrix2D(int width,
                                            int height,
                                            int perlinDepth) const;
-  std::shared_ptr<matrix1d> createMatrix1D(int width,
-                                           int perlinDepth) const;
+  std::shared_ptr<matrix1d> createMatrix1D(int width, int perlinDepth) const;
 
 private:
   void initialize(std::default_random_engine generator);
