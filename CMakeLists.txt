@@ -13,6 +13,8 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/common/player
   ${CMAKE_CURRENT_SOURCE_DIR}/common/util
   ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/materialContainer
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/Controls
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/log
   ${CMAKE_CURRENT_SOURCE_DIR}/test
@@ -41,11 +43,15 @@ set(common_srcs
   common/log/logger.h
   common/log/logger.cpp
 
+  common/noise/elevation.cpp
+  common/noise/elevation.h
   common/noise/PerlinNoise.cpp
   common/noise/PerlinNoise.h
 
   common/player/inventory.h
   common/player/inventory.cpp
+  common/player/Camera.cpp
+  common/player/Camera.h
 
   common/item/item.h
   common/item/item.cpp
@@ -62,6 +68,17 @@ set(common_srcs
   common/voxel/chunk.h
   common/voxel/chunkmanager.cpp
   common/voxel/chunkmanager.h
+  
+  common/materialContainer/MaterialContainer.cpp
+  common/materialContainer/MaterialContainer.h
+  
+  common/object.cpp
+  common/object.h
+  common/world.cpp
+  common/world.h
+  
+  common/Controls/DisplayHelper.cpp
+  common/Controls/DisplayHelper.h
 )
 source_group("common" FILES ${common_srcs})
 

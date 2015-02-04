@@ -7,7 +7,6 @@ BEGIN_EVENT_TABLE(GridPane, wxPanel)
 EVT_PAINT(GridPane::PaintEvent)
 END_EVENT_TABLE()
 
-const double COLOR_MAX = 255;
 const int GRID_TILES = 50;
 
 GridPane::GridPane(wxFrame* parent)

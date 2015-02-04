@@ -1,6 +1,7 @@
-#include "Object.h"
+#include "object.h"
 #include <string>
 #include <vector>
+#include <stdexcept>
 using namespace std;
 
 // TemplateObject functions
@@ -66,25 +67,26 @@ TemplateObjectList* TemplateObjectList::getInstance()
 
 int TemplateObjectList::getSize() const
 {
-  return list.size;
+  return list.size();
 }
 int TemplateObjectList::addTemplate(TemplateObject temp)
 {
   list.push_back(temp);
-  return list.size - 1;
+  return list.size() - 1;
 }
-const TemplateObject TemplateObjectList::getTemplate(int i) const
+const TemplateObject TemplateObjectList::getTemplate(unsigned int i) const
 {
-  if (i < list.size && i >= 0)
+  if (i < list.size())
     return list[i];
   else
   {
-    return nullptr;
+    throw std::invalid_argument(
+      "Error: index out of bounds when accessing the ObjectList.");
   }
 }
 int TemplateObjectList::findTemplate(string name) const
 {
-  for (int i = 0; i < list.size; i++)
+  for (unsigned int i = 0; i < list.size(); i++)
   {
     if (name == list[i].getName()) return i;
   }
