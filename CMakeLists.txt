@@ -42,6 +42,8 @@ set(common_srcs
   common/log/logger.h
   common/log/logger.cpp
 
+  common/noise/elevation.cpp
+  common/noise/elevation.h
   common/noise/PerlinNoise.cpp
   common/noise/PerlinNoise.h
 
@@ -66,6 +68,9 @@ set(common_srcs
   
   common/materialContainer/MaterialContainer.cpp
   common/materialContainer/MaterialContainer.h
+  
+  common/object.cpp
+  common/object.h
 )
 source_group("common" FILES ${common_srcs})
 

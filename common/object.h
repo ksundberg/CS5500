@@ -33,7 +33,7 @@ public:
   // Must be modifiable, so we need to get the instance by pointer
   static TemplateObjectList* getInstance();
   int addTemplate(TemplateObject);
-  const TemplateObject getTemplate(int) const;
+  const TemplateObject getTemplate(unsigned int) const;
   int findTemplate(std::string) const;
   int getSize() const;
 
