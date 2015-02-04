@@ -32,8 +32,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   menuHelp->Append(wxID_ABOUT);
 
   wxMenu* menuTools = new wxMenu;
-  menuTools->Append(ID_Inventory,
-                    "&Inventory...\tCtrl-I");
+  menuTools->Append(ID_Inventory, "&Inventory...\tCtrl-I");
 
   wxMenuBar* menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
@@ -67,7 +66,7 @@ void MainWindow::OnInventory(wxCommandEvent&)
   // Experiment with inventory and items.
   auto items = ItemGen::genItems().getAllItems();
   LOG(DEBUG) << "Inventory:";
-  for(auto i: items)
+  for (auto i : items)
   {
     LOG(DEBUG) << "Name: " << i.getName();
     LOG(DEBUG) << "Count: " << i.getCount();
