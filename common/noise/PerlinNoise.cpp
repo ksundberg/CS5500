@@ -13,7 +13,6 @@ PerlinNoise::PerlinNoise(uint seed)
 
 PerlinNoise::PerlinNoise()
 {
-
   std::random_device rd;
   std::default_random_engine generator(rd());
   initialize(generator);
@@ -300,4 +299,31 @@ double PerlinNoise::noise(const vector3d& p) const
   sum += knot(fi + 1, fj + 1, fk + 1, v);
 
   return sum;
+}
+
+//average heights of neighboring points
+void PerlinNoise::smooth(std::shared_ptr<matrix2d> noiseMap)
+{
+  auto wrap_under = [](int index, int max){ return index==0 ? max-1 : i-1; };
+  auto wrap_over = [](int index, int max){ return index==max-1 ? 0 : i+1; };
+
+  int width = noiseMap->size();
+  int height = noiseMap->[0].size();
+  for (int i = 0; i < width; i++)
+  {
+    for (int j = 0; j < height; j++)
+    {
+      double new_height = 0.0;
+      new_height += noiseMap->[i][j] / 4;
+      new_height += noiseMap->[wrap_under(i, width)][j] / 8;
+      new_height += noiseMap->[wrap_over(i, width)][j] / 8;
+      new_height += noiseMap->[i][wrap_under(j, height)] / 8;
+      new_height += noiseMap->[i][wrap_over(j, height)] / 8;
+      new_height += noiseMap->[wrap_under(i, width)][wrap_under(j, height)] / 16;
+      new_height += noiseMap->[wrap_under(i, width)][wrap_over(j, height)] / 16;
+      new_height += noiseMap->[wrap_over(i, width)][wrap_under(j, height)] / 16;
+      new_height += noiseMap->[wrap_over(i, width)][wrap_over(j, height)] / 16;
+      noiseMap->[i][j] = new_height;
+    }
+  }
 }
