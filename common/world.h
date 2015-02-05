@@ -12,7 +12,7 @@ public:
   Coordinate& operator-=(const Coordinate&);
   const Coordinate operator-(const Coordinate&) const;
   int x, y, z;
-  Coordinate(int, int, int);
+  Coordinate(int = 0, int = 0, int = 0);
 };
 
 // thread unsafe

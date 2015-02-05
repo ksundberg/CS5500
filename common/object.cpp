@@ -6,12 +6,8 @@ using namespace std;
 
 // TemplateObject functions
 
-TemplateObject::TemplateObject(string nam = "void",
-                               int hp = 0,
-                               int str = 0,
-                               int wei = 0,
-                               bool isFire = 0,
-                               bool isWet = 0)
+TemplateObject::TemplateObject(
+  string nam, int hp, int str, int wei, bool isFire, bool isWet)
 {
   name = nam;
   baseHp = hp;

@@ -76,7 +76,7 @@ public:
     , contentFreq(MC.contentFreq)
   {
   }
-  MaterialContainer& operator=(const MaterialContainer& mc) { return *this; }
+  MaterialContainer& operator=(const MaterialContainer&) { return *this; }
 
   // decides what element to return based on noise input
   T getElement(double noise)

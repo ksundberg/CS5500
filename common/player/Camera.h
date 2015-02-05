@@ -14,7 +14,6 @@ public:
 
 private:
   void RotateCamera(Axis axis, float angle);
-  float dt;
   Vector3 CameraPosition;
   Vector3 CameraRotation;
 };
