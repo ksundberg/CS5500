@@ -12,7 +12,8 @@ using namespace std;
 class TemplateObject
 {
 public:
-  TemplateObject(std::string, int, int, int, bool, bool);
+  TemplateObject(
+    std::string = "void", int = 0, int = 0, int = 0, bool = 0, bool = 0);
   std::string getName() const;
   int getHp() const;
   int getStrength() const;

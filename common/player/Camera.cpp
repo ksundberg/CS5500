@@ -23,4 +23,3 @@ void Camera::RotateCamera(Axis axis, float angle)
     break;
   }
 }
-
