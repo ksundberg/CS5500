@@ -2,9 +2,8 @@
 #include "object.h"
 #include <vector>
 #include <algorithm>
-Coordinate::Coordinate(int ax = 0, int ay = 0, int az = 0)
+Coordinate::Coordinate(int ax, int ay, int az) : x(ax), y(ay), z(az)
 {
-  x = ax, y = ay, z = az;
 }
 Coordinate& Coordinate::operator+=(const Coordinate& right)
 {
@@ -34,17 +33,14 @@ const Coordinate Coordinate::operator-(const Coordinate& right) const
 }
 // z is up and down
 // add paralell fill
-World::World(int tempX = 1, int tempY = 1, int tempZ = 1)
+World::World(int X, int Y, int Z) : sizeX(X), sizeY(Y), sizeZ(Z)
 {
-  sizeX = tempX;
-  sizeY = tempY;
-  sizeZ = tempZ;
   std::vector<Object> list;
-  list.resize(tempZ);
+  list.resize(sizeZ);
   std::vector<std::vector<Object>> listOList;
-  listOList.resize(tempY);
+  listOList.resize(Y);
   std::vector<std::vector<std::vector<Object>>> listOListOList;
-  listOListOList.resize(tempX);
+  listOListOList.resize(X);
   // std::fill(list.begin(),list.end(), temp.getTemplate(0));
   std::fill(listOList.begin(), listOList.end(), list);
   std::fill(listOListOList.begin(), listOListOList.end(), listOList);
