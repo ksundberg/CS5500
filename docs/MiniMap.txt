@@ -1,0 +1,20 @@
+Colter Tucker
+Cameron Edwards
+
+Reduce proposal
+MiniMap
+
+	For our implementation of reduction we plan to create a miniature map in the corner of the screen. This mini-map will be a birds eye view of a predefined portion of the map. The characters will be indicated by dots or arrows and show position on Torus-World. This will help the active player to keep track of the many things that are happening within the game. 
+
+	We feel that such an addition is needed as a GUI that will be visible throughout gameplay. We believe that the inclusion of the mini map feature will drastically enhance gameplay.
+
+	This is reduction because we are taking the world, and condensing it to a smaller representation with fewer blocks as well as projecting three dimensional space onto two dimensions. We will take a chunk of tiles, apply an average function to the chunk, and return one unit, which will be displayed as one block on the minimap (minimap blocks will be drawn much smaller than world blocks). This process will be repeated on all chunks to obtain the entire minimap. The chunks will be squares of size m x m, where mis called the “resolution”. m will likely be 3 ≤ m ≤ 20. So, if the minimap covers n x n tiles, with resolution m, the minimap will contain (n/m)^2 = n^2/m^2 units. This means O(n^2) time, where n is the length of the area covered by the minimap. It is better than O(n^2 log^2(n)) because we are not reducing all the way to one item; instead, we apply our function to each chunk once and only once, to get a slightly smaller subset. This problem is embarrassingly parallel. Since chunks do not rely on other chunk implementations, we can avoid data races and reduce them separately and simultaneously.
+
+	We will write a new class MiniMap. It will have a dependency on the Grid class. There is already code for the “grid”, which is implemented as an array of blocks. We will write our reduce function to accept an array of blocks (representing a single chunk) as a parameter, and returning a single block. This function will be called on every chunk within the bounds of n.
+
+	Assume that subset A is the entirety of the chunks of tiles in the map. Also assume that subset B is the chunk of tiles that we plan to send to function(s) F. Then A is reducible to B under F if 
+∃f∈F . ∀x∈ℕ . x∈A⇔f(x)∈B
+Thus, 
+	A ≤F B.
+
+	This definition above concludes that the subset A can be reduced to subset B iff the input of the function is satisfied. This implies that each instance in A can be reduced in constant time into B. However, because reduction is dependent on the input size(n) squared, this problem is polynomial time (A^2)/(B^2). Under the assumption that P≠NP, our problem fits into Pas shown in the diagram below. Also see the diagram below for a representation of P as compared to NP and compared to the hypothetical P=NP case called NP-Complete.
