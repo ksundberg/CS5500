@@ -135,7 +135,7 @@ class Biome : public MaterialContainer<Ground>
 public:
   static Biome sandyDesert();
   static Biome mountain();
-  static Biome fertalFarmland();
+  static Biome fertileFarmland();
   Biome(std::string name,
         std::vector<Ground> contents,
         double freq,
