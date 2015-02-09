@@ -1,9 +1,9 @@
-//
+//                                                                       
 // MaterialContainer.cpp
 // created by David Griffin and Soren Rasmussen
 // 1/24/2015
 // for project: CS5500
-//
+//   
 
 #include "MaterialContainer.h"
 #include <vector>
@@ -14,8 +14,8 @@ Biosphere Biosphere::getBasicBiosphere()
   vec.push_back(Biome::sandyDesert());
   vec.push_back(Biome::mountain());
   vec.push_back(Biome::fertileFarmland());
-  std::string name = "Biosphere";
-  Biosphere bs(name, vec, 1.0, 50.0);
+  std::string  name="Biosphere";
+  Biosphere bs(name, vec,1.0);
   return bs;
 }
 
@@ -26,8 +26,8 @@ Biome Biome::sandyDesert()
   vec.push_back(Ground::sand());
   vec.push_back(Ground::oasis());
 
-  std::string name = "sandyDesert";
-  Biome bi(name, vec, .33, 10.0);
+  std::string  name="sandyDesert";
+  Biome bi(name, vec,.33);
   return bi;
 }
 
@@ -39,8 +39,8 @@ Biome Biome::mountain()
   vec.push_back(Ground::goldDeposits());
   vec.push_back(Ground::ironDeposits());
 
-  std::string name = "Mountain";
-  Biome bi(name, vec, .33, 10.0);
+  std::string  name="Mountain";
+  Biome bi(name, vec,.33);
   return bi;
 }
 
@@ -51,8 +51,8 @@ Biome Biome::fertileFarmland()
   vec.push_back(Ground::rockySoil());
   vec.push_back(Ground::sandySoil());
 
-  std::string name = "fertileFarmland";
-  Biome bi(name, vec, .33, 10.0);
+  std::string  name="fertileFarmland";
+  Biome bi(name, vec,.33);
   return bi;
 }
 
@@ -61,8 +61,8 @@ Ground Ground::sand()
   std::vector<Material> vec;
   vec.push_back(Material::Sand());
 
-  std::string name = "sand";
-  Ground g(name, vec, .3, 5.0);
+  std::string  name="sand";
+  Ground g(name, vec,.3);
   return g;
 }
 
@@ -70,11 +70,11 @@ Ground Ground::oasis()
 {
   std::vector<Material> vec;
   vec.push_back(Material::Sand());
-
+	
   vec.push_back(Material::Soil());
 
-  std::string name = "oasis";
-  Ground g(name, vec, .05, 5.0);
+  std::string  name="oasis";
+  Ground g(name, vec,.05);
   return g;
 }
 
@@ -84,8 +84,8 @@ Ground Ground::ironDeposits()
   vec.push_back(Material::Stone());
   vec.push_back(Material::Iron());
 
-  std::string name = "ironDeposits";
-  Ground g(name, vec, .2, 5.0);
+  std::string  name="ironDeposits";
+  Ground g(name, vec,.2);
   return g;
 }
 
@@ -96,8 +96,8 @@ Ground Ground::goldDeposits()
   vec.push_back(Material::Gold());
   vec.push_back(Material::Iron());
 
-  std::string name = "goldDeposits";
-  Ground g(name, vec, .1, 5.0);
+  std::string  name="goldDeposits";
+  Ground g(name, vec,.1);
   return g;
 }
 
@@ -108,8 +108,8 @@ Ground Ground::diamondDeposits()
   vec.push_back(Material::Diamond());
   vec.push_back(Material::Coal());
 
-  std::string name = "diamondDeposits";
-  Ground g(name, vec, .03, 5.0);
+  std::string  name="diamondDeposits";
+  Ground g(name, vec,.03);
   return g;
 }
 
@@ -122,8 +122,8 @@ Ground Ground::noOre()
   vec.push_back(Material::Gravel());
   vec.push_back(Material::Sand());
 
-  std::string name = "noOre";
-  Ground g(name, vec, .5, 10.0);
+  std::string  name="noOre";
+  Ground g(name, vec,.5);
   return g;
 }
 
@@ -132,8 +132,8 @@ Ground Ground::soil()
   std::vector<Material> vec;
   vec.push_back(Material::Soil());
 
-  std::string name = "soil";
-  Ground g(name, vec, .5, 10.0);
+  std::string  name="soil";
+  Ground g(name, vec,.5);
   return g;
 }
 
@@ -144,8 +144,8 @@ Ground Ground::rockySoil()
   vec.push_back(Material::Soil());
   vec.push_back(Material::Gravel());
 
-  std::string name = "rockySoil";
-  Ground g(name, vec, .2, 10.0);
+  std::string  name="rockySoil";
+  Ground g(name, vec,.2);
   return g;
 }
 
@@ -155,51 +155,61 @@ Ground Ground::sandySoil()
   vec.push_back(Material::Sand());
   vec.push_back(Material::Soil());
 
-  std::string name = "sandySoil";
-  Ground g(name, vec, .2, 10.0);
+  std::string  name="sandySoil";
+  Ground g(name, vec,.2);
   return g;
 }
 
-Material Ground::getMaterial()
+
+Material Ground::getMaterial(int x, int y, int z)
 {
-  double noise = PerlinNoise();
-  return getElement(noise);
+  double noise = PerlinNoise(x, y, z,smoothness);
+  return getElement(noise);	
 }
 
 Material Material::Coal()
 {
-  return Material("Coal", .2);
+  return Material("Coal",.2);
 }
 Material Material::Iron()
 {
-  return Material("Iron", .1);
+  return Material("Iron",.1);
 }
 Material Material::Soil()
 {
-  return Material("Soil", 1.0);
+  return Material("Soil",1.0);
 }
 Material Material::Gravel()
 {
-  return Material("Gravel", .2);
+  return Material("Gravel",.2);
 }
 Material Material::Sand()
 {
-  return Material("Sand", .7);
+  return Material("Sand",.7);
 }
 Material Material::Diamond()
 {
-  return Material("Diamond", .05);
+  return Material("Diamond",.05);
 }
 Material Material::Stone()
 {
-  return Material("Stone", .6);
+  return Material("Stone",.6);
 }
 Material Material::Gold()
 {
-  return Material("Gold", .1);
+  return Material("Gold",.1);
 }
 
-Material Material::getMaterial()
-{
+Material Material::getMaterial(int x,int y,int z){
   return Material(*this);
 }
+
+
+static const double GROUND_OFFSET=2e5;
+static const double GROUND_SMOOTHNESS=2;
+
+static const double BIOME_OFFSET=1e5;
+static const double BIOME_SMOOTHNESS=1e-1;
+
+static const double BIOSPHERE_OFFSET=0;
+static const double BIOSPHERE_SMOOTHNESS=1e-3;
