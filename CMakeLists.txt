@@ -76,6 +76,8 @@ set(common_srcs
   common/object.h
   common/world.cpp
   common/world.h
+  common/dungeon.cpp
+  common/dungeon.h
   
   common/Controls/DisplayHelper.cpp
   common/Controls/DisplayHelper.h
@@ -89,6 +91,7 @@ set(test_srcs
   test/unit/inventory_test.cpp
   test/unit/chunkmanager_test.cpp
   test/unit/vector3f_test.cpp
+  test/unit/dungeon_test.cpp
 )
 source_group("test" FILES ${test_srcs})
 

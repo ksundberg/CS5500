@@ -1,10 +1,10 @@
 #include <string>
 #include <vector>
 #include <catch.hpp>
-#include <item.h>
-#include <inventory.h>
-#include <itemgen.h>
-#include <logger.h>
+#include "item.h"
+#include "inventory.h"
+#include "itemgen.h"
+#include "logger.h"
 
 SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
 {
