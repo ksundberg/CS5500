@@ -9,7 +9,6 @@
 // {
 //   MainWindow* frame;
 //   GridPane* gridPane;
-//   wxGLCanvas* canvas;
 
 // public:
 //   virtual bool OnInit();
@@ -26,9 +25,6 @@
 
 //   gridPane = new GridPane((wxFrame*)frame);
 //   sizer->Add(gridPane, 1, wxEXPAND);
-
-//   canvas = new TorusGLCanvas((wxFrame*)frame);
-//   sizer->Add(canvas, 1, wxEXPAND);
 
 //   frame->SetSizer(sizer);
 //   frame->SetAutoLayout(true);

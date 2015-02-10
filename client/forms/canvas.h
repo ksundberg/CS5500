@@ -1,6 +1,6 @@
 #ifndef _CANVAS_HEADER_
 #define _CANVAS_HEADER_
-#include <wx/wx.h>
+#include <wxwidget.h>
 #include <wx/glcanvas.h>
 
 // the rendering context used by all GL canvases
@@ -50,8 +50,6 @@ public:
 
 private:
   void OnClose(wxCommandEvent& event);
-  void OnNewWindow(wxCommandEvent& event);
-  void OnNewStereoWindow(wxCommandEvent& event);
 
   wxDECLARE_EVENT_TABLE();
 };
@@ -76,9 +74,5 @@ private:
   wxDECLARE_EVENT_TABLE();
 };
 
-enum
-{
-  NEW_STEREO_WINDOW = wxID_HIGHEST + 1
-};
 
 #endif

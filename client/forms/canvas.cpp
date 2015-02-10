@@ -1,5 +1,3 @@
-#include <wx/wxprec.h>
-
 #ifdef __BORLANDC__
 #pragma hdrstop
 #endif
@@ -455,8 +453,7 @@ wxString glGetwxString(GLenum name)
 // MyFrame: main application window
 // ----------------------------------------------------------------------------
 
-wxBEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_MENU(wxID_NEW, MyFrame::OnNewWindow)
-  EVT_MENU(NEW_STEREO_WINDOW, MyFrame::OnNewStereoWindow)
+wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
   EVT_MENU(wxID_CLOSE, MyFrame::OnClose) wxEND_EVENT_TABLE()
 
   MyFrame::MyFrame(bool stereoWindow)
@@ -468,8 +465,6 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_MENU(wxID_NEW, MyFrame::OnNewWindow)
 
   // Make a menubar
   wxMenu* menu = new wxMenu;
-  menu->Append(wxID_NEW);
-  menu->Append(NEW_STEREO_WINDOW, "New Stereo Window");
   menu->AppendSeparator();
   menu->Append(wxID_CLOSE);
   wxMenuBar* menuBar = new wxMenuBar;
@@ -487,28 +482,10 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_MENU(wxID_NEW, MyFrame::OnNewWindow)
   wxLogStatus("Double-buffered display %s supported",
               wxGLCanvas::IsDisplaySupported(attribs) ? "is" : "not");
 
-  if (stereoWindow)
-  {
-    const wxString vendor = glGetwxString(GL_VENDOR).Lower();
-    const wxString renderer = glGetwxString(GL_RENDERER).Lower();
-    if (vendor.find("nvidia") != wxString::npos &&
-        renderer.find("quadro") == wxString::npos)
-      ShowFullScreen(true);
-  }
 }
 
 void MyFrame::OnClose(wxCommandEvent& WXUNUSED(event))
 {
   // true is to force the frame to close
   Close(true);
-}
-
-void MyFrame::OnNewWindow(wxCommandEvent& WXUNUSED(event))
-{
-  new MyFrame();
-}
-
-void MyFrame::OnNewStereoWindow(wxCommandEvent& WXUNUSED(event))
-{
-  new MyFrame(true);
 }
