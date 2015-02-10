@@ -109,16 +109,14 @@ add_library(common STATIC ${common_srcs} ${TBB_LIBRARIES})
 
 # OpenGL
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
-include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
+include_directories(${OPENGL_INCLUDE_DIRS})
 
 add_executable(torus ${client_srcs})
 add_executable(torus_test ${test_srcs})
 
 target_link_libraries(torus common ${wxWidgets_LIBRARIES} 
                                    ${TBB_LIBRARIES} 
-                                   ${OPENGL_LIBRARIES} 
-                                   ${GLUT_INCLUDE_DIRS})
+                                   ${OPENGL_LIBRARIES})
 				   
 target_link_libraries(torus_test common ${TBB_LIBRARIES})
 
