@@ -29,7 +29,7 @@ public:
 
   // Returns the shared context used by all frames and sets it as current for
   // the given canvas.
-  TestGLContext& GetContext(wxGLCanvas* canvas, bool useStereo);
+  TestGLContext& GetContext(wxGLCanvas* canvas);
 
   // virtual wxApp methods
   virtual bool OnInit();
@@ -69,7 +69,6 @@ private:
   float m_xangle, m_yangle;
 
   wxTimer m_spinTimer;
-  bool m_useStereo, m_stereoWarningAlreadyDisplayed;
 
   wxDECLARE_EVENT_TABLE();
 };

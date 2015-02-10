@@ -1,3 +1,5 @@
+#include "logger.h"
+#include "canvas.h"
 #ifdef __BORLANDC__
 #pragma hdrstop
 #endif
@@ -10,11 +12,6 @@
 #error "OpenGL required: set wxUSE_GLCANVAS to 1 and rebuild the library"
 #endif
 
-#include "canvas.h"
-
-// ----------------------------------------------------------------------------
-// constants
-// ----------------------------------------------------------------------------
 
 // control ids
 enum
@@ -55,42 +52,14 @@ static wxImage DrawDice(int size, unsigned num)
 {
   wxASSERT_MSG(num >= 1 && num <= 6, wxT("invalid dice index"));
 
-  const int dot = size / 16;     // radius of a single dot
-  const int gap = 5 * size / 32; // gap between dots
-
   wxBitmap bmp(size, size);
   wxMemoryDC dc;
   dc.SelectObject(bmp);
   dc.SetBackground(*wxWHITE_BRUSH);
   dc.Clear();
-  dc.SetBrush(*wxBLACK_BRUSH);
+  dc.SetBrush(*wxCYAN_BRUSH);
+  dc.DrawRectangle(wxRect(0, 0, size/2, size/2));
 
-  // the upper left and lower right points
-  if (num != 1)
-  {
-    dc.DrawCircle(gap + dot, gap + dot, dot);
-    dc.DrawCircle(size - gap - dot, size - gap - dot, dot);
-  }
-
-  // draw the central point for odd dices
-  if (num % 2)
-  {
-    dc.DrawCircle(size / 2, size / 2, dot);
-  }
-
-  // the upper right and lower left points
-  if (num > 3)
-  {
-    dc.DrawCircle(size - gap - dot, gap + dot, dot);
-    dc.DrawCircle(gap + dot, size - gap - dot, dot);
-  }
-
-  // finally those 2 are only for the last dice
-  if (num == 6)
-  {
-    dc.DrawCircle(gap + dot, size / 2, dot);
-    dc.DrawCircle(size - gap - dot, size / 2, dot);
-  }
 
   dc.SelectObject(wxNullBitmap);
 
@@ -270,34 +239,20 @@ bool MyApp::OnInit()
 int MyApp::OnExit()
 {
   delete m_glContext;
-  delete m_glStereoContext;
 
   return wxApp::OnExit();
 }
 
-TestGLContext& MyApp::GetContext(wxGLCanvas* canvas, bool useStereo)
+TestGLContext& MyApp::GetContext(wxGLCanvas* canvas)
 {
   TestGLContext* glContext;
-  if (useStereo)
+  if (!m_glContext)
   {
-    if (!m_glStereoContext)
-    {
-      // Create the OpenGL context for the first stereo window which needs it:
-      // subsequently created windows will all share the same context.
-      m_glStereoContext = new TestGLContext(canvas);
-    }
-    glContext = m_glStereoContext;
+    // Create the OpenGL context for the first mono window which needs it:
+    // subsequently created windows will all share the same context.
+    m_glContext = new TestGLContext(canvas);
   }
-  else
-  {
-    if (!m_glContext)
-    {
-      // Create the OpenGL context for the first mono window which needs it:
-      // subsequently created windows will all share the same context.
-      m_glContext = new TestGLContext(canvas);
-    }
-    glContext = m_glContext;
-  }
+  glContext = m_glContext;
 
   glContext->SetCurrent(*canvas);
 
@@ -325,19 +280,8 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
                wxFULL_REPAINT_ON_RESIZE),
     m_xangle(30.0),
     m_yangle(30.0),
-    m_spinTimer(this, SpinTimer),
-    m_useStereo(false),
-    m_stereoWarningAlreadyDisplayed(false)
+    m_spinTimer(this, SpinTimer)
 {
-  if (attribList)
-  {
-    int i = 0;
-    while (attribList[i] != 0)
-    {
-      if (attribList[i] == WX_GL_STEREO) m_useStereo = true;
-      ++i;
-    }
-  }
 }
 
 void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
@@ -353,36 +297,11 @@ void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
   // is wrong when next another canvas is repainted.
   const wxSize ClientSize = GetClientSize();
 
-  TestGLContext& canvas = wxGetApp().GetContext(this, m_useStereo);
+  TestGLContext& canvas = wxGetApp().GetContext(this);
   glViewport(0, 0, ClientSize.x, ClientSize.y);
 
   // Render the graphics and swap the buffers.
-  GLboolean quadStereoSupported;
-  glGetBooleanv(GL_STEREO, &quadStereoSupported);
-  if (quadStereoSupported)
-  {
-    glDrawBuffer(GL_BACK_LEFT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-0.47f, 0.53f, -0.5f, 0.5f, 1.0f, 3.0f);
-    canvas.DrawRotatedCube(m_xangle, m_yangle);
-    CheckGLError();
-    glDrawBuffer(GL_BACK_RIGHT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-0.53f, 0.47f, -0.5f, 0.5f, 1.0f, 3.0f);
-    canvas.DrawRotatedCube(m_xangle, m_yangle);
-    CheckGLError();
-  }
-  else
-  {
-    canvas.DrawRotatedCube(m_xangle, m_yangle);
-    if (m_useStereo && !m_stereoWarningAlreadyDisplayed)
-    {
-      m_stereoWarningAlreadyDisplayed = true;
-      wxLogError("Stereo not supported by the graphics card.");
-    }
-  }
+  canvas.DrawRotatedCube(m_xangle, m_yangle);
   SwapBuffers();
 }
 
