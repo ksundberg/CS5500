@@ -3,33 +3,38 @@
 #include "GridPane.h"
 
 #include "logger.h"
+#include "canvas.h"
 
-class DwFort : public wxApp
-{
-  MainWindow* frame;
-  GridPane* gridPane;
+// class DwFort : public wxApp
+// {
+//   MainWindow* frame;
+//   GridPane* gridPane;
+//   wxGLCanvas* canvas;
 
-public:
-  virtual bool OnInit();
-};
+// public:
+//   virtual bool OnInit();
+// };
 
-bool DwFort::OnInit()
-{
-  init_log(argc, argv);
-  LOG(INFO) << "Initializing";
+// bool DwFort::OnInit()
+// {
+//   init_log(argc, argv);
+//   LOG(INFO) << "Initializing";
 
-  frame = new MainWindow("Hello World", wxPoint(50, 50), wxSize(300, 400));
+//   frame = new MainWindow("Hello World", wxPoint(50, 50), wxSize(300, 400));
 
-  wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+//   wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 
-  gridPane = new GridPane((wxFrame*)frame);
-  sizer->Add(gridPane, 1, wxEXPAND);
+//   gridPane = new GridPane((wxFrame*)frame);
+//   sizer->Add(gridPane, 1, wxEXPAND);
 
-  frame->SetSizer(sizer);
-  frame->SetAutoLayout(true);
+//   canvas = new TorusGLCanvas((wxFrame*)frame);
+//   sizer->Add(canvas, 1, wxEXPAND);
 
-  frame->Show();
-  return true;
-}
+//   frame->SetSizer(sizer);
+//   frame->SetAutoLayout(true);
 
-wxIMPLEMENT_APP(DwFort);
+//   frame->Show();
+//   return true;
+// }
+
+// wxIMPLEMENT_APP(DwFort);
