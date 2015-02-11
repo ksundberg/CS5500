@@ -1,6 +1,6 @@
 #include "worldFactory.h"
 
-WorldFactory::WorldFactory(int tempMinElevation=0, int tempMaxElevation=1)
+WorldFactory::WorldFactory(int tempMinElevation, int tempMaxElevation)
 {
   minElevation=tempMinElevation;
   maxElevation=tempMaxElevation;
