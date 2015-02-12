@@ -10,6 +10,7 @@ public:
 
 private:
   void OnPaint(wxPaintEvent& event);
+  void Resize();
   void Spin(float xSpin, float ySpin);
   void OnKeyDown(wxKeyEvent& event);
   void OnSpinTimer(wxTimerEvent& WXUNUSED(event));

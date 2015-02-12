@@ -1,3 +1,4 @@
+#include <GL/glut.h>
 #include "canvas.h"
 #include "main.h"
 
@@ -35,6 +36,16 @@ static void CheckGLError()
   }
 }
 
+static void initRendering()
+{
+  // set up the parameters we want to use
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_TEXTURE_2D);
+}
+
 // function to draw the texture for cube faces
 static wxImage DrawDice(int size, unsigned num)
 {
@@ -60,13 +71,7 @@ static wxImage DrawDice(int size, unsigned num)
 TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
 {
   SetCurrent(*canvas);
-
-  // set up the parameters we want to use
-  glEnable(GL_CULL_FACE);
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_TEXTURE_2D);
+  initRendering();
 
   // add slightly more light, the default lighting is rather dark
   GLfloat ambient[] = {0.5, 0.5, 0.5, 0.5};
@@ -74,7 +79,7 @@ TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
 
   // set viewing projection
   glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
+  glLoadIdentity(); // Reset the camera.
   glFrustum(-0.5f, 0.5f, -0.5f, 0.5f, 1.0f, 3.0f);
 
   // create the textures to use for cube sides: they will be reused by all
@@ -210,13 +215,10 @@ void TestGLContext::DrawRotatedCube(float xangle, float yangle)
 
 wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
   EVT_KEY_DOWN(TestGLCanvas::OnKeyDown)
-  EVT_TIMER(SpinTimer, TestGLCanvas::OnSpinTimer) wxEND_EVENT_TABLE()
+  EVT_TIMER(SpinTimer, TestGLCanvas::OnSpinTimer)
+  wxEND_EVENT_TABLE()
 
   TestGLCanvas::TestGLCanvas(wxWindow* parent, int* attribList)
-  // With perspective OpenGL graphics, the wxFULL_REPAINT_ON_RESIZE style
-  // flag should always be set, because even making the canvas smaller should
-  // be followed by a paint event that updates the entire canvas with new
-  // viewport settings.
   : wxGLCanvas(parent,
                wxID_ANY,
                attribList,
@@ -238,20 +240,22 @@ void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
   // This is required even though dc is not used otherwise.
   wxPaintDC dc(this);
 
-  // Set the OpenGL viewport according to the client size of this canvas.
-  // This is done here rather than in a wxSizeEvent handler because our
-  // OpenGL rendering context (and thus viewport setting) is used with
-  // multiple canvases: If we updated the viewport in the wxSizeEvent
-  // handler, changing the size of one canvas causes a viewport setting that
-  // is wrong when next another canvas is repainted.
-  const wxSize ClientSize = GetClientSize();
-
-  TestGLContext& canvas = wxGetApp().GetContext(this);
-  glViewport(0, 0, ClientSize.x, ClientSize.y);
-
+  // With perspective OpenGL graphics, the wxFULL_REPAINT_ON_RESIZE style
+  // flag should always be set, because even making the canvas smaller should
+  // be followed by a paint event that updates the entire canvas with new
+  // viewport settings.
+  Resize();
+  
   // Render the graphics and swap the buffers.
+  TestGLContext& canvas = wxGetApp().GetContext(this);
   canvas.DrawRotatedCube(m_xangle, m_yangle);
   SwapBuffers();
+}
+
+void TestGLCanvas::Resize()
+{
+  const wxSize ClientSize = GetClientSize();
+  glViewport(0, 0, ClientSize.x, ClientSize.y);
 }
 
 void TestGLCanvas::Spin(float xSpin, float ySpin)
@@ -305,7 +309,7 @@ void TestGLCanvas::OnSpinTimer(wxTimerEvent& WXUNUSED(event))
 wxString glGetwxString(GLenum name)
 {
   const GLubyte* v = glGetString(name);
-  if (v == 0)
+  if (v == nullptr)
   {
     // The error is not important. It is GL_INVALID_ENUM.
     // We just want to clear the error stack.
