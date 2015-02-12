@@ -1,9 +1,7 @@
 #include <vector>
 #include "MainWindow.h"
 #include "logger.h"
-#include "main.h"
 #include "canvas.h"
-#include "item.h"
 #include "itemgen.h"
 
 enum
