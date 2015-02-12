@@ -1,36 +1,40 @@
-#include "wxwidget.h"
-#include "MainWindow.h"
-#include "GridPane.h"
-
 #include "logger.h"
-#include "canvas.h"
+#include "main.h"
 
-// class DwFort : public wxApp
-// {
-//   MainWindow* frame;
-//   GridPane* gridPane;
+bool MyApp::OnInit()
+{
+  if (!wxApp::OnInit()) return false;
 
-// public:
-//   virtual bool OnInit();
-// };
+  init_log(argc, argv);
+  LOG(INFO) << "Initializing";
 
-// bool DwFort::OnInit()
-// {
-//   init_log(argc, argv);
-//   LOG(INFO) << "Initializing";
+  frame = new MainWindow("Hello World", wxPoint(50, 50), wxSize(300, 400));
 
-//   frame = new MainWindow("Hello World", wxPoint(50, 50), wxSize(300, 400));
+  return true;
+}
 
-//   wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+int MyApp::OnExit()
+{
+  delete m_glContext;
+  delete frame;
 
-//   gridPane = new GridPane((wxFrame*)frame);
-//   sizer->Add(gridPane, 1, wxEXPAND);
+  return wxApp::OnExit();
+}
 
-//   frame->SetSizer(sizer);
-//   frame->SetAutoLayout(true);
+TestGLContext& MyApp::GetContext(wxGLCanvas* canvas)
+{
+  TestGLContext* glContext;
+  if (!m_glContext)
+  {
+    // Create the OpenGL context for the first mono window which needs it:
+    // subsequently created windows will all share the same context.
+    m_glContext = new TestGLContext(canvas);
+  }
+  glContext = m_glContext;
 
-//   frame->Show();
-//   return true;
-// }
+  glContext->SetCurrent(*canvas);
 
-// wxIMPLEMENT_APP(DwFort);
+  return *glContext;
+}
+
+wxIMPLEMENT_APP(MyApp);

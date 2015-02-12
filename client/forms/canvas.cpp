@@ -1,17 +1,5 @@
-#include "logger.h"
 #include "canvas.h"
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
-
-#if !wxUSE_GLCANVAS
-#error "OpenGL required: set wxUSE_GLCANVAS to 1 and rebuild the library"
-#endif
-
+#include "main.h"
 
 // control ids
 enum
@@ -27,7 +15,7 @@ static void CheckGLError()
 {
   GLenum errLast = GL_NO_ERROR;
 
-  for (;;)
+  while (true)
   {
     GLenum err = glGetError();
     if (err == GL_NO_ERROR) return;
@@ -58,17 +46,12 @@ static wxImage DrawDice(int size, unsigned num)
   dc.SetBackground(*wxWHITE_BRUSH);
   dc.Clear();
   dc.SetBrush(*wxCYAN_BRUSH);
-  dc.DrawRectangle(wxRect(0, 0, size/2, size/2));
-
+  dc.DrawRectangle(wxRect(0, 0, size / 2, size / 2));
 
   dc.SelectObject(wxNullBitmap);
 
   return bmp.ConvertToImage();
 }
-
-// ============================================================================
-// implementation
-// ============================================================================
 
 // ----------------------------------------------------------------------------
 // TestGLContext
@@ -222,44 +205,6 @@ void TestGLContext::DrawRotatedCube(float xangle, float yangle)
 }
 
 // ----------------------------------------------------------------------------
-// MyApp: the application object
-// ----------------------------------------------------------------------------
-
-IMPLEMENT_APP(MyApp)
-
-bool MyApp::OnInit()
-{
-  if (!wxApp::OnInit()) return false;
-
-  new MyFrame();
-
-  return true;
-}
-
-int MyApp::OnExit()
-{
-  delete m_glContext;
-
-  return wxApp::OnExit();
-}
-
-TestGLContext& MyApp::GetContext(wxGLCanvas* canvas)
-{
-  TestGLContext* glContext;
-  if (!m_glContext)
-  {
-    // Create the OpenGL context for the first mono window which needs it:
-    // subsequently created windows will all share the same context.
-    m_glContext = new TestGLContext(canvas);
-  }
-  glContext = m_glContext;
-
-  glContext->SetCurrent(*canvas);
-
-  return *glContext;
-}
-
-// ----------------------------------------------------------------------------
 // TestGLCanvas
 // ----------------------------------------------------------------------------
 
@@ -283,6 +228,10 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
     m_spinTimer(this, SpinTimer)
 {
 }
+
+// Needed to use wxGetApp(). Usually can be done with wxIMPLEMENT_APP(),
+// but that can only be in main.
+wxDECLARE_APP(MyApp);
 
 void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
@@ -366,45 +315,4 @@ wxString glGetwxString(GLenum name)
   }
 
   return wxString((const char*)v);
-}
-
-// ----------------------------------------------------------------------------
-// MyFrame: main application window
-// ----------------------------------------------------------------------------
-
-wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
-  EVT_MENU(wxID_CLOSE, MyFrame::OnClose) wxEND_EVENT_TABLE()
-
-  MyFrame::MyFrame(bool stereoWindow)
-  : wxFrame(NULL, wxID_ANY, wxT("wxWidgets OpenGL Cube Sample"))
-{
-  int stereoAttribList[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_STEREO, 0};
-
-  new TestGLCanvas(this, stereoWindow ? stereoAttribList : NULL);
-
-  // Make a menubar
-  wxMenu* menu = new wxMenu;
-  menu->AppendSeparator();
-  menu->Append(wxID_CLOSE);
-  wxMenuBar* menuBar = new wxMenuBar;
-  menuBar->Append(menu, wxT("&Cube"));
-
-  SetMenuBar(menuBar);
-
-  CreateStatusBar();
-
-  SetClientSize(400, 400);
-  Show();
-
-  // test IsDisplaySupported() function:
-  static const int attribs[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, 0};
-  wxLogStatus("Double-buffered display %s supported",
-              wxGLCanvas::IsDisplaySupported(attribs) ? "is" : "not");
-
-}
-
-void MyFrame::OnClose(wxCommandEvent& WXUNUSED(event))
-{
-  // true is to force the frame to close
-  Close(true);
 }

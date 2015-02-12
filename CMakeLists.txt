@@ -28,6 +28,7 @@ set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
 
 set(client_srcs
   client/src/main.cpp
+  client/src/main.h
   client/forms/MainWindow.cpp
   client/forms/MainWindow.h
   client/forms/GridPane.cpp

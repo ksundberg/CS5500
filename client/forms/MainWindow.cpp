@@ -1,6 +1,8 @@
 #include <vector>
 #include "MainWindow.h"
 #include "logger.h"
+#include "main.h"
+#include "canvas.h"
 #include "item.h"
 #include "itemgen.h"
 
@@ -41,6 +43,10 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   SetMenuBar(menuBar);
   CreateStatusBar();
   SetStatusText("Welcome to Torus World!");
+
+  new TestGLCanvas(this, NULL);
+  SetClientSize(600, 600);
+  Show();
 }
 
 void MainWindow::OnExit(wxCommandEvent&)
