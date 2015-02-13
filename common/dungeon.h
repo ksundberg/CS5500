@@ -27,6 +27,6 @@ class Dungeon {
   Dungeon();
   ~Dungeon();
   // Index 256 x 256 x 256 dungeon for active blocks.
-  bool isActive(int x, int y, int z);
+  bool isBlockActive(int x, int y, int z);
   static const int DUNGEON_SIZE = 16;
 };

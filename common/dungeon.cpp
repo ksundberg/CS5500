@@ -35,10 +35,15 @@ int Dungeon::index(int x, int y, int z)
   return x * DUNGEON_SIZE * DUNGEON_SIZE + y * DUNGEON_SIZE + z;
 }
 
-bool Dungeon::isActive(int x, int y, int z)
+bool Dungeon::isBlockActive(int x, int y, int z)
 {
-  auto chunk_x = x % DUNGEON_SIZE, chunk_y = y % DUNGEON_SIZE,
-       chunk_z = y % DUNGEON_SIZE;
+  if (x < 0 || DUNGEON_SIZE <= x || y < 0 || DUNGEON_SIZE <= y || z < 0 ||
+      DUNGEON_SIZE <= z)
+  {
+    return false;
+  }
+  auto chunk_x = x / DUNGEON_SIZE, chunk_y = y / DUNGEON_SIZE,
+       chunk_z = y / DUNGEON_SIZE;
 
   auto chunk = chunks[index(chunk_x, chunk_y, chunk_z)];
 
