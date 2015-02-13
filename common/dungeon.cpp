@@ -15,6 +15,7 @@ Dungeon::Dungeon()
     }
   }
   makeChunksActive(chunks);
+  createRooms(chunks);
 }
 
 Dungeon::~Dungeon()
@@ -37,8 +38,8 @@ int Dungeon::index(int x, int y, int z)
 
 bool Dungeon::isBlockActive(int x, int y, int z)
 {
-  if (x < 0 || DUNGEON_SIZE <= x || y < 0 || DUNGEON_SIZE <= y || z < 0 ||
-      DUNGEON_SIZE <= z)
+  if (x < 0 || blockCount() <= x || y < 0 || blockCount() <= y || z < 0 ||
+      blockCount() <= z)
   {
     return false;
   }
@@ -52,4 +53,23 @@ bool Dungeon::isBlockActive(int x, int y, int z)
        block_z = z - chunk_z * DUNGEON_SIZE;
 
   return chunk->isBlockActive(block_x, block_y, block_z);
+}
+
+void Dungeon::createRooms(std::vector<Chunk*> &chunkList)
+{
+
+  // Entrance is at the top of our dungeon cube.
+  createRoom(
+    chunkList[index(DUNGEON_SIZE / 2, DUNGEON_SIZE / 2, DUNGEON_SIZE - 1)]);
+}
+
+void Dungeon::createRoom(Chunk* chunk)
+{
+  // Rooms are just empty chunks for now.
+  chunk->deactivateAllBlocks();
+}
+
+int Dungeon::blockCount()
+{
+  return DUNGEON_SIZE * Chunk::CHUNK_SIZE;
 }

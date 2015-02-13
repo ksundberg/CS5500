@@ -22,11 +22,14 @@ class Dungeon {
  private: 
   int index(int x, int y, int z);
   void makeChunksActive(std::vector<Chunk*> &chunkList);
+  void createRooms(std::vector<Chunk*> &chunkList);
+  void createRoom(Chunk* chunkList);
   std::vector<Chunk*> chunks;
  public:
   Dungeon();
   ~Dungeon();
-  // Index 256 x 256 x 256 dungeon for active blocks.
+  // Indexes 256 x 256 x 256 dungeon for active blocks.
   bool isBlockActive(int x, int y, int z);
+  int blockCount();
   static const int DUNGEON_SIZE = 16;
 };
