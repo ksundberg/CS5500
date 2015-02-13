@@ -19,6 +19,11 @@ public:
   void setIndex(int ind);
   bool getRebuild();
   void setRebuild();
+  void activateBlock(int x, int y, int z);
+  void deactivateBlock(int x, int y, int z);
+  void activateAllBlocks();
+  void deactivateAllBlocks();
+  bool isBlockActive(int x, int y, int z);
   Vector3* getPosition();
 
   /*

@@ -2,7 +2,8 @@
 #include "dungeon.h"
 #include "logger.h"
 
-TEST_CASE("DEATH")
+TEST_CASE("The bottom of a dungeon contains active blocks.")
 {
-  REQUIRE(1 == 1);
+  Dungeon dungeon;
+  REQUIRE(dungeon.isActive(0,0,0));
 }

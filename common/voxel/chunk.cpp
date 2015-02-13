@@ -93,3 +93,44 @@ void Chunk::Update(float /*dt*/)
 **		//A function stub for the render call from the Chunk Manager
 **	}
 */
+
+void Chunk::activateBlock(int x, int y, int z)
+{
+  mBlocks[x][y][z].SetActive(true);
+}
+void Chunk::deactivateBlock(int x, int y, int z)
+{
+  mBlocks[x][y][z].SetActive(false);
+}
+bool Chunk::isBlockActive(int x, int y, int z)
+{
+  return mBlocks[x][y][z].IsActive();
+}
+
+void Chunk::activateAllBlocks()
+{
+  for (int i = 0; i < CHUNK_SIZE; i++)
+  {
+    for (int j = 0; j < CHUNK_SIZE; j++)
+    {
+      for (int k = 0; k < CHUNK_SIZE; k++)
+      {
+        mBlocks[i][j][k].SetActive(true);
+      }
+    }
+  }
+}
+
+void Chunk::deactivateAllBlocks()
+{
+  for(int i=0; i < CHUNK_SIZE; i++)
+  {
+    for(int j=0; j < CHUNK_SIZE; j++)
+    {
+      for(int k=0; k < CHUNK_SIZE; k++)
+      {
+        mBlocks[i][j][k].SetActive(false);
+      }
+    }
+  }
+}
