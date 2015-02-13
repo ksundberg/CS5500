@@ -43,16 +43,14 @@ bool Dungeon::isBlockActive(int x, int y, int z)
   {
     return false;
   }
-  auto chunk_x = x / DUNGEON_SIZE, chunk_y = y / DUNGEON_SIZE,
-       chunk_z = y / DUNGEON_SIZE;
 
-  auto chunk = chunks[index(chunk_x, chunk_y, chunk_z)];
+  auto chunk = chunks[index(x / DUNGEON_SIZE,
+                            y / DUNGEON_SIZE,
+                            z / DUNGEON_SIZE)];
 
-  auto block_x = x - chunk_x * DUNGEON_SIZE,
-       block_y = y - chunk_y * DUNGEON_SIZE,
-       block_z = z - chunk_z * DUNGEON_SIZE;
-
-  return chunk->isBlockActive(block_x, block_y, block_z);
+  return chunk->isBlockActive(x % DUNGEON_SIZE,
+                              y % DUNGEON_SIZE,
+                              z % DUNGEON_SIZE);
 }
 
 void Dungeon::createRooms(std::vector<Chunk*> &chunkList)
