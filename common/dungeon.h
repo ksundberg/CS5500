@@ -21,21 +21,22 @@
   
  */
 
-typedef std::tuple<int, int, int> Point3D;
-
 class Dungeon {
  public:
   static void makeDungeon(ChunkList &list);
   // Indexes 256 x 256 x 256 dungeon for active blocks.
   static bool isBlockActive(const ChunkList &list, int x, int y, int z);
-  static bool isChunkAllActive(const ChunkList &list, int x, int y, int z);
+  static float distanceBetween(Vector3 a, Vector3 b);
   static int dungeonBlockLength();
   static void printDungeon(ChunkList &list);
+  static Vector3 chunkToBlockDistance(Vector3 incoming);
   static const int DUNGEON_SIZE = 16;
  private: 
   static int index(int x, int y, int z);
   static void makeChunksActive(ChunkList &chunkList);
   static void createRooms(ChunkList &chunkList);
-  static void connectRoom(ChunkList& list, Point3D pos1, Point3D pos2);
-  static Point3D createRoom(Chunk* chunkList);
+  static void connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2);
+  static void createRoom(Chunk* chunkList);
+  static bool isChunkAllActive(Chunk* chunk);
+  static bool isChunkAnyActive(Chunk* chunk);
 };
