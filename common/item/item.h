@@ -10,15 +10,14 @@
 // this sort of information can be shared across all items.
 struct ItemProperty
 {
-  ItemProperty(int v, float w, std::string d, std::string i)
-    : value(v), weight(w), description(d), image_file(i)
-  {
-  }
-
   const int value;
   const float weight;
   const std::string description;
   const std::string image_file;
+  ItemProperty(int v, float w, std::string d, std::string i)
+    : value(v), weight(w), description(d), image_file(i)
+  {
+  }
 };
 
 struct Weapon : ItemProperty
@@ -75,7 +74,7 @@ public:
   // Hash ItemProperty values by an Item's name.
   typedef std::unordered_map<std::string, ItemProperty> PropMap;
 
-  static std::vector<std::string> getPropertyKeys();
+  static std::vector<std::string> getValidItemNames();
 
 private:
   std::string name;

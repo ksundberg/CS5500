@@ -128,6 +128,6 @@ SCENARIO("We want to generate items in parallel.")
 
 TEST_CASE(" There is at least one name that maps to an ItemProperty ")
 {
-  auto keys = Item::getPropertyKeys();
+  auto keys = Item::getValidItemNames();
   REQUIRE(keys.size() > 0);
 }
