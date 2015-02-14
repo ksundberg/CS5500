@@ -12,5 +12,5 @@ void DisplayHelper::Render(float dt,
   auto chunkManager = ChunkManager();
   auto chunkManagerMini = ChunkManager();
   chunkManager.Update(dt, cameraPosisiton, cameraRotation);
-  chunkManegerMini.Update(dt, cameraPosisiton, cameraRotation);
+  chunkManagerMini.Update(dt, cameraPosisiton, cameraRotation);
 }
