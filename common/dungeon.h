@@ -1,6 +1,9 @@
 #ifndef DUNGEON_HEADER
 #define DUNGEON_HEADER
 #include <vector>
+#include <tuple>
+#include "vector3.h"
+#include "chunkmanager.h"
 #include "chunk.h"
 
 #endif
@@ -18,18 +21,21 @@
   
  */
 
+typedef std::tuple<int, int, int> Point3D;
+
 class Dungeon {
- private: 
-  int index(int x, int y, int z);
-  void makeChunksActive(std::vector<Chunk*> &chunkList);
-  void createRooms(std::vector<Chunk*> &chunkList);
-  void createRoom(Chunk* chunkList);
-  std::vector<Chunk*> chunks;
  public:
-  Dungeon();
-  ~Dungeon();
+  static void makeDungeon(ChunkList &list);
   // Indexes 256 x 256 x 256 dungeon for active blocks.
-  bool isBlockActive(int x, int y, int z);
-  int blockCount();
+  static bool isBlockActive(const ChunkList &list, int x, int y, int z);
+  static bool isChunkAllActive(const ChunkList &list, int x, int y, int z);
+  static int dungeonBlockLength();
+  static void printDungeon(ChunkList &list);
   static const int DUNGEON_SIZE = 16;
+ private: 
+  static int index(int x, int y, int z);
+  static void makeChunksActive(ChunkList &chunkList);
+  static void createRooms(ChunkList &chunkList);
+  static void connectRoom(ChunkList& list, Point3D pos1, Point3D pos2);
+  static Point3D createRoom(Chunk* chunkList);
 };

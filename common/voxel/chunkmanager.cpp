@@ -55,7 +55,7 @@ void ChunkManager::Update(float /*deltaTime*/,
             for (int k = r.begin(); k < r.end(); k++)
             {
               Chunk* tChunk = new Chunk(i, j, k);
-              int l = translatePositionToIndex(*tChunk->getPosition());
+              int l = translatePositionToIndex(tChunk->getPosition());
               tChunk->setIndex(l);
               nchunkVisibilityList[l] = tChunk;
             }

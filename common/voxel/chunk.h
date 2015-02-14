@@ -24,7 +24,7 @@ public:
   void activateAllBlocks();
   void deactivateAllBlocks();
   bool isBlockActive(int x, int y, int z);
-  Vector3* getPosition();
+  Vector3 getPosition();
 
   /*
   ** Assuming the use of OpenGLRenderer class from JUCE  Currently commented out
