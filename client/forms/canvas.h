@@ -30,7 +30,8 @@ public:
   TestGLContext(wxGLCanvas* canvas);
 
   // render the cube showing it at given angles
-  void DrawRotatedCube(float xangle, float yangle);
+  void DrawRotatedCube(
+    float xangle, float yangle, float xtranslate, float ytranslate, float size);
 
 private:
   // textures for the cube faces

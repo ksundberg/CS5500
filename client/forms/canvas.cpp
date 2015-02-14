@@ -115,93 +115,93 @@ TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
   CheckGLError();
 }
 
-void TestGLContext::DrawRotatedCube(float xangle, float yangle)
+void TestGLContext::DrawRotatedCube(
+  float xangle, float yangle, float xtranslate, float ytranslate, float length)
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+  auto size = length / 2;
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glTranslatef(0.0f, 0.0f, -2.0f);
+  glTranslatef(xtranslate, ytranslate, -2.0f);
   glRotatef(xangle, 1.0f, 0.0f, 0.0f);
   glRotatef(yangle, 0.0f, 1.0f, 0.0f);
 
-  // draw six faces of a cube of size 1 centered at (0, 0, 0)
+  // Draw the 6 faces of a cube.
   glBindTexture(GL_TEXTURE_2D, m_textures[0]);
   glBegin(GL_QUADS);
   glNormal3f(0.0f, 0.0f, 1.0f);
   glTexCoord2f(0, 0);
-  glVertex3f(0.5f, 0.5f, 0.5f);
+  glVertex3f(size, size, size);
   glTexCoord2f(1, 0);
-  glVertex3f(-0.5f, 0.5f, 0.5f);
+  glVertex3f(-size, size, size);
   glTexCoord2f(1, 1);
-  glVertex3f(-0.5f, -0.5f, 0.5f);
+  glVertex3f(-size, -size, size);
   glTexCoord2f(0, 1);
-  glVertex3f(0.5f, -0.5f, 0.5f);
+  glVertex3f(size, -size, size);
   glEnd();
 
   glBindTexture(GL_TEXTURE_2D, m_textures[1]);
   glBegin(GL_QUADS);
   glNormal3f(0.0f, 0.0f, -1.0f);
   glTexCoord2f(0, 0);
-  glVertex3f(-0.5f, -0.5f, -0.5f);
+  glVertex3f(-size, -size, -size);
   glTexCoord2f(1, 0);
-  glVertex3f(-0.5f, 0.5f, -0.5f);
+  glVertex3f(-size, size, -size);
   glTexCoord2f(1, 1);
-  glVertex3f(0.5f, 0.5f, -0.5f);
+  glVertex3f(size, size, -size);
   glTexCoord2f(0, 1);
-  glVertex3f(0.5f, -0.5f, -0.5f);
+  glVertex3f(size, -size, -size);
   glEnd();
 
   glBindTexture(GL_TEXTURE_2D, m_textures[2]);
   glBegin(GL_QUADS);
   glNormal3f(0.0f, 1.0f, 0.0f);
   glTexCoord2f(0, 0);
-  glVertex3f(0.5f, 0.5f, 0.5f);
+  glVertex3f(size, size, size);
   glTexCoord2f(1, 0);
-  glVertex3f(0.5f, 0.5f, -0.5f);
+  glVertex3f(size, size, -size);
   glTexCoord2f(1, 1);
-  glVertex3f(-0.5f, 0.5f, -0.5f);
+  glVertex3f(-size, size, -size);
   glTexCoord2f(0, 1);
-  glVertex3f(-0.5f, 0.5f, 0.5f);
+  glVertex3f(-size, size, size);
   glEnd();
 
   glBindTexture(GL_TEXTURE_2D, m_textures[3]);
   glBegin(GL_QUADS);
   glNormal3f(0.0f, -1.0f, 0.0f);
   glTexCoord2f(0, 0);
-  glVertex3f(-0.5f, -0.5f, -0.5f);
+  glVertex3f(-size, -size, -size);
   glTexCoord2f(1, 0);
-  glVertex3f(0.5f, -0.5f, -0.5f);
+  glVertex3f(size, -size, -size);
   glTexCoord2f(1, 1);
-  glVertex3f(0.5f, -0.5f, 0.5f);
+  glVertex3f(size, -size, size);
   glTexCoord2f(0, 1);
-  glVertex3f(-0.5f, -0.5f, 0.5f);
+  glVertex3f(-size, -size, size);
   glEnd();
 
   glBindTexture(GL_TEXTURE_2D, m_textures[4]);
   glBegin(GL_QUADS);
   glNormal3f(1.0f, 0.0f, 0.0f);
   glTexCoord2f(0, 0);
-  glVertex3f(0.5f, 0.5f, 0.5f);
+  glVertex3f(size, size, size);
   glTexCoord2f(1, 0);
-  glVertex3f(0.5f, -0.5f, 0.5f);
+  glVertex3f(size, -size, size);
   glTexCoord2f(1, 1);
-  glVertex3f(0.5f, -0.5f, -0.5f);
+  glVertex3f(size, -size, -size);
   glTexCoord2f(0, 1);
-  glVertex3f(0.5f, 0.5f, -0.5f);
+  glVertex3f(size, size, -size);
   glEnd();
 
   glBindTexture(GL_TEXTURE_2D, m_textures[5]);
   glBegin(GL_QUADS);
   glNormal3f(-1.0f, 0.0f, 0.0f);
   glTexCoord2f(0, 0);
-  glVertex3f(-0.5f, -0.5f, -0.5f);
+  glVertex3f(-size, -size, -size);
   glTexCoord2f(1, 0);
-  glVertex3f(-0.5f, -0.5f, 0.5f);
+  glVertex3f(-size, -size, size);
   glTexCoord2f(1, 1);
-  glVertex3f(-0.5f, 0.5f, 0.5f);
+  glVertex3f(-size, size, size);
   glTexCoord2f(0, 1);
-  glVertex3f(-0.5f, 0.5f, -0.5f);
+  glVertex3f(-size, size, -size);
   glEnd();
 
   glFlush();
@@ -215,8 +215,7 @@ void TestGLContext::DrawRotatedCube(float xangle, float yangle)
 
 wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
   EVT_KEY_DOWN(TestGLCanvas::OnKeyDown)
-  EVT_TIMER(SpinTimer, TestGLCanvas::OnSpinTimer)
-  wxEND_EVENT_TABLE()
+  EVT_TIMER(SpinTimer, TestGLCanvas::OnSpinTimer) wxEND_EVENT_TABLE()
 
   TestGLCanvas::TestGLCanvas(wxWindow* parent, int* attribList)
   : wxGLCanvas(parent,
@@ -224,15 +223,15 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
                attribList,
                wxDefaultPosition,
                wxDefaultSize,
-               wxFULL_REPAINT_ON_RESIZE),
-    m_xangle(30.0),
-    m_yangle(30.0),
-    m_spinTimer(this, SpinTimer)
+               wxFULL_REPAINT_ON_RESIZE)
+  , m_xangle(30.0)
+  , m_yangle(30.0)
+  , m_spinTimer(this, SpinTimer)
 {
 }
 
-// Needed to use wxGetApp(). Usually can be done with wxIMPLEMENT_APP(),
-// but that can only be in main.
+// Needed to use wxGetApp(). Usually you get the same result
+// by using wxIMPLEMENT_APP(), but that can only be in main.
 wxDECLARE_APP(MyApp);
 
 void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
@@ -245,10 +244,14 @@ void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
   // be followed by a paint event that updates the entire canvas with new
   // viewport settings.
   Resize();
-  
+
+  // Clear screen.
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   // Render the graphics and swap the buffers.
   TestGLContext& canvas = wxGetApp().GetContext(this);
-  canvas.DrawRotatedCube(m_xangle, m_yangle);
+  canvas.DrawRotatedCube(m_xangle, m_yangle, 0.1f, -0.2f, 0.5f);
+  canvas.DrawRotatedCube(m_xangle, m_yangle, -0.5f, 0.3f, 0.5f);
   SwapBuffers();
 }
 

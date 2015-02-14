@@ -9,6 +9,7 @@ bool MyApp::OnInit()
   LOG(INFO) << "Initializing";
 
   frame = new MainWindow("Hello World", wxPoint(50, 50), wxSize(300, 400));
+  manager = new ChunkManager();
 
   return true;
 }
@@ -17,7 +18,7 @@ int MyApp::OnExit()
 {
   delete m_glContext;
   delete frame;
-
+  delete manager;
   return wxApp::OnExit();
 }
 

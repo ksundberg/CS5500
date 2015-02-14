@@ -3,6 +3,7 @@
 #include <wxwidget.h>
 #include "MainWindow.h"
 #include "canvas.h"
+#include "chunkmanager.h"
 
 
 // Define a new application type
@@ -12,6 +13,7 @@ private:
   // the GL context we use for all our mono rendering windows
   TestGLContext* m_glContext;
   MainWindow* frame;
+  ChunkManager* manager;
   
 public:
   MyApp()
