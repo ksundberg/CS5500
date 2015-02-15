@@ -13,6 +13,7 @@ private:
   void OnExit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
   void OnInventory(wxCommandEvent& event);
+  void OnDungeonTest(wxCommandEvent& event);
   wxDECLARE_EVENT_TABLE();
 };
 

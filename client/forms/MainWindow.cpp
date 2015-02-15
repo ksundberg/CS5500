@@ -3,17 +3,20 @@
 #include "logger.h"
 #include "canvas.h"
 #include "itemgen.h"
+#include "dungeon.h"
 
 enum
 {
   ID_Help = 1,
-  ID_Inventory
+  ID_Inventory,
+  ID_Dungeon
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   EVT_MENU(wxID_EXIT, MainWindow::OnExit)
   EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
-  EVT_MENU(ID_Inventory, MainWindow::OnInventory) wxEND_EVENT_TABLE()
+  EVT_MENU(ID_Inventory, MainWindow::OnInventory)
+  EVT_MENU(ID_Dungeon, MainWindow::OnDungeonTest) wxEND_EVENT_TABLE()
 
   MainWindow::MainWindow(const wxString& title,
                          const wxPoint& pos,
@@ -33,6 +36,8 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
 
   wxMenu* menuTools = new wxMenu;
   menuTools->Append(ID_Inventory, "&Inventory...\tCtrl-I");
+  menuTools->Append(ID_Dungeon, "&Dungeon...\tCtrl-d");
+
 
   wxMenuBar* menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
@@ -76,4 +81,11 @@ void MainWindow::OnInventory(wxCommandEvent&)
     LOG(DEBUG) << "Count: " << i.getCount();
     LOG(DEBUG) << "Durability " << i.getDurability();
   }
+}
+
+void MainWindow::OnDungeonTest(wxCommandEvent&)
+{
+  ChunkList chunks;
+  Dungeon::makeDungeon(chunks);
+  Dungeon::printDungeon(chunks);
 }

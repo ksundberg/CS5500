@@ -128,6 +128,11 @@ int Dungeon::dungeonBlockLength()
 
 void Dungeon::printDungeon(ChunkList& list)
 {
+  std::cout << "Dungeon representation:" << std::endl;
+  std::cout << " . represents solid chunks." << std::endl;
+  std::cout << " R represents a room" << std::endl;
+  std::cout << "Each chunk should be a 16 x 16 x 16 container of voxels," << std::endl;
+  std::cout << "so a room would contain 4096 voxels (for now)." << std::endl;
   list.resize(DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE);
   for (int k = DUNGEON_SIZE - 1; k >= 0; k--)
   {
