@@ -28,10 +28,13 @@ set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
 
 set(client_srcs
   client/src/main.cpp
+  client/src/main.h
   client/forms/MainWindow.cpp
   client/forms/MainWindow.h
   client/forms/GridPane.cpp
   client/forms/GridPane.h
+  client/forms/canvas.cpp
+  client/forms/canvas.h
   client/src/Grid.hpp
   client/src/Grid.cpp
   include/wxwidget.h
@@ -97,7 +100,7 @@ source_group("test" FILES ${test_srcs})
 
 #wxwidgets
 set(wxWidgets_CONFIGURATION mswu)
-find_package(wxWidgets COMPONENTS core base REQUIRED)
+find_package(wxWidgets COMPONENTS core base gl REQUIRED)
 include(${wxWidgets_USE_FILE})
 
 #tbb
@@ -108,10 +111,19 @@ link_directories(${TBB_LIBRARY_DIRS})
 
 add_library(common STATIC ${common_srcs} ${TBB_LIBRARIES})
 
+# OpenGL
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+
 add_executable(torus ${client_srcs})
 add_executable(torus_test ${test_srcs})
 
-target_link_libraries(torus common ${wxWidgets_LIBRARIES} ${TBB_LIBRARIES})
+target_link_libraries(torus common ${wxWidgets_LIBRARIES} 
+                                   ${TBB_LIBRARIES} 
+                                   ${OPENGL_LIBRARIES}
+				   ${GLUT_LIBRARY})
+				   
 target_link_libraries(torus_test common ${TBB_LIBRARIES})
 
 enable_testing()
