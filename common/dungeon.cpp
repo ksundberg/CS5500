@@ -1,4 +1,5 @@
 #include <cmath>
+#include <time.h>
 #include "dungeon.h"
 #include "logger.h"
 
@@ -50,14 +51,41 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
 
 void Dungeon::createRooms(ChunkList& list)
 {
+	// Entrance is at the top of our dungeon cube.
+	//auto chunk1 =
+	//	list[index(DUNGEON_SIZE / 2, DUNGEON_SIZE / 2, DUNGEON_SIZE - 1)];
+		//auto chunk2 = list[index(0, 0, DUNGEON_SIZE - 1)];
 
-  // Entrance is at the top of our dungeon cube.
-  auto chunk1 =
-    list[index(DUNGEON_SIZE / 2, DUNGEON_SIZE / 2, DUNGEON_SIZE - 1)];
-  auto chunk2 = list[index(0, 0, DUNGEON_SIZE - 1)];
-  createRoom(chunk1);
-  createRoom(chunk2);
-  connectRoom(list, chunk1, chunk2);
+	// initialize rand()
+	srand(time(NULL));
+	int i;
+	int roomcount;
+	int x,y,z; //location
+	// make entrance
+	x = DUNGEON_SIZE / 2;
+	y = DUNGEON_SIZE / 2;
+	z = DUNGEON_SIZE -1;
+	auto chunkrand = list[index( x , y , z)];
+	createRoom(chunkrand);
+
+	roomcount  = DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE * .05;
+
+	for(i = 0; i < roomcount; i++)
+	{
+		x = rand() % DUNGEON_SIZE;
+		y = rand() % DUNGEON_SIZE;
+		z = rand() % DUNGEON_SIZE;
+
+		chunkrand = list[index(x, y, z)];
+
+		createRoom(chunkrand);
+	}
+
+
+
+  //createRoom(chunk1);
+  //createRoom(chunk2);
+  //connectRoom(list, chunk1, chunk2);
 }
 
 void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
