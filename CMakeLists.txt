@@ -10,6 +10,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/common/item
   ${CMAKE_CURRENT_SOURCE_DIR}/common/log
   ${CMAKE_CURRENT_SOURCE_DIR}/common/noise
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/Physics
   ${CMAKE_CURRENT_SOURCE_DIR}/common/player
   ${CMAKE_CURRENT_SOURCE_DIR}/common/util
   ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel
@@ -47,6 +48,9 @@ set(common_srcs
   common/noise/elevation.h
   common/noise/PerlinNoise.cpp
   common/noise/PerlinNoise.h
+  
+  common/Physics/PhysicsEngine.cpp
+  common/Physics/PhysicsEngine.h
 
   common/player/inventory.h
   common/player/inventory.cpp
