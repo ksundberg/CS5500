@@ -47,14 +47,13 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
     x % DUNGEON_SIZE, y % DUNGEON_SIZE, z % DUNGEON_SIZE);
 }
 
-
 void Dungeon::createRooms(ChunkList& list)
 {
 
   // Entrance is at the top of our dungeon cube.
   auto chunk1 =
     list[index(DUNGEON_SIZE / 2, DUNGEON_SIZE / 2, DUNGEON_SIZE - 1)];
-  auto chunk2 = list[index(0, 0, DUNGEON_SIZE - 1)];
+  auto chunk2 = list[index(0, 0, DUNGEON_SIZE - 6)];
   createRoom(chunk1);
   createRoom(chunk2);
   connectRoom(list, chunk1, chunk2);
@@ -66,43 +65,25 @@ void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
   auto pos2 = chunkToBlockDistance(chunk2->getPosition());
 
   auto dist = distanceBetween(pos1, pos2);
-  
-  std::cout << list.size() << std::endl;
-  std::cout << "Point 1: "
-            << " X: " << pos1.x << " Y: " << pos1.y << " Z: " << pos1.z
-            << std::endl;
-  std::cout << "Point 2: "
-            << " X: " << pos2.x << " Y: " << pos2.y << " Z: " << pos2.z
-            << std::endl;
-  std::cout << "Block distance between: " << distanceBetween(pos1, pos2)
-            << std::endl;
+  auto unit = -((pos1 - pos2) / dist);
 
-  
-  std::cout << dist << std::endl;
-  // Test making an entire row of rooms.
+  auto start = pos1;
 
-  auto incX = (pos1.x - pos2.x) / dist;
-  auto incY = (pos1.y - pos2.y) / dist;
-  auto incZ = (pos1.z - pos2.z) / dist;
-
-  std::cout << incX << std::endl;
-
-  auto i = pos1.x, j = pos1.y, k = pos1.z;
-  while (i < pos2.x || j < pos2.y || k < pos2.z)
+  auto in_dungeon = [](Vector3 v)
   {
-    i += incX;
-    j += incY;
-    k += incZ;
-    list[index(static_cast<int>(i) / DUNGEON_SIZE,
-               static_cast<int>(j) / DUNGEON_SIZE,
-               static_cast<int>(k) / DUNGEON_SIZE)]
-      ->deactivateBlock(static_cast<int>(i) % DUNGEON_SIZE,
-                        static_cast<int>(j) % DUNGEON_SIZE,
-                        static_cast<int>(k) % DUNGEON_SIZE);
-  }
-  for (int i = 0; i < DUNGEON_SIZE; i++)
+    return (0 < v.x && v.x < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1 && 0 < v.y &&
+            v.y < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1 && 0 < v.x &&
+            v.x < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1);
+  };
+  while (distanceBetween(start, pos2) > 1.0 && in_dungeon(start))
   {
-    list[index(i, 0, DUNGEON_SIZE - 1)]->deactivateBlock(0, 0, 0);
+    start += unit;
+    list[index((static_cast<int>(start.x)) / DUNGEON_SIZE,
+               (static_cast<int>(start.y)) / DUNGEON_SIZE,
+               (static_cast<int>(start.z)) / DUNGEON_SIZE)]
+        ->deactivateBlock((static_cast<int>(start.x)) % DUNGEON_SIZE,
+                          (static_cast<int>(start.y)) % DUNGEON_SIZE,
+                          (static_cast<int>(start.z)) % DUNGEON_SIZE);
   }
 }
 
