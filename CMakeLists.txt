@@ -43,8 +43,6 @@ set(common_srcs
   common/log/logger.h
   common/log/logger.cpp
 
-  common/noise/elevation.cpp
-  common/noise/elevation.h
   common/noise/PerlinNoise.cpp
   common/noise/PerlinNoise.h
 
@@ -57,6 +55,9 @@ set(common_srcs
   common/item/item.cpp
   common/item/itemgen.h
   common/item/itemgen.cpp
+
+  common/worldFactory.h
+  common/worldFactory.cpp
 
   common/util/vector3.cpp
   common/util/vector3.h
