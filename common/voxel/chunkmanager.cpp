@@ -54,8 +54,8 @@ void ChunkManager::Update(float /*deltaTime*/,
           {
             for (int k = r.begin(); k < r.end(); k++)
             {
-              Chunk* tChunk = new Chunk(i, j, k);
-              int l = translatePositionToIndex(*tChunk->getPosition());
+              auto tChunk = std::make_shared<Chunk>(i, j, k);
+              int l = translatePositionToIndex(tChunk->getPosition());
               tChunk->setIndex(l);
               nchunkVisibilityList[l] = tChunk;
             }
@@ -70,7 +70,7 @@ void ChunkManager::Update(float /*deltaTime*/,
       {
         for (auto i : r)
         {
-          Chunk* pChunk = i;
+          auto pChunk = i;
           if (nchunkVisibilityList[i->getIndex()] != NULL)
           {
             chunkUnloadList[pChunk->getIndex()] = pChunk;
@@ -86,7 +86,7 @@ void ChunkManager::Update(float /*deltaTime*/,
       {
         for (auto i : r)
         {
-          Chunk* pChunk = i;
+          auto pChunk = i;
           if (pChunkVisibilityList[i->getIndex()] == NULL ||
               (!pChunk->IsLoaded() || !pChunk->IsSetup()))
           {
@@ -112,7 +112,7 @@ void ChunkManager::Update(float /*deltaTime*/,
         // add chunk processing code below
         if (i != NULL)
         {
-          Chunk* pChunk = i;
+          auto pChunk = i;
 
           // Update Load List Sequence
           if (pChunk->IsLoaded() == false)
@@ -176,10 +176,7 @@ void ChunkManager::Update(float /*deltaTime*/,
       { // A for loop that removes and unloads chunks
         if (i != NULL)
         {
-          Chunk* pChunk = i;
-          delete pChunk; // Deletes the chunk to simulate the unload function
-                         // which will be written after world persistence is
-                         // handleable
+          auto pChunk = i;
         }
       }
     });

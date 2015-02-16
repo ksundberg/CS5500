@@ -31,7 +31,7 @@ std::vector<Item> ItemGen::genNItems(unsigned int n)
   std::vector<int> indexes;
   indexes.resize(n);
 
-  auto names = Item::getPropertyKeys();
+  auto names = Item::getValidItemNames();
 
   // Generate indices.
   std::srand(std::time(0));

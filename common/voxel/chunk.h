@@ -19,7 +19,12 @@ public:
   void setIndex(int ind);
   bool getRebuild();
   void setRebuild();
-  Vector3* getPosition();
+  void activateBlock(int x, int y, int z);
+  void deactivateBlock(int x, int y, int z);
+  void activateAllBlocks();
+  void deactivateAllBlocks();
+  bool isBlockActive(int x, int y, int z);
+  Vector3 getPosition();
 
   /*
   ** Assuming the use of OpenGLRenderer class from JUCE  Currently commented out

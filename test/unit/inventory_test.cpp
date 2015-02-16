@@ -1,10 +1,10 @@
 #include <string>
 #include <vector>
 #include <catch.hpp>
-#include <item.h>
-#include <inventory.h>
-#include <itemgen.h>
-#include <logger.h>
+#include "item.h"
+#include "inventory.h"
+#include "itemgen.h"
+#include "logger.h"
 
 SCENARIO(" All Items have a proper name, count, and durability.", "[Item]")
 {
@@ -128,6 +128,6 @@ SCENARIO("We want to generate items in parallel.")
 
 TEST_CASE(" There is at least one name that maps to an ItemProperty ")
 {
-  auto keys = Item::getPropertyKeys();
+  auto keys = Item::getValidItemNames();
   REQUIRE(keys.size() > 0);
 }

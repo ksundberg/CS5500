@@ -3,13 +3,14 @@
 
 // Class dependencies
 #include <vector>
+#include <memory>
 #include "chunk.h"
 #include "vector3.h"
 #include "tbb/concurrent_vector.h"
 #include "tbb/blocked_range.h"
 
 // typedefs
-typedef tbb::concurrent_vector<Chunk*> ChunkList;
+typedef tbb::concurrent_vector<std::shared_ptr<Chunk>> ChunkList;
 typedef tbb::blocked_range<ChunkList::iterator> chunkListRange;
 
 class ChunkManager
