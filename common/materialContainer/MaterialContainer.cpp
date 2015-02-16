@@ -13,7 +13,7 @@ Biosphere Biosphere::getBasicBiosphere()
   std::vector<Biome> vec;
   vec.push_back(Biome::sandyDesert());
   vec.push_back(Biome::mountain());
-  vec.push_back(Biome::fertalFarmland());
+  vec.push_back(Biome::fertileFarmland());
   std::string name = "Biosphere";
   Biosphere bs(name, vec, 1.0, 50.0);
   return bs;
@@ -44,14 +44,14 @@ Biome Biome::mountain()
   return bi;
 }
 
-Biome Biome::fertalFarmland()
+Biome Biome::fertileFarmland()
 {
   std::vector<Ground> vec;
   vec.push_back(Ground::soil());
   vec.push_back(Ground::rockySoil());
   vec.push_back(Ground::sandySoil());
 
-  std::string name = "fertalFarmland";
+  std::string name = "fertileFarmland";
   Biome bi(name, vec, .33, 10.0);
   return bi;
 }

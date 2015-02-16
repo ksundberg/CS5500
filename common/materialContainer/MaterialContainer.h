@@ -16,12 +16,12 @@
 
 class Material
 {
-private:
+ private:
   std::string name;
   double freq;
 
-public:
-  Material(std::string name, double freq) : name(name), freq(freq) {}
+ public:
+ Material(std::string name, double freq) : name(name), freq(freq) {}
   double getFreq() { return freq; }
   std::string getName() { return name; }
   static Material Coal();
@@ -37,7 +37,7 @@ public:
 
 template <class T> class MaterialContainer
 {
-protected:
+ protected:
   // temp PerlinNoise until intergration with project PerlinNoise
   double PerlinNoise()
   {
@@ -58,7 +58,7 @@ protected:
       contentFreq += c.getFreq();
   }
 
-public:
+ public:
   // MaterialContainer constructors and operator
   MaterialContainer(std::string name,
                     std::vector<T> contents,
@@ -74,8 +74,8 @@ public:
     , freq(MC.freq)
     , smoothness(MC.smoothness)
     , contentFreq(MC.contentFreq)
-  {
-  }
+    {
+    }
   MaterialContainer& operator=(const MaterialContainer&) { return *this; }
 
   // decides what element to return based on noise input
@@ -84,10 +84,10 @@ public:
     double tot = 0.0;
     auto target = contentFreq * noise;
     for (auto c : contents)
-    {
-      tot += c.getFreq();
-      if (tot >= target) return c;
-    }
+      {
+	tot += c.getFreq();
+	if (tot >= target) return c;
+      }
     return contents[0];
   }
 
@@ -108,7 +108,7 @@ public:
 
 class Ground : public MaterialContainer<Material>
 {
-public:
+ public:
   Material getMaterial();
   static Ground sand();
   static Ground oasis();
@@ -126,35 +126,35 @@ public:
          double freq,
          double smoothness)
     : MaterialContainer(name, contents, freq, smoothness)
-  {
-  }
+    {
+    }
 };
 
 class Biome : public MaterialContainer<Ground>
 {
-public:
+ public:
   static Biome sandyDesert();
   static Biome mountain();
-  static Biome fertalFarmland();
+  static Biome fertileFarmland();
   Biome(std::string name,
         std::vector<Ground> contents,
         double freq,
         double smoothness)
     : MaterialContainer(name, contents, freq, smoothness)
-  {
-  }
+    {
+    }
 };
 
 class Biosphere : public MaterialContainer<Biome>
 {
-public:
+ public:
   Biosphere(std::string name,
             std::vector<Biome> contents,
             double freq,
             double smoothness)
     : MaterialContainer(name, contents, freq, smoothness)
-  {
-  }
+    {
+    }
 
   static Biosphere getBasicBiosphere();
 };
