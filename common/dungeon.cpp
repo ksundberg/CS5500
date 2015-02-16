@@ -12,7 +12,7 @@ void Dungeon::makeDungeon(ChunkList& list)
     {
       for (int k = 0; k < DUNGEON_SIZE; k++)
       {
-        list[index(i, j, k)] = new Chunk(i, j, k);
+        list[index(i, j, k)] = std::make_shared<Chunk>(i, j, k);
       }
     }
   }
@@ -86,15 +86,17 @@ void Dungeon::createRooms(ChunkList& list)
   createMaze(list, chunksToConnect);
 }
 
-void Dungeon::createMaze(ChunkList& env, const ChunkList &toConnect)
+void Dungeon::createMaze(ChunkList& env, const ChunkList& toConnect)
 {
-  for(const auto &c: toConnect)
+  for (const auto& c : toConnect)
   {
     connectRoom(env, c, toConnect[rand() % toConnect.size()]);
   }
 }
 
-void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
+void Dungeon::connectRoom(ChunkList& list,
+                          std::shared_ptr<Chunk> chunk1,
+                          std::shared_ptr<Chunk> chunk2)
 {
   auto pos1 = chunkToBlockDistance(chunk1->getPosition());
   auto pos2 = chunkToBlockDistance(chunk2->getPosition());
@@ -117,13 +119,13 @@ void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
     list[index((static_cast<int>(start.x)) / Chunk::CHUNK_SIZE,
                (static_cast<int>(start.y)) / Chunk::CHUNK_SIZE,
                (static_cast<int>(start.z)) / Chunk::CHUNK_SIZE)]
-        ->deactivateBlock((static_cast<int>(start.x)) % DUNGEON_SIZE,
-                          (static_cast<int>(start.y)) % DUNGEON_SIZE,
-                          (static_cast<int>(start.z)) % DUNGEON_SIZE);
+      ->deactivateBlock((static_cast<int>(start.x)) % DUNGEON_SIZE,
+                        (static_cast<int>(start.y)) % DUNGEON_SIZE,
+                        (static_cast<int>(start.z)) % DUNGEON_SIZE);
   }
 }
 
-void Dungeon::createRoom(Chunk* chunk)
+void Dungeon::createRoom(std::shared_ptr<Chunk> chunk)
 {
   // Rooms are just empty chunks for now.
   chunk->deactivateAllBlocks();
@@ -178,7 +180,7 @@ void Dungeon::printDungeon(ChunkList& list)
             << std::endl;
 }
 
-bool Dungeon::isChunkAllActive(Chunk* chunk)
+bool Dungeon::isChunkAllActive(std::shared_ptr<Chunk> chunk)
 {
   for (int i = 0; i < Chunk::CHUNK_SIZE; i++)
   {
@@ -193,7 +195,7 @@ bool Dungeon::isChunkAllActive(Chunk* chunk)
   return true;
 }
 
-bool Dungeon::isChunkAnyActive(Chunk* chunk)
+bool Dungeon::isChunkAnyActive(std::shared_ptr<Chunk> chunk)
 {
   for (int i = 0; i < Chunk::CHUNK_SIZE; i++)
   {
