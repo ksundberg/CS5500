@@ -16,10 +16,10 @@ public:
 
   bool IsActive();
   void SetActive(bool active);
-  
-  double mass; //in kg
-  Vector3 acceleration; //in m/s^2
-  Vector3 velocity; //in m/s
+
+  double mass; // in kg
+  Vector3 acceleration; // in m/s^2
+  Vector3 velocity; // in m/s
 
 private:
   bool mActive;

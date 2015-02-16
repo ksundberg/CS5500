@@ -123,11 +123,11 @@ void Chunk::activateAllBlocks()
 
 void Chunk::deactivateAllBlocks()
 {
-  for(int i=0; i < CHUNK_SIZE; i++)
+  for (int i = 0; i < CHUNK_SIZE; i++)
   {
-    for(int j=0; j < CHUNK_SIZE; j++)
+    for (int j = 0; j < CHUNK_SIZE; j++)
     {
-      for(int k=0; k < CHUNK_SIZE; k++)
+      for (int k = 0; k < CHUNK_SIZE; k++)
       {
         mBlocks[i][j][k].SetActive(false);
       }

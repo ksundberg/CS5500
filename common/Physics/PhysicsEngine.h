@@ -1,4 +1,4 @@
-//http://buildnewgames.com/gamephysics/
+// http://buildnewgames.com/gamephysics/
 
 #ifndef PHYSICSENGINE_H
 #define PHYSICSENGINE_H
@@ -11,18 +11,19 @@
 
 class PhysicsEngine
 {
-    public:
-        PhysicsEngine(float deltaTime);
-        void UpdateSingle(Block block, Vector3 force);
-        void UpdateChunk(std::vector<Block> blockList);
-    private:
-        float dt;
-        Vector3 CalculateGravity(Block block);
-        Vector3 CalculateFriction(Block block);
-        Vector3 CalculateAirDrag(Block block);
-        Vector3 SumForces(Block block);
-        bool IsFalling(Block block);
-        bool IsMoving(Block block);
+public:
+  PhysicsEngine(float deltaTime);
+  void UpdateSingle(Block block, Vector3 force);
+  void UpdateChunk(std::vector<Block> blockList);
+
+private:
+  float dt;
+  Vector3 CalculateGravity(Block block);
+  Vector3 CalculateFriction(Block block);
+  Vector3 CalculateAirDrag(Block block);
+  Vector3 SumForces(Block block);
+  bool IsFalling(Block block);
+  bool IsMoving(Block block);
 };
 
 #endif

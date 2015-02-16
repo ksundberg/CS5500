@@ -38,7 +38,6 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   menuTools->Append(ID_Inventory, "&Inventory...\tCtrl-I");
   menuTools->Append(ID_Dungeon, "&Dungeon...\tCtrl-d");
 
-
   wxMenuBar* menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
   menuBar->Append(menuHelp, "&Help");

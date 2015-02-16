@@ -3,15 +3,16 @@
 
 #include "noise/PerlinNoise.h"
 
-//thread unsafe
+// thread unsafe
 class WorldFactory
 {
 public:
-WorldFactory(int,int);
-int getMinElevation() const;
-int getMaxElevation() const;
-int elevation (int x, int y, PerlinNoise noise, int noiseDepth);
+  WorldFactory(int, int);
+  int getMinElevation() const;
+  int getMaxElevation() const;
+  int elevation(int x, int y, PerlinNoise noise, int noiseDepth);
+
 private:
-int minElevation,maxElevation;
+  int minElevation, maxElevation;
 };
 #endif

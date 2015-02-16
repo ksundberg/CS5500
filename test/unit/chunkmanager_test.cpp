@@ -31,26 +31,25 @@ TEST_CASE("Chunk Manager update function test",
 TEST_CASE("Chunks can access and set their blocks.")
 {
   Chunk* chunk = new Chunk(0, 0, 0);
-  chunk->activateBlock(0,0,0);
-  REQUIRE(chunk->isBlockActive(0,0,0));
-  chunk->deactivateBlock(0,0,0);
-  REQUIRE(!(chunk->isBlockActive(0,0,0)));
+  chunk->activateBlock(0, 0, 0);
+  REQUIRE(chunk->isBlockActive(0, 0, 0));
+  chunk->deactivateBlock(0, 0, 0);
+  REQUIRE(!(chunk->isBlockActive(0, 0, 0)));
 }
 
 TEST_CASE("Can activate and deactivate all blocks in a chunk.")
 {
-  Chunk* chunk = new Chunk(1,4,5);
+  Chunk* chunk = new Chunk(1, 4, 5);
 
   chunk->activateAllBlocks();
   // Make sure they're all active.
-  REQUIRE(chunk->isBlockActive(5,8,2));
-  REQUIRE(chunk->isBlockActive(2,4,9));
-  REQUIRE(chunk->isBlockActive(9,8,7));
+  REQUIRE(chunk->isBlockActive(5, 8, 2));
+  REQUIRE(chunk->isBlockActive(2, 4, 9));
+  REQUIRE(chunk->isBlockActive(9, 8, 7));
 
   chunk->deactivateAllBlocks();
   // Make sure they're all inactive.
-  REQUIRE(!(chunk->isBlockActive(5,8,2)));
-  REQUIRE(!(chunk->isBlockActive(2,4,9)));
-  REQUIRE(!(chunk->isBlockActive(9,8,7)));
-
+  REQUIRE(!(chunk->isBlockActive(5, 8, 2)));
+  REQUIRE(!(chunk->isBlockActive(2, 4, 9)));
+  REQUIRE(!(chunk->isBlockActive(9, 8, 7)));
 }

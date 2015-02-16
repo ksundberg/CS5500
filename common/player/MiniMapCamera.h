@@ -1,7 +1,9 @@
 #include <vector3.h>
 enum Axis
 {
-  X,Y,Z
+  X,
+  Y,
+  Z
 };
 
 class MiniMapCamera
@@ -9,7 +11,7 @@ class MiniMapCamera
 public:
   MiniMapCamera(float x, float y, float z);
   auto getDensityOfChunk = ()[]{
-    
+
   };
 
 private:

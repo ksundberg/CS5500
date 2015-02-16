@@ -5,7 +5,6 @@
 #include "canvas.h"
 #include "chunkmanager.h"
 
-
 // Define a new application type
 class MyApp : public wxApp
 {
@@ -14,12 +13,9 @@ private:
   TestGLContext* m_glContext;
   MainWindow* frame;
   ChunkManager* manager;
-  
+
 public:
-  MyApp()
-  {
-    m_glContext = NULL;
-  }
+  MyApp() { m_glContext = NULL; }
 
   // Returns the shared context used by all frames and sets it as current for
   // the given canvas.
@@ -28,8 +24,6 @@ public:
   // virtual wxApp methods
   virtual bool OnInit();
   virtual int OnExit();
-
 };
-
 
 #endif
