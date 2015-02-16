@@ -1,3 +1,6 @@
+// Example application modified from the wxWidgets demo here:
+// http://fossies.org/dox/wxWidgets-3.0.2/cube_8cpp_source.html
+
 #include <GL/glut.h>
 #include "canvas.h"
 #include "main.h"

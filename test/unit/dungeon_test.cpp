@@ -30,4 +30,13 @@ TEST_CASE("We have a dungeon to work with.")
     delete a;
     delete b;
   }
+
+  SECTION("Make sure isBlockActive can index without segfaulting.")
+  {
+    auto couldBeTrueOrFalse = Dungeon::isBlockActive(
+      chunks, dungeon_length - 1, dungeon_length - 1, dungeon_length - 1);
+
+    auto theTruth = true || couldBeTrueOrFalse;
+    REQUIRE(theTruth);
+  }
 }

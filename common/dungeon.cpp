@@ -41,8 +41,8 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
     return false;
   }
 
-  auto chunk =
-    list[index(x / DUNGEON_SIZE, y / DUNGEON_SIZE, z / DUNGEON_SIZE)];
+  auto chunk = list[index(
+    x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE, z / Chunk::CHUNK_SIZE)];
 
   return chunk->isBlockActive(
     x % DUNGEON_SIZE, y % DUNGEON_SIZE, z % DUNGEON_SIZE);
@@ -50,41 +50,48 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
 
 void Dungeon::createRooms(ChunkList& list)
 {
-	// Entrance is at the top of our dungeon cube.
-	//auto chunk1 =
-	//	list[index(DUNGEON_SIZE / 2, DUNGEON_SIZE / 2, DUNGEON_SIZE - 1)];
-		//auto chunk2 = list[index(0, 0, DUNGEON_SIZE - 1)];
+  // Entrance is at the top of our dungeon cube.
+  // auto chunk1 =
+  //	list[index(DUNGEON_SIZE / 2, DUNGEON_SIZE / 2, DUNGEON_SIZE - 1)];
+  // auto chunk2 = list[index(0, 0, DUNGEON_SIZE - 1)];
 
-	// initialize rand()
-	srand(time(NULL));
-	int i;
-	int roomcount;
-	int x,y,z; //location
-	// make entrance
-	x = DUNGEON_SIZE / 2;
-	y = DUNGEON_SIZE / 2;
-	z = DUNGEON_SIZE -1;
-	auto chunkrand = list[index( x , y , z)];
-	createRoom(chunkrand);
+  // initialize rand()
+  srand(time(NULL));
+  int i;
+  int roomcount;
+  int x, y, z; // location
+  ChunkList chunksToConnect;
+  // make entrance
+  x = DUNGEON_SIZE / 2;
+  y = DUNGEON_SIZE / 2;
+  z = DUNGEON_SIZE - 1;
+  auto chunkrand = list[index(x, y, z)];
+  createRoom(chunkrand);
+  chunksToConnect.push_back(chunkrand);
 
-	roomcount  = DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE * .05;
+  roomcount = DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE * .05;
 
-	for(i = 0; i < roomcount; i++)
-	{
-		x = rand() % DUNGEON_SIZE;
-		y = rand() % DUNGEON_SIZE;
-		z = rand() % DUNGEON_SIZE;
+  for (i = 0; i < roomcount; i++)
+  {
+    x = rand() % DUNGEON_SIZE;
+    y = rand() % DUNGEON_SIZE;
+    z = rand() % DUNGEON_SIZE;
 
-		chunkrand = list[index(x, y, z)];
+    chunkrand = list[index(x, y, z)];
 
-		createRoom(chunkrand);
-	}
+    createRoom(chunkrand);
+    chunksToConnect.push_back(chunkrand);
+  }
 
+  createMaze(list, chunksToConnect);
+}
 
-
-  //createRoom(chunk1);
-  //createRoom(chunk2);
-  //connectRoom(list, chunk1, chunk2);
+void Dungeon::createMaze(ChunkList& env, const ChunkList &toConnect)
+{
+  for(const auto &c: toConnect)
+  {
+    connectRoom(env, c, toConnect[rand() % toConnect.size()]);
+  }
 }
 
 void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
@@ -103,12 +110,13 @@ void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
             v.y < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1 && 0 < v.x &&
             v.x < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1);
   };
+
   while (distanceBetween(start, pos2) > 1.0 && in_dungeon(start))
   {
     start += unit;
-    list[index((static_cast<int>(start.x)) / DUNGEON_SIZE,
-               (static_cast<int>(start.y)) / DUNGEON_SIZE,
-               (static_cast<int>(start.z)) / DUNGEON_SIZE)]
+    list[index((static_cast<int>(start.x)) / Chunk::CHUNK_SIZE,
+               (static_cast<int>(start.y)) / Chunk::CHUNK_SIZE,
+               (static_cast<int>(start.z)) / Chunk::CHUNK_SIZE)]
         ->deactivateBlock((static_cast<int>(start.x)) % DUNGEON_SIZE,
                           (static_cast<int>(start.y)) % DUNGEON_SIZE,
                           (static_cast<int>(start.z)) % DUNGEON_SIZE);
@@ -128,11 +136,6 @@ int Dungeon::dungeonBlockLength()
 
 void Dungeon::printDungeon(ChunkList& list)
 {
-  std::cout << "Dungeon representation:" << std::endl;
-  std::cout << " . represents solid chunks." << std::endl;
-  std::cout << " R represents a room" << std::endl;
-  std::cout << "Each chunk should be a 16 x 16 x 16 container of voxels," << std::endl;
-  std::cout << "so a room would contain 4096 voxels (for now)." << std::endl;
   list.resize(DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE);
   for (int k = DUNGEON_SIZE - 1; k >= 0; k--)
   {
@@ -162,6 +165,17 @@ void Dungeon::printDungeon(ChunkList& list)
     }
     std::cout << std::endl;
   }
+  std::cout << "Dungeon representation:" << std::endl;
+  std::cout << " . represents solid chunks." << std::endl;
+  std::cout << " R represents a room." << std::endl;
+  std::cout << " o represents a path." << std::endl;
+  std::cout
+    << "\nEach solid chunk should be a 16 x 16 x 16 container of voxels."
+    << std::endl;
+  std::cout << "\nA room is also a 16 x 16 x 16 container of voxels, but"
+            << "\nall of its voxels are inactive (air)." << std::endl;
+  std::cout << "\nA path chunk is a mixture of both air and solid voxels."
+            << std::endl;
 }
 
 bool Dungeon::isChunkAllActive(Chunk* chunk)

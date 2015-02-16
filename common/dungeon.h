@@ -39,4 +39,5 @@ class Dungeon {
   static void createRoom(Chunk* chunkList);
   static bool isChunkAllActive(Chunk* chunk);
   static bool isChunkAnyActive(Chunk* chunk);
+  static void createMaze(ChunkList& env, const ChunkList &toConnect);
 };
