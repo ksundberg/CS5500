@@ -1,5 +1,5 @@
 #include "material_density.h"
-#include <vector>
+#include <forward_list>
 #include <tbb/tbb.h>
 
 void
@@ -73,11 +73,11 @@ material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::
                                              prism.getY (), prism.getY () + prism.getWidthY (),
                                              prism.getZ (), prism.getZ () + prism.getHeightZ ());
 
-  return tbb::parallel_reduce
+  std::forward_list<MaterialDensityMap> mapList =  tbb::parallel_reduce
           (
            range,
-           std::vector<MaterialDensityMap>(),
-           [coordinate2materialNameFunction, xyzWeightingFunction](const tbb::blocked_range3d<int, int, int> r, std::vector<MaterialDensityMap> init)->std::vector<MaterialDensityMap>
+           std::forward_list<MaterialDensityMap>(),
+           [coordinate2materialNameFunction, xyzWeightingFunction](const tbb::blocked_range3d<int, int, int> r, std::forward_list<MaterialDensityMap> init)->std::forward_list<MaterialDensityMap>
              {
 
                int xBegin = r.pages ().begin (),
@@ -99,21 +99,25 @@ material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::
            float weight = xyzWeightingFunction (xIt, yIt, zIt);
            MaterialDensityMap map;
            map.add (materialName, weight);
-           init.push_back (map);
+           init.push_front (map);
                          }
                      }
                  }
 
-           //return the fully initialized mapVector
+           //return the fully initialized mapList
            return init;
              },
-           [](std::vector<MaterialDensityMap> vecA, std::vector<MaterialDensityMap> vecB)->std::vector<MaterialDensityMap>
+           [](std::forward_list<MaterialDensityMap> listA, std::forward_list<MaterialDensityMap> listB)->std::forward_list<MaterialDensityMap>
              {
-               //return the concatenation of two vectors
-               vecA.insert (vecA.end (), vecB.begin (), vecB.end ());
-           return vecA;
+               //return the concatenation of two lists
+               listA.splice_after(listA.end (), listB);
+               return listA;
              }
            );
+           
+           std::vector<MaterialDensityMap> mapVector;
+           mapVector.insert (mapVector.end (), mapList.begin (), mapList.end ());
+           return mapVector;
 }
 
 MaterialDensityMap
