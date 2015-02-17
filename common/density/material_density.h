@@ -7,7 +7,7 @@
 #include <string>
 
 #include <functional>
-#include <vector>
+#include <tbb/concurrent_vector.h>
 
 #include "rectangular_prism.h"
 #include "../world.h"
@@ -48,12 +48,12 @@ namespace material_density
   float basicMaterialWeightingFunction (std::string material);
 
   //takes a prism, a way to get materials, and a way to get xyz weigtings and returns a vector of reducible materialDensity maps
-  std::vector<MaterialDensityMap> prism_2_mapVector (RectangularPrism prism,
+  tbb::concurrent_vector<MaterialDensityMap> prism_2_mapVector (RectangularPrism prism,
                                                      std::function<std::string (Coordinate) > coordinate2materialNameFunction,
                                                      std::function<float(int, int, int) > xyzWeightingFunction);
   
   //takes a vector of materialDensityMaps and reduces them to a single MaterialDensityMap
-  MaterialDensityMap parallel_reduce_MD (std::vector<MaterialDensityMap> vec);
+  MaterialDensityMap parallel_reduce_MD (tbb::concurrent_vector<MaterialDensityMap> vec);
   
   //takes a MaterialDensityMap and a way to get materialWeightings and returns a float
   float parallel_reduce_MDM (MaterialDensityMap mdm, std::function<float(std::string) > materialWeightingFunction);

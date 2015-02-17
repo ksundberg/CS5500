@@ -1,5 +1,4 @@
 #include "material_density.h"
-#include <forward_list>
 #include <tbb/tbb.h>
 
 void
@@ -66,18 +65,19 @@ MaterialDensityMap::operator+ (MaterialDensityMap& mdMap)
 //////////////////////////////////////////////////////////////////////////////
 //Material Density Functions
 
-std::vector<MaterialDensityMap>
+tbb::concurrent_vector<MaterialDensityMap>
 material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::string (Coordinate) > coordinate2materialNameFunction, std::function<float(int, int, int) > xyzWeightingFunction)
 {
   tbb::blocked_range3d<int, int, int> range (prism.getX (), prism.getX () + prism.getLengthX (),
                                              prism.getY (), prism.getY () + prism.getWidthY (),
                                              prism.getZ (), prism.getZ () + prism.getHeightZ ());
 
-  std::forward_list<MaterialDensityMap> mapList =  tbb::parallel_reduce
+  tbb::concurrent_vector<MaterialDensityMap> concurrentMapVector;
+  
+  tbb::parallel_for
           (
            range,
-           std::forward_list<MaterialDensityMap>(),
-           [coordinate2materialNameFunction, xyzWeightingFunction](const tbb::blocked_range3d<int, int, int> r, std::forward_list<MaterialDensityMap> init)->std::forward_list<MaterialDensityMap>
+           [&concurrentMapVector, coordinate2materialNameFunction, xyzWeightingFunction](const tbb::blocked_range3d<int, int, int> r)
              {
 
                int xBegin = r.pages ().begin (),
@@ -99,37 +99,26 @@ material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::
            float weight = xyzWeightingFunction (xIt, yIt, zIt);
            MaterialDensityMap map;
            map.add (materialName, weight);
-           init.push_front (map);
+           concurrentMapVector.push_back (map);
                          }
                      }
                  }
-
-           //return the fully initialized mapList
-           return init;
-             },
-           [](std::forward_list<MaterialDensityMap> listA, std::forward_list<MaterialDensityMap> listB)->std::forward_list<MaterialDensityMap>
-             {
-               //return the concatenation of two lists
-               listA.splice_after(listA.end (), listB);
-               return listA;
              }
            );
            
-           std::vector<MaterialDensityMap> mapVector;
-           mapVector.insert (mapVector.end (), mapList.begin (), mapList.end ());
-           return mapVector;
+           return concurrentMapVector;
 }
 
 MaterialDensityMap
-material_density::parallel_reduce_MD (std::vector<MaterialDensityMap> vec)
+material_density::parallel_reduce_MD (tbb::concurrent_vector<MaterialDensityMap> vec)
 {
   return tbb::parallel_reduce
           (
-           tbb::blocked_range<std::vector<MaterialDensityMap>::iterator>(vec.begin (), vec.end ()),
+           tbb::blocked_range<tbb::concurrent_vector<MaterialDensityMap>::iterator>(vec.begin (), vec.end ()),
            MaterialDensityMap (),
-           [](const tbb::blocked_range<std::vector<MaterialDensityMap>::iterator>& r, MaterialDensityMap init)->MaterialDensityMap
+           [](const tbb::blocked_range<tbb::concurrent_vector<MaterialDensityMap>::iterator>& r, MaterialDensityMap init)->MaterialDensityMap
              {
-               for (std::vector<MaterialDensityMap>::iterator a = r.begin (); a != r.end (); ++a)
+               for (tbb::concurrent_vector<MaterialDensityMap>::iterator a = r.begin (); a != r.end (); ++a)
                  {
                    init = init + *a;
                  }
