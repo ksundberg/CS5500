@@ -72,6 +72,12 @@ material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::
                                              prism.getY (), prism.getY () + prism.getWidthY (),
                                              prism.getZ (), prism.getZ () + prism.getHeightZ ());
 
+  //ToDo:
+  // I need to change input to be pass by reference
+  // and I need to make sure my return variable isn't going out of scope
+  //really I need to use the keyword new and a pointer
+  //or I need to wrap this in some sort of RAII and change the return type to *
+  //look-up shared_ptr
   tbb::concurrent_vector<MaterialDensityMap> concurrentMapVector;
   
   tbb::parallel_for
@@ -112,6 +118,9 @@ material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::
 MaterialDensityMap
 material_density::parallel_reduce_MD (tbb::concurrent_vector<MaterialDensityMap> vec)
 {
+  //ToDo: make this so that it is pass by reference 
+  //and make sure that variable being returned doesn't go out of scope
+  
   return tbb::parallel_reduce
           (
            tbb::blocked_range<tbb::concurrent_vector<MaterialDensityMap>::iterator>(vec.begin (), vec.end ()),
