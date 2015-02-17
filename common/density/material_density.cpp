@@ -48,7 +48,8 @@ MaterialDensityMap::findDensity (std::string str)
     return 0.0;
 }
 
-MaterialDensityMap MaterialDensityMap::operator+ (MaterialDensityMap& mdMap)
+MaterialDensityMap
+MaterialDensityMap::operator+ (MaterialDensityMap& mdMap)
 {
   MaterialDensityMap newMap;
   for (std::map<std::string, double>::iterator mapIt = mdMap.begin (); mapIt != mdMap.end (); ++mapIt)
@@ -110,7 +111,7 @@ material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::
              {
                //return the concatenation of two vectors
                vecA.insert (vecA.end (), vecB.begin (), vecB.end ());
-               return vecA;
+           return vecA;
              }
            );
 }
@@ -125,7 +126,9 @@ material_density::parallel_reduce_MD (std::vector<MaterialDensityMap> vec)
            [](const tbb::blocked_range<std::vector<MaterialDensityMap>::iterator>& r, MaterialDensityMap init)->MaterialDensityMap
              {
                for (std::vector<MaterialDensityMap>::iterator a = r.begin (); a != r.end (); ++a)
-                 init = init + *a;
+                 {
+                   init = init + *a;
+                 }
                return init;
              },
            [](MaterialDensityMap x, MaterialDensityMap y)->MaterialDensityMap
