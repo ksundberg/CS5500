@@ -2,68 +2,177 @@
 #include <vector>
 #include <tbb/tbb.h>
 
-void material_density_Map::add(Material& m,double d)
+void
+MaterialDensityMap::add (Material& m, double d)
 {
-  add(m.name,d);
+  add (m.name, d);
 }
 
-void material_density_Map::add(std::string m,double d)
+void
+MaterialDensityMap::add (std::string m, double d)
 {
-  if(count(m)==0)
-    find(m)->second+=d;
+  if (count (m) == 0)
+    {
+      find (m)->second += d;
+    }
   else
-    emplace(m,d);
+    {
+      emplace (m, d);
+    }
 }
 
-void material_density_Map::add(material_density& md)
+void
+MaterialDensityMap::add (MaterialDensity& md)
 {
-  add(md.first,md.second);
+  add (md.first, md.second);
 }
 
-void material_density_Map::add(std::pair<const std::string,double> md)
+void
+MaterialDensityMap::add (std::pair<const std::string, double> md)
 {
-  add(md.first,md.second);
+  add (md.first, md.second);
 }
 
-double material_density_Map::findDensity(Material& m)
+double
+MaterialDensityMap::findDensity (Material& m)
 {
-  return findDensity(m.name);
+  return findDensity (m.name);
 }
 
-double material_density_Map::findDensity(std::string str)
+double
+MaterialDensityMap::findDensity (std::string str)
 {
-  if(count(str)>0)
-    return find(str)->second;
+  if (count (str) > 0)
+    return find (str)->second;
   else
     return 0.0;
 }
 
-material_density_Map material_density_Map::operator+(material_density_Map& mdMap)
+MaterialDensityMap MaterialDensityMap::operator+ (MaterialDensityMap& mdMap)
 {
-  material_density_Map newMap;
-  for(auto& md=mdMap.begin();md!=mdMap.end();++md)
-  {
-    newMap.add(*md);
-  }
-  for(auto& md=this->begin();md!=this->end();++md)
-  {
-    newMap.add(*md);
-  }
+  MaterialDensityMap newMap;
+  for (std::map<std::string, double>::iterator mapIt = mdMap.begin (); mapIt != mdMap.end (); ++mapIt)
+    {
+      newMap.add (mapIt->first, mapIt->second);
+    }
+  for (std::map<std::string, double>::iterator mapIt = this->begin (); mapIt != this->end (); ++mapIt)
+    {
+      newMap.add (mapIt->first, mapIt->second);
+    }
   return newMap;
 }
 
-material_density_Map parallel_reduce_MD(std::vector<material_density_Map> vec)
+//////////////////////////////////////////////////////////////////////////////
+//Material Density Functions
+
+std::vector<MaterialDensityMap>
+material_density::prism_2_mapVector (RectangularPrism prism, std::function<std::string (Coordinate) > coordinate2materialNameFunction, std::function<float(int, int, int) > xyzWeightingFunction)
+{
+  tbb::blocked_range3d<int, int, int> range (prism.getX (), prism.getX () + prism.getLengthX (),
+                                             prism.getY (), prism.getY () + prism.getWidthY (),
+                                             prism.getZ (), prism.getZ () + prism.getHeightZ ());
+
+  return tbb::parallel_reduce
+          (
+           range,
+           std::vector<MaterialDensityMap>(),
+           [coordinate2materialNameFunction, xyzWeightingFunction](const tbb::blocked_range3d<int, int, int> r, std::vector<MaterialDensityMap> init)->std::vector<MaterialDensityMap>
+             {
+
+               int xBegin = r.pages ().begin (),
+                       xEnd = r.pages ().end (),
+                       yBegin = r.rows ().begin (),
+                       yEnd = r.rows ().end (),
+                       zBegin = r.cols ().begin (),
+                       zEnd = r.cols ().end ();
+
+           //for each sub range given to me by tbb
+           for (int xIt = xBegin; xIt != xEnd; ++xIt)
+                 {
+           for (int yIt = yBegin; yIt != yEnd; ++yIt)
+                     {
+           for (int zIt = zBegin; zIt != zEnd; ++zIt)
+                         {
+           Coordinate coordinate (xIt, yIt, zIt);
+           std::string materialName = coordinate2materialNameFunction (coordinate);
+           float weight = xyzWeightingFunction (xIt, yIt, zIt);
+           MaterialDensityMap map;
+           map.add (materialName, weight);
+           init.push_back (map);
+                         }
+                     }
+                 }
+
+           //return the fully initialized mapVector
+           return init;
+             },
+           [](std::vector<MaterialDensityMap> vecA, std::vector<MaterialDensityMap> vecB)->std::vector<MaterialDensityMap>
+             {
+               //return the concatenation of two vectors
+               vecA.insert (vecA.end (), vecB.begin (), vecB.end ());
+               return vecA;
+             }
+           );
+}
+
+MaterialDensityMap
+material_density::parallel_reduce_MD (std::vector<MaterialDensityMap> vec)
 {
   return tbb::parallel_reduce
-  ( 
-    tbb::blocked_range<std::vector<material_density_Map>::iterator>(vec.begin(), vec.end()), 
-      material_density_Map(), 
-      [](const tbb::blocked_range<std::vector<material_density_Map>::iterator>& r, material_density_Map init)->material_density_Map
-      {
-        for( std::vector<material_density_Map>::iterator a=r.begin(); a!=r.end(); ++a ) 
-          init = init+*a;
-          return init;
-      },
-      []( material_density_Map x, material_density_Map y )->material_density_Map{return x+y;}
-  ); 
+          (
+           tbb::blocked_range<std::vector<MaterialDensityMap>::iterator>(vec.begin (), vec.end ()),
+           MaterialDensityMap (),
+           [](const tbb::blocked_range<std::vector<MaterialDensityMap>::iterator>& r, MaterialDensityMap init)->MaterialDensityMap
+             {
+               for (std::vector<MaterialDensityMap>::iterator a = r.begin (); a != r.end (); ++a)
+                 init = init + *a;
+               return init;
+             },
+           [](MaterialDensityMap x, MaterialDensityMap y)->MaterialDensityMap
+             {
+               return x + y;
+             }
+           );
 }
+
+float
+material_density::parallel_reduce_MDM (MaterialDensityMap mdm, std::function<float(std::string) > materialWeightingFunction)
+{
+  //Soren's ToDo: reduce the MaterialDensityMap to a float using the materialWeightingFunction
+
+  //voided variables so that compiler doesn't complain about unused variables
+  //can be removed when variables are actually used
+  (void) mdm;
+  (void) materialWeightingFunction;
+
+  return 0;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Basic weightings functions that may be used in place of lambdas
+
+std::string
+material_density::basicCoordinate2materialNameFunction (Coordinate coordinate)
+{
+  //This is a filler function until the World and Material are linked
+  (void) coordinate;
+  return "Stone";
+}
+
+float
+material_density::basicXYZWeightingFunction (int x, int y, int z)
+{
+  (void) x;
+  (void) y;
+  (void) z;
+  return 1;
+};
+
+float
+material_density::basicMaterialWeightingFunction (std::string material)
+{
+  (void) material;
+  return 1;
+};
+

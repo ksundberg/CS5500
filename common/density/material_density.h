@@ -9,6 +9,9 @@
 #include <functional>
 #include <vector>
 
+#include "rectangular_prism.h"
+#include "../world.h"
+
 class Material
 {
 public:
@@ -16,25 +19,44 @@ public:
   double freq;
 };
 
-class material_density:public std::pair<std::string,double>
+class MaterialDensity : public std::pair<std::string, double>
 {
 public:
-  material_density(Material& m,double d):pair<std::string,double>(m.name,d){};
-  material_density(std::string& str,double d):pair<std::string,double>(str,d){};
+
+  MaterialDensity (Material& m, double d) : pair<std::string, double>(m.name, d) { };
+
+  MaterialDensity (std::string& str, double d) : pair<std::string, double>(str, d) { };
 };
 
-class material_density_Map:public std::map<std::string,double>
+class MaterialDensityMap : public std::map<std::string, double>
 {
 public:
-  void add(Material& m,double d);
-  void add(std::string str,double d);
-  void add(material_density& md);
-  void add(std::pair<const std::string,double>);
-  double findDensity(Material& m);
-  double findDensity(std::string str);
-  material_density_Map operator+(material_density_Map& mdMap);
+  void add (Material& m, double d);
+  void add (std::string str, double d);
+  void add (MaterialDensity& md);
+  void add (std::pair<const std::string, double>);
+  double findDensity (Material& m);
+  double findDensity (std::string str);
+  MaterialDensityMap operator+ (MaterialDensityMap& mdMap);
 };
 
- material_density_Map parallel_reduce_MD(std::vector<material_density_Map> vec);
+namespace material_density
+{
+  //basic functions that can be used in place of lambda functions if desired
+  std::string basicCoordinate2materialNameFunction (Coordinate coordinate);
+  float basicXYZWeightingFunction (int x, int y, int z);
+  float basicMaterialWeightingFunction (std::string material);
+
+  //takes a prism, a way to get materials, and a way to get xyz weigtings and returns a vector of reducible materialDensity maps
+  std::vector<MaterialDensityMap> prism_2_mapVector (RectangularPrism prism,
+                                                     std::function<std::string (Coordinate) > coordinate2materialNameFunction,
+                                                     std::function<float(int, int, int) > xyzWeightingFunction);
+  
+  //takes a vector of materialDensityMaps and reduces them to a single MaterialDensityMap
+  MaterialDensityMap parallel_reduce_MD (std::vector<MaterialDensityMap> vec);
+  
+  //takes a MaterialDensityMap and a way to get materialWeightings and returns a float
+  float parallel_reduce_MDM (MaterialDensityMap mdm, std::function<float(std::string) > materialWeightingFunction);
+}
 
 #endif
