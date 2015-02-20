@@ -117,7 +117,7 @@ bool PhysicsEngine::IsFalling(Block block)
   // This will be a stencil
 
   // Since this datastructure doesn't exist yet...
-  auto remove_warning = block.IsActive();
+  auto remove_warning = block.get();
   return !remove_warning;
 }
 

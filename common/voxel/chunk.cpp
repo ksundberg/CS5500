@@ -96,15 +96,15 @@ void Chunk::Update(float /*dt*/)
 
 void Chunk::activateBlock(int x, int y, int z)
 {
-  mBlocks[x][y][z].SetActive(true);
+  mBlocks[x][y][z].set(BlockType::Active);
 }
 void Chunk::deactivateBlock(int x, int y, int z)
 {
-  mBlocks[x][y][z].SetActive(false);
+  mBlocks[x][y][z].set(BlockType::Inactive);
 }
 bool Chunk::isBlockActive(int x, int y, int z)
 {
-  return mBlocks[x][y][z].IsActive();
+  return mBlocks[x][y][z].get();
 }
 
 void Chunk::activateAllBlocks()
@@ -115,7 +115,7 @@ void Chunk::activateAllBlocks()
     {
       for (int k = 0; k < CHUNK_SIZE; k++)
       {
-        mBlocks[i][j][k].SetActive(true);
+        mBlocks[i][j][k].set(BlockType::Active);
       }
     }
   }
@@ -129,7 +129,7 @@ void Chunk::deactivateAllBlocks()
     {
       for (int k = 0; k < CHUNK_SIZE; k++)
       {
-        mBlocks[i][j][k].SetActive(false);
+        mBlocks[i][j][k].set(BlockType::Inactive);
       }
     }
   }

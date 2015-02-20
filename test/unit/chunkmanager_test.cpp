@@ -1,5 +1,6 @@
 #include <catch.hpp>
 #include "chunkmanager.h"
+#include "block.h"
 
 TEST_CASE("Chunk Manager update function test",
           "[float deltaTime, Vector3 cameraPosition, Vector3 cameraRotation)]")
@@ -52,4 +53,14 @@ TEST_CASE("Can activate and deactivate all blocks in a chunk.")
   REQUIRE(!(chunk->isBlockActive(5, 8, 2)));
   REQUIRE(!(chunk->isBlockActive(2, 4, 9)));
   REQUIRE(!(chunk->isBlockActive(9, 8, 7)));
+}
+
+TEST_CASE("Can check if blocks are active or not.")
+{
+  auto block = new Block();
+  block->set(BlockType::Active);
+  REQUIRE(block->get());
+  block->set(BlockType::Inactive);
+  REQUIRE(!(block->get()));
+  delete block;
 }

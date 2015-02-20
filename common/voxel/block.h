@@ -5,7 +5,8 @@
 
 enum BlockType
 {
-  BlockTypeDefault
+  Inactive = 0,
+  Active
 };
 
 class Block
@@ -14,15 +15,15 @@ public:
   Block();
   ~Block();
 
-  bool IsActive();
-  void SetActive(bool active);
+  BlockType get();
+  void set(BlockType type);
 
   double mass; // in kg
   Vector3 acceleration; // in m/s^2
   Vector3 velocity; // in m/s
 
 private:
-  bool mActive;
+  BlockType type;
 
   //		BlockType mBlockType;
 };
