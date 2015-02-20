@@ -2,9 +2,14 @@
 #include "chunkmanager.h"
 #include "block.h"
 
-TEST_CASE("Chunk Manager update function test",
-          "[float deltaTime, Vector3 cameraPosition, Vector3 cameraRotation)]")
+TEST_CASE("ChunkManager is a 3-dimmensional matrix of blocks under the hood, "
+          "so we should be able to set and get them.")
 {
+  ChunkManager cm;
+  cm.set(1, 2, 3, BlockType::Active);
+  REQUIRE(cm.get(1, 2, 3));
+  cm.set(1, 4, 5, BlockType::Inactive);
+  REQUIRE(!(cm.get(1, 4, 5)));
 }
 
 TEST_CASE("Chunks can access and set their blocks.")

@@ -17,14 +17,15 @@ class ChunkManager
 {
 private:
   int index(int x, int y, int z);
-  ChunkList chunkProcessingList;
+  ChunkList chunks;
   const int CMX =
-    100; // The maximum width of the world in chunks(1600 blocks)(index is for
-         // use in chunk vector list calculations)(index goes from 0 to 99)
-  const int CMY = 100; // The maximum depth of the world in chunks(1600 blocks)
-  const int CMZ = 16;  // The maximum height of the world in chunks(256 blocks )
+    16; // The maximum width of the world in chunks(1600 blocks)(index is for
+        // use in chunk vector list calculations)(index goes from 0 to 99)
+  const int CMY = 16; // The maximum depth of the world in chunks(1600 blocks)
+  const int CMZ = 16; // The maximum height of the world in chunks(256 blocks )
 
 public:
+  ChunkManager();
   BlockType get(int x, int y, int z);
   void set(int x, int y, int z, BlockType type);
 };

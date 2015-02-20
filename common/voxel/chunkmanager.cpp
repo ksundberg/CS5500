@@ -12,23 +12,33 @@ sure that chunks don't overlap each other in these
 arrays does not happen doing this assumes that it is safe to overwrite an index.
 */
 
+ChunkManager::ChunkManager()
+{
+  chunks.resize(index(CMX, CMY, CMZ));
+  for (int i = 0; i < CMX; i++)
+  {
+    for (int j = 0; j < CMY; j++)
+    {
+      for (int k = 0; k < CMZ; k++)
+      {
+        chunks[index(i, j, k)] = std::make_shared<Chunk>(i, j, k);
+      }
+    }
+  }
+}
+
 BlockType ChunkManager::get(int x, int y, int z)
 {
-  return chunkProcessingList[index(x / Chunk::CHUNK_SIZE,
-                                   y / Chunk::CHUNK_SIZE,
-                                   z / Chunk::CHUNK_SIZE)]->get(x % CMX,
-                                                                y % CMY,
-                                                                z % CMZ);
+  return chunks[index(x / Chunk::CHUNK_SIZE,
+                      y / Chunk::CHUNK_SIZE,
+                      z / Chunk::CHUNK_SIZE)]->get(x % CMX, y % CMY, z % CMZ);
 }
 
 void ChunkManager::set(int x, int y, int z, BlockType type)
 {
-  chunkProcessingList[index(x / Chunk::CHUNK_SIZE,
-                            y / Chunk::CHUNK_SIZE,
-                            z / Chunk::CHUNK_SIZE)]->set(x % CMX,
-                                                         y % CMY,
-                                                         z % CMZ,
-                                                         type);
+  chunks[index(
+           x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE, z / Chunk::CHUNK_SIZE)]
+    ->set(x % CMX, y % CMY, z % CMZ, type);
 }
 
 int ChunkManager::index(int x, int y, int z)
