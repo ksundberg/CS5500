@@ -24,7 +24,7 @@ void Dungeon::makeChunksActive(ChunkList& chunkList)
 {
   for (auto& c : chunkList)
   {
-    c->activateAllBlocks();
+    c->setAllBlocks(BlockType::Active);
   }
 }
 
@@ -44,8 +44,7 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
   auto chunk = list[index(
     x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE, z / Chunk::CHUNK_SIZE)];
 
-  return chunk->isBlockActive(
-    x % DUNGEON_SIZE, y % DUNGEON_SIZE, z % DUNGEON_SIZE);
+  return chunk->get(x % DUNGEON_SIZE, y % DUNGEON_SIZE, z % DUNGEON_SIZE);
 }
 
 void Dungeon::createRooms(ChunkList& list)
@@ -119,16 +118,17 @@ void Dungeon::connectRoom(ChunkList& list,
     list[index((static_cast<int>(start.x)) / Chunk::CHUNK_SIZE,
                (static_cast<int>(start.y)) / Chunk::CHUNK_SIZE,
                (static_cast<int>(start.z)) / Chunk::CHUNK_SIZE)]
-      ->deactivateBlock((static_cast<int>(start.x)) % DUNGEON_SIZE,
-                        (static_cast<int>(start.y)) % DUNGEON_SIZE,
-                        (static_cast<int>(start.z)) % DUNGEON_SIZE);
+      ->set((static_cast<int>(start.x)) % DUNGEON_SIZE,
+            (static_cast<int>(start.y)) % DUNGEON_SIZE,
+            (static_cast<int>(start.z)) % DUNGEON_SIZE,
+            BlockType::Inactive);
   }
 }
 
 void Dungeon::createRoom(std::shared_ptr<Chunk> chunk)
 {
   // Rooms are just empty chunks for now.
-  chunk->deactivateAllBlocks();
+  chunk->setAllBlocks(BlockType::Inactive);
 }
 
 int Dungeon::dungeonBlockLength()
@@ -188,7 +188,7 @@ bool Dungeon::isChunkAllActive(std::shared_ptr<Chunk> chunk)
     {
       for (int k = 0; k < Chunk::CHUNK_SIZE; k++)
       {
-        if (!(chunk->isBlockActive(i, j, k))) return false;
+        if (!(chunk->get(i, j, k))) return false;
       }
     }
   }
@@ -203,7 +203,7 @@ bool Dungeon::isChunkAnyActive(std::shared_ptr<Chunk> chunk)
     {
       for (int k = 0; k < Chunk::CHUNK_SIZE; k++)
       {
-        if (chunk->isBlockActive(i, j, k)) return true;
+        if (chunk->get(i, j, k)) return true;
       }
     }
   }

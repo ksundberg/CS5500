@@ -231,6 +231,14 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
   , m_yangle(30.0)
   , m_spinTimer(this, SpinTimer)
 {
+  // Init for the game loop.
+  m_spinTimer.Start(16); // 16 milliseconds for 60 fps.
+  chunk_manager = new ChunkManager();
+}
+
+TestGLCanvas::~TestGLCanvas()
+{
+  delete chunk_manager;
 }
 
 // Needed to use wxGetApp(). Usually you get the same result
@@ -241,26 +249,12 @@ void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
   // This is required even though dc is not used otherwise.
   wxPaintDC dc(this);
-
-  // With perspective OpenGL graphics, the wxFULL_REPAINT_ON_RESIZE style
-  // flag should always be set, because even making the canvas smaller should
-  // be followed by a paint event that updates the entire canvas with new
-  // viewport settings.
-  Resize();
-
-  // Clear screen.
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // Render the graphics and swap the buffers.
-  TestGLContext& canvas = wxGetApp().GetContext(this);
-  canvas.DrawRotatedCube(m_xangle, m_yangle, 0.1f, -0.2f, 0.5f);
-  canvas.DrawRotatedCube(m_xangle, m_yangle, -0.5f, 0.3f, 0.5f);
-  SwapBuffers();
+  Render();
 }
 
 void TestGLCanvas::Resize()
 {
-  const wxSize ClientSize = GetClientSize();
+  auto ClientSize = GetClientSize();
   glViewport(0, 0, ClientSize.x, ClientSize.y);
 }
 
@@ -268,8 +262,6 @@ void TestGLCanvas::Spin(float xSpin, float ySpin)
 {
   m_xangle += xSpin;
   m_yangle += ySpin;
-
-  Refresh(false);
 }
 
 void TestGLCanvas::OnKeyDown(wxKeyEvent& event)
@@ -294,13 +286,6 @@ void TestGLCanvas::OnKeyDown(wxKeyEvent& event)
     Spin(angle, 0.0);
     break;
 
-  case WXK_SPACE:
-    if (m_spinTimer.IsRunning())
-      m_spinTimer.Stop();
-    else
-      m_spinTimer.Start(25);
-    break;
-
   default:
     event.Skip();
     return;
@@ -309,5 +294,30 @@ void TestGLCanvas::OnKeyDown(wxKeyEvent& event)
 
 void TestGLCanvas::OnSpinTimer(wxTimerEvent& WXUNUSED(event))
 {
+  Update();
+  Render();
+}
+
+void TestGLCanvas::Render()
+{
   Spin(0.0, 4.0);
+
+  // With perspective OpenGL graphics, the wxFULL_REPAINT_ON_RESIZE style
+  // flag should always be set, because even making the canvas smaller should
+  // be followed by a paint event that updates the entire canvas with new
+  // viewport settings.
+  Resize();
+
+  // Clear screen.
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Render the graphics and swap the buffers.
+  TestGLContext& context = wxGetApp().GetContext(this);
+  context.DrawRotatedCube(m_xangle, m_yangle, 0.1f, -0.2f, 0.5f);
+  context.DrawRotatedCube(m_xangle, m_yangle, -0.5f, 0.3f, 0.3f);
+  SwapBuffers();
+}
+
+void TestGLCanvas::Update()
+{
 }

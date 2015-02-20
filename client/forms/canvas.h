@@ -2,11 +2,13 @@
 #define _CANVAS_HEADER_
 #include <wxwidget.h>
 #include <wx/glcanvas.h>
+#include "chunkmanager.h"
 
 class TestGLCanvas : public wxGLCanvas
 {
 public:
   TestGLCanvas(wxWindow* parent, int* attribList = NULL);
+  ~TestGLCanvas();
 
 private:
   void OnPaint(wxPaintEvent& event);
@@ -14,11 +16,13 @@ private:
   void Spin(float xSpin, float ySpin);
   void OnKeyDown(wxKeyEvent& event);
   void OnSpinTimer(wxTimerEvent& WXUNUSED(event));
+  void Render();
+  void Update();
 
   // angles of rotation around x- and y- axis
   float m_xangle, m_yangle;
-
   wxTimer m_spinTimer;
+  ChunkManager* chunk_manager;
 
   wxDECLARE_EVENT_TABLE();
 };

@@ -86,9 +86,6 @@ set(common_srcs
   common/world.h
   common/dungeon.cpp
   common/dungeon.h
-  
-  common/Controls/DisplayHelper.cpp
-  common/Controls/DisplayHelper.h
 )
 source_group("common" FILES ${common_srcs})
 
