@@ -62,3 +62,13 @@ void Chunk::setAllBlocks(BlockType type)
     }
   }
 }
+
+void Chunk::update()
+{
+  // TODO: fill up this Chunk's vertex buffer object with new data.
+}
+
+void Chunk::render()
+{
+  // TODO: render this Chunk's vertex buffer object.
+}

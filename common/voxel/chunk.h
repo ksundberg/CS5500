@@ -10,18 +10,12 @@ public:
   Chunk(int x, int y, int z);
   ~Chunk();
 
-  void Update();
   void setAllBlocks(BlockType type);
   BlockType get(int x, int y, int z);
   void set(int x, int y, int z, BlockType type);
   Vector3 getPosition();
-
-  /*
-  ** Assuming the use of OpenGLRenderer class from JUCE  Currently commented out
-  *to prevent compile errors
-  ** void Render(OpenGLRenderer* pRenderer);
-  ** To be added back in next sprint for rendering compatibility
-  */
+  void update();
+  void render();
 
   static const int CHUNK_SIZE = 16;
 

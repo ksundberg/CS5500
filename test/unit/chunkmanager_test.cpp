@@ -2,14 +2,29 @@
 #include "chunkmanager.h"
 #include "block.h"
 
-TEST_CASE("ChunkManager is a 3-dimmensional matrix of blocks under the hood, "
-          "so we should be able to set and get them.")
+TEST_CASE("ChunkManager is a 3-dimmensional matrix of blocks under the hood.")
 {
   ChunkManager cm;
-  cm.set(1, 2, 3, BlockType::Active);
-  REQUIRE(cm.get(1, 2, 3));
-  cm.set(1, 4, 5, BlockType::Inactive);
-  REQUIRE(!(cm.get(1, 4, 5)));
+  SECTION("Can set and get blocks.")
+  {
+    cm.set(1, 2, 3, BlockType::Active);
+    REQUIRE(cm.get(1, 2, 3));
+    cm.set(1, 4, 5, BlockType::Inactive);
+    REQUIRE(!(cm.get(1, 4, 5)));
+  }
+  SECTION("Out of bounds blocks are inactive.")
+  {
+    cm.set(cm.BOUNDX,
+           cm.BOUNDY,
+           cm.BOUNDZ,
+           BlockType::Active);
+    REQUIRE(cm.get(cm.BOUNDX,
+                   cm.BOUNDY,
+                   cm.BOUNDZ) == BlockType::Inactive);
+
+    cm.set(-1,-1,-1,BlockType::Active);
+    REQUIRE(cm.get(-1,-1,-1) == BlockType::Inactive);
+  }
 }
 
 TEST_CASE("Chunks can access and set their blocks.")
@@ -19,6 +34,7 @@ TEST_CASE("Chunks can access and set their blocks.")
   REQUIRE(chunk->get(0, 0, 0));
   chunk->set(0, 0, 0, BlockType::Inactive);
   REQUIRE(!(chunk->get(0, 0, 0)));
+  delete chunk;
 }
 
 TEST_CASE("Can activate and deactivate all blocks in a chunk.")
@@ -36,6 +52,8 @@ TEST_CASE("Can activate and deactivate all blocks in a chunk.")
   REQUIRE(!(chunk->get(5, 8, 2)));
   REQUIRE(!(chunk->get(2, 4, 9)));
   REQUIRE(!(chunk->get(9, 8, 7)));
+
+  delete chunk;
 }
 
 TEST_CASE("Can check if blocks are active or not.")

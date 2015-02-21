@@ -4,14 +4,6 @@
 #include "tbb/parallel_for.h"
 #include "tbb/task_scheduler_init.h"
 
-/*
-The insert methods have been replaced with a blind write to memory in the future
-we need to insert error checking to make sure
-that the index exists and we need to double check index calculations to make
-sure that chunks don't overlap each other in these
-arrays does not happen doing this assumes that it is safe to overwrite an index.
-*/
-
 ChunkManager::ChunkManager()
 {
   chunks.resize(index(CMX, CMY, CMZ));
@@ -29,19 +21,51 @@ ChunkManager::ChunkManager()
 
 BlockType ChunkManager::get(int x, int y, int z)
 {
-  return chunks[index(x / Chunk::CHUNK_SIZE,
-                      y / Chunk::CHUNK_SIZE,
-                      z / Chunk::CHUNK_SIZE)]->get(x % CMX, y % CMY, z % CMZ);
+  if (0 > x || x >= CMX * Chunk::CHUNK_SIZE || 0 > y ||
+      y >= CMY * Chunk::CHUNK_SIZE || 0 > z || z >= CMZ * Chunk::CHUNK_SIZE)
+  {
+    return BlockType::Inactive;
+  }
+  else
+  {
+    return chunks[index(x / Chunk::CHUNK_SIZE,
+                        y / Chunk::CHUNK_SIZE,
+                        z / Chunk::CHUNK_SIZE)]->get(x % CMX, y % CMY, z % CMZ);
+  }
 }
 
 void ChunkManager::set(int x, int y, int z, BlockType type)
 {
-  chunks[index(
-           x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE, z / Chunk::CHUNK_SIZE)]
-    ->set(x % CMX, y % CMY, z % CMZ, type);
+  if (0 > x || x >= CMX * Chunk::CHUNK_SIZE || 0 > y ||
+      y >= CMY * Chunk::CHUNK_SIZE || 0 > z || z >= CMZ * Chunk::CHUNK_SIZE)
+  {
+    return;
+  }
+  auto chunk = chunks[index(
+    x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE, z / Chunk::CHUNK_SIZE)];
+
+  // Set this Chunk's specified voxel to its new type.
+  chunk->set(x % CMX, y % CMY, z % CMZ, type);
+
+  // Schedule this chunk to be updated.
+  chunksToUpdate.insert(chunk);
 }
 
 int ChunkManager::index(int x, int y, int z)
 {
   return x * CMY * CMZ + y * CMZ + z;
+}
+
+void ChunkManager::update()
+{
+  for(auto &c: chunksToUpdate)
+  {
+    c->update();
+  }
+
+  chunksToUpdate.clear();
+}
+
+void ChunkManager::render()
+{
 }
