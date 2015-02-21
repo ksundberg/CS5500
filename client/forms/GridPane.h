@@ -13,13 +13,17 @@ public:
   GridPane(wxFrame* parent);
 
   void PaintEvent(wxPaintEvent& evt);
-  void paintNow();
+  void OnKeyDown(wxKeyEvent& event);
 
   void Render(wxDC& dc);
 
-  std::shared_ptr<Grid> grid;
+  std::vector<std::shared_ptr<Grid>> layers;
 
   DECLARE_EVENT_TABLE()
+
+private:
+      int currentLayer;
+      int layerCount;
 };
 
 #endif //_GRIDPANE_H_

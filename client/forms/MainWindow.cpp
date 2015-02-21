@@ -113,6 +113,7 @@ void MainWindow::OnDisplayWorld(wxCommandEvent&)
   LOG(DEBUG) << "Showing world";
   testCanvas->Hide();
   gridPane->Show();
+  gridPane->SetFocus();
   Refresh();
 }
 
@@ -121,5 +122,6 @@ void MainWindow::OnDisplayCubes(wxCommandEvent&)
   LOG(DEBUG) << "Showing cubes";
   gridPane->Hide();
   testCanvas->Show();
+  testCanvas->SetFocus();
   Refresh();
 }

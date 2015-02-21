@@ -282,6 +282,7 @@ void TestGLCanvas::Spin(float xSpin, float ySpin)
 
 void TestGLCanvas::OnKeyDown(wxKeyEvent& event)
 {
+  LOG(DEBUG) << "TestGLCanvas::" << __FUNCTION__;
   float angle = 5.0;
 
   switch (event.GetKeyCode())
