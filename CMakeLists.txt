@@ -36,6 +36,8 @@ set(client_srcs
   client/forms/GridPane.h
   client/forms/canvas.cpp
   client/forms/canvas.h
+  client/forms/graphics.cpp
+  client/forms/graphics.h
   client/src/Grid.hpp
   client/src/Grid.cpp
   include/wxwidget.h

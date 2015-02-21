@@ -2,7 +2,7 @@
 #define _MAIN_HEADER_
 #include <wxwidget.h>
 #include "MainWindow.h"
-#include "canvas.h"
+#include "graphics.h"
 #include "chunkmanager.h"
 
 // Define a new application type
