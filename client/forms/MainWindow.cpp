@@ -7,16 +7,20 @@
 
 enum
 {
-  ID_Help = 1,
+  ID_Help,
   ID_Inventory,
-  ID_Dungeon
+  ID_Dungeon,
+  ID_World,
+  ID_Cubes
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   EVT_MENU(wxID_EXIT, MainWindow::OnExit)
   EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
   EVT_MENU(ID_Inventory, MainWindow::OnInventory)
-  EVT_MENU(ID_Dungeon, MainWindow::OnDungeonTest) wxEND_EVENT_TABLE()
+  EVT_MENU(ID_Dungeon, MainWindow::OnDungeonTest)
+  EVT_MENU(ID_World, MainWindow::OnDisplayWorld)
+  EVT_MENU(ID_Cubes, MainWindow::OnDisplayCubes) wxEND_EVENT_TABLE()
 
   MainWindow::MainWindow(const wxString& title,
                          const wxPoint& pos,
@@ -37,6 +41,8 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   wxMenu* menuTools = new wxMenu;
   menuTools->Append(ID_Inventory, "&Inventory...\tCtrl-I");
   menuTools->Append(ID_Dungeon, "&Dungeon...\tCtrl-d");
+  menuTools->Append(ID_World, "&World...\tCtrl-w");
+  menuTools->Append(ID_Cubes, "&Cubes...\tCtrl-c");
 
   wxMenuBar* menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
@@ -46,8 +52,21 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   CreateStatusBar();
   SetStatusText("Welcome to Torus World!");
 
-  new TestGLCanvas(this, NULL);
   SetClientSize(600, 600);
+  testCanvas.reset(new TestGLCanvas(this, GetClientSize(), NULL));
+
+  // world setup
+  wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+
+  gridPane.reset(new GridPane(this));
+  sizer->Add(gridPane.get(), 1, wxEXPAND);
+  sizer->Add(testCanvas.get(), 1, wxEXPAND);
+
+  SetSizer(sizer);
+  SetAutoLayout(true);
+
+  gridPane->Hide();
+
   Show();
 }
 
@@ -87,4 +106,20 @@ void MainWindow::OnDungeonTest(wxCommandEvent&)
   ChunkList chunks;
   Dungeon::makeDungeon(chunks);
   Dungeon::printDungeon(chunks);
+}
+
+void MainWindow::OnDisplayWorld(wxCommandEvent&)
+{
+  LOG(DEBUG) << "Showing world";
+  testCanvas->Hide();
+  gridPane->Show();
+  Refresh();
+}
+
+void MainWindow::OnDisplayCubes(wxCommandEvent&)
+{
+  LOG(DEBUG) << "Showing cubes";
+  gridPane->Hide();
+  testCanvas->Show();
+  Refresh();
 }

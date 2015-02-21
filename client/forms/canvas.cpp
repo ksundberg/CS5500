@@ -8,6 +8,7 @@
 #endif
 #include "canvas.h"
 #include "main.h"
+#include "logger.h"
 
 // control ids
 enum
@@ -225,12 +226,12 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
   EVT_KEY_DOWN(TestGLCanvas::OnKeyDown)
   EVT_TIMER(SpinTimer, TestGLCanvas::OnSpinTimer) wxEND_EVENT_TABLE()
 
-  TestGLCanvas::TestGLCanvas(wxWindow* parent, int* attribList)
+  TestGLCanvas::TestGLCanvas(wxWindow* parent, wxSize size, int* attribList)
   : wxGLCanvas(parent,
                wxID_ANY,
                attribList,
                wxDefaultPosition,
-               wxDefaultSize,
+               size,
                wxFULL_REPAINT_ON_RESIZE)
   , m_xangle(30.0)
   , m_yangle(30.0)
@@ -252,6 +253,8 @@ void TestGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
   // be followed by a paint event that updates the entire canvas with new
   // viewport settings.
   Resize();
+
+  LOG(DEBUG) << "painting";
 
   // Clear screen.
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

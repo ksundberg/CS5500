@@ -11,8 +11,8 @@ class MyApp : public wxApp
 private:
   // the GL context we use for all our mono rendering windows
   TestGLContext* m_glContext;
-  MainWindow* frame;
-  ChunkManager* manager;
+  std::shared_ptr<MainWindow> frame;
+  std::shared_ptr<ChunkManager> manager;
 
 public:
   MyApp() { m_glContext = NULL; }
