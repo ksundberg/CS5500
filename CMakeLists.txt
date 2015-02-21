@@ -36,12 +36,9 @@ set(client_srcs
   client/forms/GridPane.h
   client/forms/canvas.cpp
   client/forms/canvas.h
-  client/forms/graphics.cpp
-  client/forms/graphics.h
   client/src/Grid.hpp
   client/src/Grid.cpp
   include/wxwidget.h
-
 )
 source_group("client" FILES ${client_srcs})
 
@@ -88,6 +85,9 @@ set(common_srcs
   common/world.h
   common/dungeon.cpp
   common/dungeon.h
+
+  client/forms/graphics.cpp
+  client/forms/graphics.h
 )
 source_group("common" FILES ${common_srcs})
 
@@ -128,7 +128,10 @@ target_link_libraries(torus common ${wxWidgets_LIBRARIES}
                                    ${OPENGL_LIBRARIES}
 				   ${GLUT_LIBRARY})
 				   
-target_link_libraries(torus_test common ${TBB_LIBRARIES})
+target_link_libraries(torus_test common ${TBB_LIBRARIES}
+                                        ${wxWidgets_LIBRARIES}
+                                        ${OPENGL_LIBRARIES}
+				        ${GLUT_LIBRARY})
 
 enable_testing()
 add_test(unit_tests torus_test)

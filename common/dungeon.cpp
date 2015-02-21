@@ -1,7 +1,7 @@
 #include <cmath>
 #include <time.h>
-#include "dungeon.h"
 #include "logger.h"
+#include "dungeon.h"
 
 void Dungeon::makeDungeon(ChunkList& list)
 {

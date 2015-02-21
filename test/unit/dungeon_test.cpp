@@ -1,7 +1,7 @@
 #include <cmath>
 #include <catch.hpp>
-#include "dungeon.h"
 #include "logger.h"
+#include "dungeon.h"
 
 TEST_CASE("We have a dungeon to work with.")
 {

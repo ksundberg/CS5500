@@ -9,6 +9,7 @@
 #include <tbb/blocked_range.h>
 #include "chunk.h"
 #include "vector3.h"
+#include "graphics.h"
 
 // typedefs
 typedef tbb::concurrent_vector<std::shared_ptr<Chunk>> ChunkList;
@@ -37,7 +38,7 @@ public:
   BlockType get(int x, int y, int z);
   void set(int x, int y, int z, BlockType type);
   void update();
-  void render();
+  void render(TestGLContext& context);
   static const int BOUNDX = CMX * Chunk::CHUNK_SIZE;
   static const int BOUNDY = CMY * Chunk::CHUNK_SIZE;
   static const int BOUNDZ = CMZ * Chunk::CHUNK_SIZE;

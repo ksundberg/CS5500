@@ -1,6 +1,5 @@
 #ifndef _GRAPHICS_HEADER_
 #define _GRAPHICS_HEADER_
-#include <wxwidget.h>
 #include <wx/glcanvas.h>
 
 // the rendering context used by all GL canvases

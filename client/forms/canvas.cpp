@@ -114,6 +114,7 @@ void TestGLCanvas::Render()
   TestGLContext& context = wxGetApp().GetContext(this);
   context.DrawRotatedCube(m_xangle, m_yangle, 0.1f, -0.2f, 0.5f);
   context.DrawRotatedCube(m_xangle, m_yangle, -0.5f, 0.3f, 0.3f);
+  chunk_manager->render(context);
   SwapBuffers();
 }
 
