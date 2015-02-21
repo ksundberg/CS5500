@@ -7,16 +7,6 @@
 ChunkManager::ChunkManager()
 {
   chunks.resize(index(CMX, CMY, CMZ));
-  for (int i = 0; i < CMX; i++)
-  {
-    for (int j = 0; j < CMY; j++)
-    {
-      for (int k = 0; k < CMZ; k++)
-      {
-        chunks[index(i, j, k)] = std::make_shared<Chunk>(i, j, k);
-      }
-    }
-  }
 }
 
 BlockType ChunkManager::get(int x, int y, int z)
@@ -24,14 +14,24 @@ BlockType ChunkManager::get(int x, int y, int z)
   if (0 > x || x >= CMX * Chunk::CHUNK_SIZE || 0 > y ||
       y >= CMY * Chunk::CHUNK_SIZE || 0 > z || z >= CMZ * Chunk::CHUNK_SIZE)
   {
+    // Out of bounds.
     return BlockType::Inactive;
   }
-  else
+  auto cmx = x / Chunk::CHUNK_SIZE;
+  auto cmy = y / Chunk::CHUNK_SIZE;
+  auto cmz = z / Chunk::CHUNK_SIZE;
+
+  x %= CMX;
+  y %= CMY;
+  z %= CMZ;
+
+  if(chunks[index(cmx, cmy, cmz)] == nullptr)
   {
-    return chunks[index(x / Chunk::CHUNK_SIZE,
-                        y / Chunk::CHUNK_SIZE,
-                        z / Chunk::CHUNK_SIZE)]->get(x % CMX, y % CMY, z % CMZ);
+    // Chunk hasn't been allocated yet.
+    return BlockType::Inactive;
   }
+
+  return chunks[index(cmx, cmy, cmz)]->get(x, y, z);
 }
 
 void ChunkManager::set(int x, int y, int z, BlockType type)
@@ -41,8 +41,19 @@ void ChunkManager::set(int x, int y, int z, BlockType type)
   {
     return;
   }
-  auto chunk = chunks[index(
-    x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE, z / Chunk::CHUNK_SIZE)];
+  auto cmx = x / Chunk::CHUNK_SIZE;
+  auto cmy = y / Chunk::CHUNK_SIZE;
+  auto cmz = z / Chunk::CHUNK_SIZE;
+
+  x %= CMX;
+  y %= CMY;
+  z %= CMZ;
+
+  // Allocate this chunk if it doesn't exist yet.
+  if(chunks[index(cmx, cmy, cmz)] == nullptr)
+    chunks[index(cmx,cmy,cmz)] = std::make_shared<Chunk>(x, y, z);
+
+  auto chunk = chunks[index(cmx,cmy,cmz)];
 
   // Set this Chunk's specified voxel to its new type.
   chunk->set(x % CMX, y % CMY, z % CMZ, type);
