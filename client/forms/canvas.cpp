@@ -1,7 +1,11 @@
 // Example application modified from the wxWidgets demo here:
 // http://fossies.org/dox/wxWidgets-3.0.2/cube_8cpp_source.html
 
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
 #include "canvas.h"
 #include "main.h"
 
@@ -52,6 +56,7 @@ static void initRendering()
 // function to draw the texture for cube faces
 static wxImage DrawDice(int size, unsigned num)
 {
+  (void)num;
   wxASSERT_MSG(num >= 1 && num <= 6, wxT("invalid dice index"));
 
   wxBitmap bmp(size, size);
