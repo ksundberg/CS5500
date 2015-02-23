@@ -56,7 +56,9 @@ namespace material_density
   MaterialDensityMap parallel_reduce_MD (tbb::concurrent_vector<MaterialDensityMap> vec);
   
   //takes a MaterialDensityMap and a way to get materialWeightings and returns a float
-  float parallel_reduce_MDM (MaterialDensityMap mdm, std::function<float(std::string) > materialWeightingFunction);
+  float parallel_reduce_MDM (MaterialDensityMap &mdm, std::function<float(std::string)> &materialWeightingFunction);
 }
+
+
 
 #endif

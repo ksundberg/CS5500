@@ -140,17 +140,35 @@ material_density::parallel_reduce_MD (tbb::concurrent_vector<MaterialDensityMap>
            );
 }
 
+struct Sum {
+    float value;
+    Sum() : value(0) {}
+    Sum( Sum& s, tbb::split sp) { (void) s; (void) sp; value = 0;}
+    void operator()( const tbb::blocked_range<std::vector<float>::iterator>& r ) {
+        float temp = value;
+        for( std::vector<float>::iterator a=r.begin(); a!=r.end(); ++a ) {
+            temp += *a;
+        }
+        value = temp;
+    }
+    void join( Sum& rhs ) {value += rhs.value;}
+};
+
 float
-material_density::parallel_reduce_MDM (MaterialDensityMap mdm, std::function<float(std::string) > materialWeightingFunction)
+material_density::parallel_reduce_MDM (MaterialDensityMap &mdm, std::function<float(std::string) > &materialWeightingFunction)
 {
-  //Soren's ToDo: reduce the MaterialDensityMap to a float using the materialWeightingFunction
+  std::vector<float> massValues;
+  for (auto iter=mdm.begin(); iter != mdm.end(); ++iter)
+    {
+      //to apply function materialWeightingFunction(std::string) to mdm values
+      massValues.push_back(materialWeightingFunction(iter->first)*iter->second);
+    }
 
-  //voided variables so that compiler doesn't complain about unused variables
-  //can be removed when variables are actually used
-  (void) mdm;
-  (void) materialWeightingFunction;
+  //use of struct Sum so that parallel_reduce will function
+  Sum sum;
+  tbb::parallel_reduce(tbb::blocked_range<std::vector<float>::iterator>(massValues.begin(), massValues.end()), sum);
 
-  return 0;
+  return sum.value;
 }
 
 
