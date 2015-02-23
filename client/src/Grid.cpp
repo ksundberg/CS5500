@@ -26,7 +26,6 @@ void Grid::generateTerrain()
 
 void Grid::drawDensityMap(wxDC& dc, int w, int h, double lowerBound, double upperBound){
   auto densityMap = getDensityMap(lowerBound, upperBound);
-
   dc.SetPen(wxPen(wxColor(0, 0, 0), 1));
 
   int block_height = h / height;
@@ -48,7 +47,7 @@ void Grid::drawDensityMap(wxDC& dc, int w, int h, double lowerBound, double uppe
 
 //A material is considered any voxel between two values in the Perlin Noise map.
 std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound, double upperBound){
-  std::shared_ptr<matrix2d> returnMatrix = std::make_shared<matrix2d>();
+  std::shared_ptr<matrix2d> returnMatrix = std::make_shared<matrix2d>(width, std::vector<double>(height));
   //Get the count for each.
   for (int x = 0; x < width; x++)
   {
@@ -78,11 +77,11 @@ std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound, double upperBou
     {
       double p = (*returnMatrix)[x][y];
       min = (p < min) ? p : min;
-      max = (p < max) ? p : max;
+      max = (p > max) ? p : max;
     }
   }
 
-  //Equalize the return matrix to values between 0-1 based on density
+  //Using the min and max, equalize the return matrix to values between 0-1 based on density
   for (int x = 0; x < width; x++)
   {
     for (int y = 0; y < height; y++)
