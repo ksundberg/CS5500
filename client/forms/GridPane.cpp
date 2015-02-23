@@ -11,14 +11,11 @@ END_EVENT_TABLE()
 const int GRID_TILES = 50;
 
 GridPane::GridPane(wxFrame* parent)
-  : wxPanel(parent), currentLayer(0), layerCount(10)
+  : wxPanel(parent), currentLayer(0)
 {
-    for(int i=0; i < layerCount; i++)
-    {
-      auto grid = std::make_shared<Grid>(GRID_TILES, GRID_TILES);
-      grid->generateTerrain();
-      layers.push_back(grid);
-    }
+    this->World = std::make_shared<Grid>(GRID_TILES, GRID_TILES, GRID_TILES);
+    this->World->generateTerrain();
+    
 }
 
 void GridPane::PaintEvent(wxPaintEvent&)
@@ -30,7 +27,7 @@ void GridPane::PaintEvent(wxPaintEvent&)
 void GridPane::Render(wxDC& dc)
 {
   auto size = this->GetSize();
-  layers[currentLayer]->draw(dc, size.GetWidth(), size.GetHeight());
+  this->World->draw(dc, size.GetWidth(), size.GetHeight(), currentLayer);
 }
 
 void GridPane::OnKeyDown(wxKeyEvent& event)
@@ -47,14 +44,14 @@ void GridPane::OnKeyDown(wxKeyEvent& event)
   {
   case WXK_UP:
       currentLayer++;
-      if (currentLayer >= layerCount)
+      if (currentLayer >= GRID_TILES)
           currentLayer = 0;
     break;
 
   case WXK_DOWN:
       currentLayer--;
       if (currentLayer < 0)
-          currentLayer = layerCount-1;
+          currentLayer = GRID_TILES-1;
     break;
 
   default:

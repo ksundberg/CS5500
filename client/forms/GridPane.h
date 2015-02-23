@@ -17,13 +17,12 @@ public:
 
   void Render(wxDC& dc);
 
-  std::vector<std::shared_ptr<Grid>> layers;
+  std::shared_ptr<Grid> World;
 
   DECLARE_EVENT_TABLE()
 
 private:
       int currentLayer;
-      int layerCount;
 };
 
 #endif //_GRIDPANE_H_
