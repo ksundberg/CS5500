@@ -23,6 +23,7 @@ private:
 
   std::shared_ptr<TestGLCanvas> testCanvas;
   std::shared_ptr<GridPane> gridPane;
+  wxBoxSizer* sizer;
 };
 
 #endif //_MAINWINDOW_H_

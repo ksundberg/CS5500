@@ -56,7 +56,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   testCanvas.reset(new TestGLCanvas(this, GetClientSize(), NULL));
 
   // world setup
-  wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+  sizer = new wxBoxSizer(wxHORIZONTAL);
 
   gridPane.reset(new GridPane(this));
   sizer->Add(gridPane.get(), 1, wxEXPAND);
@@ -114,7 +114,7 @@ void MainWindow::OnDisplayWorld(wxCommandEvent&)
   testCanvas->Hide();
   gridPane->Show();
   gridPane->SetFocus();
-  Refresh();
+  sizer->RecalcSizes();
 }
 
 void MainWindow::OnDisplayCubes(wxCommandEvent&)
@@ -123,5 +123,6 @@ void MainWindow::OnDisplayCubes(wxCommandEvent&)
   gridPane->Hide();
   testCanvas->Show();
   testCanvas->SetFocus();
+  sizer->RecalcSizes();
   Refresh();
 }

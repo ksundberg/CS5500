@@ -15,23 +15,28 @@ public:
   void PaintEvent(wxPaintEvent& evt);
   void OnKeyDown(wxKeyEvent& event);
 
-  void showGoldDensity(wxCommandEvent& event);
-  void showLumberDensity(wxCommandEvent& event);
+  void showGoldDensity(wxCommandEvent&);
+  void showLumberDensity(wxCommandEvent&);
+  void showNormal(wxCommandEvent&);
 
   void Render(wxDC& dc);
 
-
-
   std::shared_ptr<Grid> World;
 
-  wxButton *materialDenisityGoldButton;
-  wxButton *materialDenisityLumberButton;
-  //wxButton *material2DenisityMap
+  std::shared_ptr<wxButton> filterGoldBtn;
+  std::shared_ptr<wxButton> filterLumberBtn;
+  std::shared_ptr<wxButton> normalFilterBtn;
 
   DECLARE_EVENT_TABLE()
 
 private:
+      enum struct Filter {
+          SHOW_NORMAL,
+          SHOW_GOLD,
+          SHOW_LUMBER
+      };
       int currentLayer;
+      Filter filter;
 };
 
 #endif //_GRIDPANE_H_
