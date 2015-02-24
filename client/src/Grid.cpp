@@ -8,7 +8,7 @@ void Grid::generateTerrain()
   PerlinNoise perlin;
   noiseMap = perlin.createMatrix3D(width, height, depth, 5);
 
-  //perlin.smooth(noiseMap);
+  // perlin.smooth(noiseMap);
 
   for (double x = 0; x < width; x++)
   {
@@ -24,7 +24,9 @@ void Grid::generateTerrain()
   }
 }
 
-void Grid::drawDensityMap(wxDC& dc, int w, int h, double lowerBound, double upperBound){
+void Grid::drawDensityMap(
+  wxDC& dc, int w, int h, double lowerBound, double upperBound)
+{
   auto densityMap = getDensityMap(lowerBound, upperBound);
   dc.SetPen(wxPen(wxColor(0, 0, 0), 1));
 
@@ -42,18 +44,21 @@ void Grid::drawDensityMap(wxDC& dc, int w, int h, double lowerBound, double uppe
         x * block_width, y * block_height, block_width - 1, block_height - 1);
     }
   }
-
 }
 
-//A material is considered any voxel between two values in the Perlin Noise map.
-std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound, double upperBound){
-  std::shared_ptr<matrix2d> returnMatrix = std::make_shared<matrix2d>(width, std::vector<double>(height));
-  //Get the count for each.
+// A material is considered any voxel between two values in the Perlin Noise
+// map.
+std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound,
+                                              double upperBound)
+{
+  std::shared_ptr<matrix2d> returnMatrix =
+    std::make_shared<matrix2d>(width, std::vector<double>(height));
+  // Get the count for each.
   for (int x = 0; x < width; x++)
   {
     for (int y = 0; y < height; y++)
     {
-      //Count the number of materials in the range.
+      // Count the number of materials in the range.
       double count = 0;
       for (int z = 0; z < depth; z++)
       {
@@ -67,7 +72,7 @@ std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound, double upperBou
     }
   }
 
-  //Get the min and max 
+  // Get the min and max
   double min = DBL_MAX;
   double max = -DBL_MAX;
 
@@ -81,12 +86,13 @@ std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound, double upperBou
     }
   }
 
-  //Using the min and max, equalize the return matrix to values between 0-1 based on density
+  // Using the min and max, equalize the return matrix to values between 0-1
+  // based on density
   for (int x = 0; x < width; x++)
   {
     for (int y = 0; y < height; y++)
     {
-      (*returnMatrix)[x][y] = ((*returnMatrix)[x][y] - min) / (max - min); 
+      (*returnMatrix)[x][y] = ((*returnMatrix)[x][y] - min) / (max - min);
     }
   }
   return returnMatrix;

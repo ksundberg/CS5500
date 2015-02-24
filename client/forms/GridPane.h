@@ -30,13 +30,14 @@ public:
   DECLARE_EVENT_TABLE()
 
 private:
-      enum struct Filter {
-          SHOW_NORMAL,
-          SHOW_GOLD,
-          SHOW_LUMBER
-      };
-      int currentLayer;
-      Filter filter;
+  enum struct Filter
+  {
+    SHOW_NORMAL,
+    SHOW_GOLD,
+    SHOW_LUMBER
+  };
+  int currentLayer;
+  Filter filter;
 };
 
 #endif //_GRIDPANE_H_
