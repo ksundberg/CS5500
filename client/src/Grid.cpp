@@ -1,3 +1,6 @@
+#include "tbb/parallel_reduce.h"
+#include "tbb/parallel_for.h"
+#include "tbb/blocked_range.h"
 #include "Grid.hpp"
 #include <cfloat>
 
@@ -46,6 +49,54 @@ void Grid::drawDensityMap(
   }
 }
 
+class FilterMaterials
+{
+  std::shared_ptr<matrix3d> workingNoiseMap;
+  double lowBound, highBound;
+  int x, y;
+
+public:
+  int global_count;
+  void operator()(const tbb::blocked_range<int>& r)
+  {
+    std::shared_ptr<matrix3d> tempMap = workingNoiseMap;
+    int count = global_count;
+    size_t end = r.end();
+    for (size_t i = r.begin(); i != end; ++i)
+    {
+      double p = (*tempMap)[x][y][i];
+      if (p > lowBound && p < highBound)
+      {
+        count++;
+      }
+      global_count = count;
+    }
+  }
+
+  FilterMaterials(
+    std::shared_ptr<matrix3d> noiseMap, double low, double high, int wx, int wy)
+    : workingNoiseMap(noiseMap)
+    , lowBound(low)
+    , highBound(high)
+    , x(wx)
+    , y(wy)
+    , global_count(0)
+  {
+  }
+
+  FilterMaterials(FilterMaterials& src, tbb::split)
+    : workingNoiseMap(src.workingNoiseMap)
+    , lowBound(src.lowBound)
+    , highBound(src.highBound)
+    , x(src.x)
+    , y(src.y)
+    , global_count(0)
+  {
+  }
+
+  void join(const FilterMaterials& y) { global_count += y.global_count; }
+};
+
 // A material is considered any voxel between two values in the Perlin Noise
 // map.
 std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound,
@@ -56,45 +107,61 @@ std::shared_ptr<matrix2d> Grid::getDensityMap(double lowerBound,
   // Get the count for each.
   for (int x = 0; x < width; x++)
   {
-    for (int y = 0; y < height; y++)
-    {
-      // Count the number of materials in the range.
-      double count = 0;
-      for (int z = 0; z < depth; z++)
+    tbb::parallel_for(tbb::blocked_range<int>(0, height),
+                      [&](const tbb::blocked_range<int>& ry)
+                      {
+      for (int y = ry.begin(); y != ry.end(); ++y)
       {
-        double p = (*noiseMap)[x][y][z];
-        if (p > lowerBound && p < upperBound)
-        {
-          count++;
-        }
+        // Count the number of materials in the range.
+
+        FilterMaterials filter(noiseMap, lowerBound, upperBound, x, y);
+        tbb::parallel_reduce(tbb::blocked_range<int>(0, depth), filter);
+        (*returnMatrix)[x][y] = filter.global_count;
       }
-      (*returnMatrix)[x][y] = count;
-    }
+    });
   }
 
   // Get the min and max
   double min = DBL_MAX;
   double max = -DBL_MAX;
 
-  for (int x = 0; x < width; x++)
-  {
-    for (int y = 0; y < height; y++)
+  tbb::parallel_for(tbb::blocked_range<int>(0, width),
+                    [&](const tbb::blocked_range<int>& rx)
+                    {
+
+    for (int x = rx.begin(); x != rx.end(); ++x)
     {
-      double p = (*returnMatrix)[x][y];
-      min = (p < min) ? p : min;
-      max = (p > max) ? p : max;
+      tbb::parallel_for(tbb::blocked_range<int>(0, height),
+                        [&](const tbb::blocked_range<int>& ry)
+                        {
+        for (int y = ry.begin(); y != ry.end(); ++y)
+        {
+          double p = (*returnMatrix)[x][y];
+          min = (p < min) ? p : min;
+          max = (p > max) ? p : max;
+        }
+      });
     }
-  }
+  });
 
   // Using the min and max, equalize the return matrix to values between 0-1
   // based on density
-  for (int x = 0; x < width; x++)
-  {
-    for (int y = 0; y < height; y++)
+  tbb::parallel_for(tbb::blocked_range<int>(0, width),
+                    [&](const tbb::blocked_range<int>& rx)
+                    {
+
+    for (int x = rx.begin(); x != rx.end(); ++x)
     {
-      (*returnMatrix)[x][y] = ((*returnMatrix)[x][y] - min) / (max - min);
+      tbb::parallel_for(tbb::blocked_range<int>(0, height),
+                        [&](const tbb::blocked_range<int>& ry)
+                        {
+        for (int y = ry.begin(); y != ry.end(); ++y)
+        {
+          (*returnMatrix)[x][y] = ((*returnMatrix)[x][y] - min) / (max - min);
+        }
+      });
     }
-  }
+  });
   return returnMatrix;
 }
 
