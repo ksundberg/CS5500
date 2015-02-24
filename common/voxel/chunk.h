@@ -3,6 +3,7 @@
 
 #include "block.h"
 #include "vector3.h"
+#include "graphics.h"
 
 class Chunk
 {

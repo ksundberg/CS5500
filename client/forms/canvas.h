@@ -2,6 +2,7 @@
 #define _CANVAS_HEADER_
 #include <wxwidget.h>
 #include <wx/glcanvas.h>
+#include <glm/glm.hpp>
 #include "chunkmanager.h"
 
 class TestGLCanvas : public wxGLCanvas
@@ -23,6 +24,7 @@ private:
   float m_xangle, m_yangle;
   wxTimer m_spinTimer;
   ChunkManager* chunk_manager;
+  glm::vec3 position; // Where are we in the voxel world.
 
   wxDECLARE_EVENT_TABLE();
 };

@@ -118,7 +118,8 @@ add_library(common STATIC ${common_srcs} ${TBB_LIBRARIES})
 # OpenGL
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+find_package(GLM)
+include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
 
 add_executable(torus ${client_srcs})
 add_executable(torus_test ${test_srcs})

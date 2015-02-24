@@ -37,13 +37,20 @@ static void initRendering()
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_TEXTURE_2D);
+
+  // add slightly more light, the default lighting is rather dark
+  GLfloat ambient[] = {0.5, 0.5, 0.5, 0.5};
+  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+
+  // set viewing projection
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity(); // Reset the camera.
+  glFrustum(-0.5f, 0.5f, -0.5f, 0.5f, 1.0f, 3.0f);
 }
 
 // function to draw the texture for cube faces
-static wxImage DrawDice(int size, unsigned num)
+static wxImage DrawDice(int size)
 {
-  wxASSERT_MSG(num >= 1 && num <= 6, wxT("invalid dice index"));
-
   wxBitmap bmp(size, size);
   wxMemoryDC dc;
   dc.SelectObject(bmp);
@@ -66,15 +73,6 @@ TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
   SetCurrent(*canvas);
   initRendering();
 
-  // add slightly more light, the default lighting is rather dark
-  GLfloat ambient[] = {0.5, 0.5, 0.5, 0.5};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-
-  // set viewing projection
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity(); // Reset the camera.
-  glFrustum(-0.5f, 0.5f, -0.5f, 0.5f, 1.0f, 3.0f);
-
   // create the textures to use for cube sides: they will be reused by all
   // canvases (which is probably not critical in the case of simple textures
   // we use here but could be really important for a real application where
@@ -91,7 +89,7 @@ TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    const wxImage img(DrawDice(256, i + 1));
+    const wxImage img(DrawDice(256));
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D,
