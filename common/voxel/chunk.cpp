@@ -88,7 +88,7 @@ void Chunk::update()
 
   auto squareY = [&](int i, int j, int k, BlockType type)
   {
-    // Vertices for a square perpendicular to the Y-axis. 
+    // Vertices for a square perpendicular to the Y-axis.
     vertex[vindex++] = byte4(i, j, k, type);
     vertex[vindex++] = byte4(i, j, k + 1, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
@@ -117,27 +117,45 @@ void Chunk::update()
         auto type = mBlocks[i][j][k];
 
         // BlockType::Inactive is 0; this tests if our block is non-empty.
-        if(type)
+        if (type)
         {
           // Create vertices for all 6 sides of our block.
 
-          // Square in the negative x direction.
-          squareX(i, j, k, type);
+          if (0 == i || !(mBlocks[i - 1][j][k]))
+          {
+            // Square in the negative x direction.
+            squareX(i, j, k, type);
+          }
 
-          // Now for the positive x.
-          squareX(i + 1, j, k, type);
+          if ((CHUNK_SIZE - 1) == i || !(mBlocks[i+1][j][k]))
+          {
+            // Now for the positive x.
+            squareX(i + 1, j, k, type);
+          }
 
-          // Negative y direction.
-          squareY(i, j, k, type);
+          if (0 == j || !(mBlocks[i][j - 1][k]))
+          {
+            // Negative y direction.
+            squareY(i, j, k, type);
+          }
 
           // Positive y direction
-          squareY(i, j + 1, k, type);
+          if ((CHUNK_SIZE - 1) == j || !(mBlocks[i][j+1][k]))
+          {
+            squareY(i, j + 1, k, type);
+          }
 
-          // Negative z direction.
-          squareZ(i, j, k, type);
+          if (0 == k || !(mBlocks[i][j][k - 1]))
+          {
+            // Negative z direction.
+            squareZ(i, j, k, type);
+          }
 
           // Positive z direction.
-          squareZ(i, j, k + 1, type);
+          if ((CHUNK_SIZE - 1) == k || !(mBlocks[i][j][k+1]))
+          {
+            squareZ(i, j, k + 1, type);
+          }
         }
       }
     }
@@ -147,13 +165,14 @@ void Chunk::update()
   // Upload the vertices.
   glGenBuffers(1, &vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-  glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
+  glBufferData(
+    GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
 }
 
 void Chunk::render()
 {
   GLint attribute_coord = 0;
-  if(vertex_count >= 1)
+  if (vertex_count >= 1)
   {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(attribute_coord, 4, GL_BYTE, GL_FALSE, 0, 0);
