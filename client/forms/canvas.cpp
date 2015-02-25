@@ -42,6 +42,8 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
       }
     }
   }
+
+  position = glm::vec3(24, 10, 10);
 }
 
 TestGLCanvas::~TestGLCanvas()
@@ -74,24 +76,22 @@ void TestGLCanvas::Spin(float xSpin, float ySpin)
 
 void TestGLCanvas::OnKeyDown(wxKeyEvent& event)
 {
-  float angle = 5.0;
-
   switch (event.GetKeyCode())
   {
   case WXK_RIGHT:
-    Spin(0.0, -angle);
+    position += glm::vec3(0.0, 1.0, 0.0);
     break;
 
   case WXK_LEFT:
-    Spin(0.0, angle);
+    position += glm::vec3(0.0, -1.0, 0.0);
     break;
 
   case WXK_DOWN:
-    Spin(-angle, 0.0);
+    position += glm::vec3(-1.0, 0.0, 0.0);
     break;
 
   case WXK_UP:
-    Spin(angle, 0.0);
+    position += glm::vec3(1.0, 0.0, 0.0);
     break;
 
   default:
@@ -119,7 +119,30 @@ void TestGLCanvas::Render()
 
   // Render the graphics and swap the buffers.
   TestGLContext& context = wxGetApp().GetContext(this);
-  chunk_manager->render(context);
+
+  auto program = context.shaderProgram();
+  GLuint MatrixID = glGetUniformLocation(program, "mvp");
+  glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
+  // Camera matrix
+  glm::mat4 View = glm::lookAt(
+    position,
+    glm::vec3(0, 0, 0), // and looks at the origin
+    glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+  // Model matrix : an identity matrix (model will be at the origin)
+  glm::mat4 Model = glm::mat4(1.0f);
+  // Our ModelViewProjection : multiplication of our 3 matrices
+  glm::mat4 MVP = Projection * View * Model;
+
+  // Send our transformation to the currently bound shader, 
+  // in the "MVP" uniform
+  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+  // 1rst attribute buffer : vertices
+  glEnableVertexAttribArray(0);
+
+  chunk_manager->render();
 
   SwapBuffers();
 }

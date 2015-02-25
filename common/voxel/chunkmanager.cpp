@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include <glm/gtc/matrix_transform.hpp>
 
 ChunkManager::ChunkManager()
 {
@@ -77,33 +76,8 @@ void ChunkManager::update()
   chunksToUpdate.clear();
 }
 
-void ChunkManager::render(TestGLContext& context)
+void ChunkManager::render()
 {
-  GLuint VertexArrayID;
-  glGenVertexArrays(1, &VertexArrayID);
-  glBindVertexArray(VertexArrayID);
-
-  auto program = context.shaderProgram();
-  GLuint MatrixID = glGetUniformLocation(program, "mvp");
-  glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-
-  // Camera matrix
-  glm::mat4 View = glm::lookAt(
-    glm::vec3(24, 20, 10), // Camera is at (4,3,3), in World Space
-    glm::vec3(0, 0, 0), // and looks at the origin
-    glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
-  // Model matrix : an identity matrix (model will be at the origin)
-  glm::mat4 Model = glm::mat4(1.0f);
-  // Our ModelViewProjection : multiplication of our 3 matrices
-  glm::mat4 MVP = Projection * View * Model;
-
-  // Send our transformation to the currently bound shader, 
-  // in the "MVP" uniform
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-  // 1rst attribute buffer : vertices
-  glEnableVertexAttribArray(0);
-
   // DRAW ONE CHUNK.
   chunks[index(0, 0, 0)]->render();
 
