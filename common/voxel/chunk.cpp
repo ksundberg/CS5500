@@ -145,12 +145,17 @@ void Chunk::update()
   vertex_count = vindex;
 
   // Upload the vertices.
-  // glGenBuffers(1, &vertex_buffer);
-  // glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-  // glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
+  glGenBuffers(1, &vertex_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+  glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
 }
 
-void Chunk::render()
+void Chunk::render(GLint attribute_coord)
 {
-  // TODO: render this Chunk's vertex buffer object.
+  if(vertex_count >= 1)
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glVertexAttribPointer(attribute_coord, 4, GL_BYTE, GL_FALSE, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, vertex_count);
+  }
 }

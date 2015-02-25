@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <wx/glcanvas.h>
 
-typedef glm::tvec4<GLbyte> byte4; 
+typedef glm::tvec4<GLbyte> byte4;
 
 // the rendering context used by all GL canvases
 class TestGLContext : public wxGLContext
@@ -19,8 +19,10 @@ public:
     float xangle, float yangle, float xtranslate, float ytranslate, float size);
 
 private:
+  void initRendering();
   // textures for the cube faces
   GLuint m_textures[6];
+  GLuint shader_program;
 };
 
 #endif

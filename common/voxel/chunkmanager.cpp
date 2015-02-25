@@ -77,7 +77,6 @@ void ChunkManager::update()
   chunksToUpdate.clear();
 }
 
-void ChunkManager::render(TestGLContext& context)
+void ChunkManager::render(TestGLContext&)
 {
-  context.DrawRotatedCube(30.0, 30.0, 0.2f, 0.1f, 0.3f);
 }
