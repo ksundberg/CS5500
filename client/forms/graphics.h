@@ -14,15 +14,10 @@ class TestGLContext : public wxGLContext
 public:
   TestGLContext(wxGLCanvas* canvas);
 
-  // render the cube showing it at given angles
-  void DrawRotatedCube(
-    float xangle, float yangle, float xtranslate, float ytranslate, float size);
-
   GLuint shaderProgram();
 private:
   void initRendering();
   // textures for the cube faces
-  GLuint m_textures[6];
   GLuint shader_program;
 };
 
