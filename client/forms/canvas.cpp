@@ -1,9 +1,6 @@
 // Example application modified from the wxWidgets demo here:
 // http://fossies.org/dox/wxWidgets-3.0.2/cube_8cpp_source.html
-
-#include <GL/glut.h>
 #include "canvas.h"
-#include "main.h"
 
 // control ids
 enum
@@ -33,6 +30,18 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
   // Init for the game loop.
   m_spinTimer.Start(16); // 16 milliseconds for 60 fps.
   chunk_manager = new ChunkManager();
+
+  // Fill the first chunk.
+  for (int i = 0; i < Chunk::CHUNK_SIZE; i++)
+  {
+    for (int j = 0; j < Chunk::CHUNK_SIZE; j++)
+    {
+      for (int k = 0; k < Chunk::CHUNK_SIZE; k++)
+      {
+        chunk_manager->set(i, j, k, BlockType::Active);
+      }
+    }
+  }
 }
 
 TestGLCanvas::~TestGLCanvas()
@@ -99,8 +108,6 @@ void TestGLCanvas::OnSpinTimer(wxTimerEvent& WXUNUSED(event))
 
 void TestGLCanvas::Render()
 {
-  Spin(0.0, 4.0);
-
   // With perspective OpenGL graphics, the wxFULL_REPAINT_ON_RESIZE style
   // flag should always be set, because even making the canvas smaller should
   // be followed by a paint event that updates the entire canvas with new
@@ -112,12 +119,11 @@ void TestGLCanvas::Render()
 
   // Render the graphics and swap the buffers.
   TestGLContext& context = wxGetApp().GetContext(this);
-  context.DrawRotatedCube(m_xangle, m_yangle, 0.1f, -0.2f, 0.5f);
-  context.DrawRotatedCube(m_xangle, m_yangle, -0.5f, 0.3f, 0.3f);
   chunk_manager->render(context);
   SwapBuffers();
 }
 
 void TestGLCanvas::Update()
 {
+  chunk_manager->update();
 }

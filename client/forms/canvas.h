@@ -1,8 +1,7 @@
 #ifndef _CANVAS_HEADER_
 #define _CANVAS_HEADER_
 #include <wxwidget.h>
-#include <wx/glcanvas.h>
-#include <glm/glm.hpp>
+#include "main.h"
 #include "chunkmanager.h"
 
 class TestGLCanvas : public wxGLCanvas

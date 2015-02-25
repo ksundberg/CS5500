@@ -22,10 +22,11 @@ public:
 
 private:
   // The blocks data
-  Block*** mBlocks;
+  BlockType*** mBlocks;
   int X; // World Chunk Position;
   int Y; // World Chunk Position;
   int Z; // World Chunk Position;
+  int vertex_count;
 };
 
 #endif

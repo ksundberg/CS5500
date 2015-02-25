@@ -118,8 +118,12 @@ add_library(common STATIC ${common_srcs} ${TBB_LIBRARIES})
 # OpenGL
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
-find_package(GLM)
-include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
+find_package(GLM REQUIRED)
+find_package(GLEW REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS} 
+                    ${GLUT_INCLUDE_DIRS} 
+                    ${GLM_INCLUDE_DIRS} 
+                    ${GLEW_INCLUDE_DIRS})
 
 add_executable(torus ${client_srcs})
 add_executable(torus_test ${test_srcs})
@@ -127,12 +131,14 @@ add_executable(torus_test ${test_srcs})
 target_link_libraries(torus common ${wxWidgets_LIBRARIES} 
                                    ${TBB_LIBRARIES} 
                                    ${OPENGL_LIBRARIES}
-				   ${GLUT_LIBRARY})
+				   ${GLUT_LIBRARY}
+				   ${GLEW_LIBRARY})
 				   
 target_link_libraries(torus_test common ${TBB_LIBRARIES}
                                         ${wxWidgets_LIBRARIES}
                                         ${OPENGL_LIBRARIES}
-				        ${GLUT_LIBRARY})
+				        ${GLUT_LIBRARY}
+					${GLEW_LIBRARY})
 
 enable_testing()
 add_test(unit_tests torus_test)
