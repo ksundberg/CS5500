@@ -150,12 +150,13 @@ void Chunk::update()
   glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
 }
 
-void Chunk::render(GLint attribute_coord)
+void Chunk::render()
 {
+  GLint attribute_coord = 0;
   if(vertex_count >= 1)
   {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(attribute_coord, 4, GL_BYTE, GL_FALSE, 0, 0);
-    glDrawArrays(GL_TRIANGLES, 0, vertex_count);
+    glDrawArrays(GL_LINES, 0, vertex_count);
   }
 }

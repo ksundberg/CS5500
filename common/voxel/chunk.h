@@ -16,7 +16,7 @@ public:
   void set(int x, int y, int z, BlockType type);
   Vector3 getPosition();
   void update();
-  void render(GLint attribute_coord);
+  void render();
 
   static const int CHUNK_SIZE = 16;
 

@@ -120,6 +120,7 @@ void TestGLCanvas::Render()
   // Render the graphics and swap the buffers.
   TestGLContext& context = wxGetApp().GetContext(this);
   chunk_manager->render(context);
+
   SwapBuffers();
 }
 

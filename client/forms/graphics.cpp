@@ -160,13 +160,11 @@ void TestGLContext::initRendering()
   }
 
   // Load shaders.
-  std::cout << "Dear lord why." << std::endl;
   shader_program = loadShaders("world.v.glsl", "world.f.glsl");
   glUseProgram(shader_program);
-  std::cout << "Dear lord why again." << std::endl;
 
   // Background color
-  glClearColor(255.0, 100.0, 100.0, 1.0);
+  glClearColor(1.0, 0.7, 0.9, 1.0);
 }
 
 // function to draw the texture for cube faces
@@ -319,4 +317,10 @@ void TestGLContext::DrawRotatedCube(
   glFlush();
 
   CheckGLError();
+}
+
+
+GLuint TestGLContext::shaderProgram()
+{
+  return shader_program;
 }

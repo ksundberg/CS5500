@@ -18,6 +18,7 @@ public:
   void DrawRotatedCube(
     float xangle, float yangle, float xtranslate, float ytranslate, float size);
 
+  GLuint shaderProgram();
 private:
   void initRendering();
   // textures for the cube faces
