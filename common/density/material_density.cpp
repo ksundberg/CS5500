@@ -149,7 +149,8 @@ struct Sum {
         for( std::vector<float>::iterator a=r.begin(); a!=r.end(); ++a ) {
             temp += *a;
         }
-        value = temp;
+        // TODO: compile error fix
+        //value = temp;
     }
     void join( Sum& rhs ) {value += rhs.value;}
 };
