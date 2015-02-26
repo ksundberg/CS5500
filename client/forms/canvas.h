@@ -18,15 +18,22 @@ private:
   void OnSpinTimer(wxTimerEvent& WXUNUSED(event));
   void Render();
   void Update();
+  void GameInit();
+  void VectorUpdate(glm::vec3 angle);
 
   // angles of rotation around x- and y- axis
-  float m_xangle, m_yangle;
+  const float player_speed = 0.5;
+  float background_color;
   wxTimer m_spinTimer;
   ChunkManager* chunk_manager;
-  glm::vec3 position; // Where are we in the voxel world.
+  glm::vec3 position;
+  glm::vec3 forward;
+  glm::vec3 right;
+  glm::vec3 up;
+  glm::vec3 lookat;
+  glm::vec3 angle;
 
   wxDECLARE_EVENT_TABLE();
 };
-
 
 #endif

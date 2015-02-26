@@ -23,12 +23,20 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
                wxDefaultPosition,
                wxDefaultSize,
                wxFULL_REPAINT_ON_RESIZE)
-  , m_xangle(30.0)
-  , m_yangle(30.0)
   , m_spinTimer(this, SpinTimer)
 {
+  GameInit();
+}
+
+TestGLCanvas::~TestGLCanvas()
+{
+  delete chunk_manager;
+}
+
+void TestGLCanvas::GameInit()
+{
   // Init for the game loop.
-  m_spinTimer.Start(16); // 16 milliseconds for 60 fps.
+  m_spinTimer.Start(60); // in milliseconds.
   chunk_manager = new ChunkManager();
 
   // Fill the first chunk.
@@ -43,12 +51,11 @@ wxBEGIN_EVENT_TABLE(TestGLCanvas, wxGLCanvas) EVT_PAINT(TestGLCanvas::OnPaint)
     }
   }
 
-  position = glm::vec3(24, 10, 10);
-}
-
-TestGLCanvas::~TestGLCanvas()
-{
-  delete chunk_manager;
+  position = glm::vec3(3, 3, 3);
+  angle = glm::vec3(0, -0.5, 0);
+  up = glm::vec3(0, 1, 0);
+  VectorUpdate(angle);
+  background_color = 0.5;
 }
 
 // Needed to use wxGetApp(). Usually you get the same result
@@ -68,30 +75,36 @@ void TestGLCanvas::Resize()
   glViewport(0, 0, ClientSize.x, ClientSize.y);
 }
 
-void TestGLCanvas::Spin(float xSpin, float ySpin)
-{
-  m_xangle += xSpin;
-  m_yangle += ySpin;
-}
-
 void TestGLCanvas::OnKeyDown(wxKeyEvent& event)
 {
   switch (event.GetKeyCode())
   {
   case WXK_RIGHT:
-    position += glm::vec3(0.0, 1.0, 0.0);
+  case 'D':
+    position += right * player_speed;
     break;
 
   case WXK_LEFT:
-    position += glm::vec3(0.0, -1.0, 0.0);
-    break;
-
-  case WXK_DOWN:
-    position += glm::vec3(-1.0, 0.0, 0.0);
+  case 'A':
+    position -= right * player_speed;
     break;
 
   case WXK_UP:
-    position += glm::vec3(1.0, 0.0, 0.0);
+  case 'W':
+    position += forward * player_speed;
+    break;
+
+  case WXK_DOWN:
+  case 'S':
+    position -= forward * player_speed;
+    break;
+
+  case 'K':
+    position += up * player_speed;
+    break;
+
+  case 'J':
+    position -= up * player_speed;
     break;
 
   default:
@@ -117,6 +130,9 @@ void TestGLCanvas::Render()
   // Clear screen.
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  // Background color
+  glClearColor(background_color, background_color, background_color, 1.0);
+
   // Render the graphics and swap the buffers.
   TestGLContext& context = wxGetApp().GetContext(this);
 
@@ -127,8 +143,8 @@ void TestGLCanvas::Render()
   // Camera matrix
   glm::mat4 View = glm::lookAt(
     position,
-    glm::vec3(0, 0, 0), // and looks at the origin
-    glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+    position + lookat,
+    up
     );
   // Model matrix : an identity matrix (model will be at the origin)
   glm::mat4 Model = glm::mat4(1.0f);
@@ -140,8 +156,6 @@ void TestGLCanvas::Render()
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
   // 1rst attribute buffer : vertices
-  glEnableVertexAttribArray(0);
-
   chunk_manager->render();
 
   SwapBuffers();
@@ -149,5 +163,21 @@ void TestGLCanvas::Render()
 
 void TestGLCanvas::Update()
 {
+  VectorUpdate(angle);
   chunk_manager->update();
+}
+
+void TestGLCanvas::VectorUpdate(glm::vec3 angle)
+{
+  forward.x = sinf(angle.x);
+  forward.y = 0;
+  forward.z = cosf(angle.x);
+
+  right.x = -cosf(angle.x);
+  right.y = 0;
+  right.z = sinf(angle.x);
+
+  lookat.x = sinf(angle.x) * cosf(angle.y);
+  lookat.y = sinf(angle.y);
+  lookat.z = cosf(angle.x) * cosf(angle.y);
 }

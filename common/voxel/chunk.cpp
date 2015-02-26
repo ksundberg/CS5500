@@ -139,9 +139,9 @@ void Chunk::update()
             squareY(i, j, k, type);
           }
 
-          // Positive y direction
           if ((CHUNK_SIZE - 1) == j || !(mBlocks[i][j+1][k]))
           {
+            // Positive y direction
             squareY(i, j + 1, k, type);
           }
 
@@ -151,9 +151,9 @@ void Chunk::update()
             squareZ(i, j, k, type);
           }
 
-          // Positive z direction.
           if ((CHUNK_SIZE - 1) == k || !(mBlocks[i][j][k+1]))
           {
+            // Positive z direction.
             squareZ(i, j, k + 1, type);
           }
         }
@@ -176,6 +176,6 @@ void Chunk::render()
   {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(attribute_coord, 4, GL_BYTE, GL_FALSE, 0, 0);
-    glDrawArrays(GL_LINES, 0, vertex_count);
+    glDrawArrays(GL_TRIANGLES, 0, vertex_count);
   }
 }

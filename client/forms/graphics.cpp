@@ -163,8 +163,7 @@ void TestGLContext::initRendering()
   shader_program = loadShaders("world.v.glsl", "world.f.glsl");
   glUseProgram(shader_program);
 
-  // Background color
-  glClearColor(1.0, 0.7, 0.9, 1.0);
+  glEnableVertexAttribArray(0);
 }
 
 TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
