@@ -146,8 +146,14 @@ add_test(unit_tests torus_test)
 # Copy log directory
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/log/log.conf DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/log)
 
-# Copy vertex shader.
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel/world.v.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(TARGET torus POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${CMAKE_SOURCE_DIR}/common/voxel/world.v.glsl"
+	"${CMAKE_BINARY_DIR}/world.v.glsl"
+        DEPENDS "${CMAKE_SOURCE_DIR}/world.v.glsl")
 
-# Copy fragment shader.
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel/world.f.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(TARGET torus POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${CMAKE_SOURCE_DIR}/common/voxel/world.f.glsl"
+	"${CMAKE_BINARY_DIR}/world.f.glsl"
+        DEPENDS "${CMAKE_SOURCE_DIR}/world.f.glsl")

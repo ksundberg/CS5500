@@ -39,12 +39,12 @@ void TestGLCanvas::GameInit()
   m_spinTimer.Start(60); // in milliseconds.
   chunk_manager = new ChunkManager();
 
-  // Fill the first chunk.
-  for (int i = 0; i < Chunk::CHUNK_SIZE; i++)
+  // Fill the first few chunks.
+  for (int i = 0; i < Chunk::CHUNK_SIZE * 2; i++)
   {
-    for (int j = 0; j < Chunk::CHUNK_SIZE; j++)
+    for (int j = 0; j < Chunk::CHUNK_SIZE * 2; j++)
     {
-      for (int k = 0; k < Chunk::CHUNK_SIZE; k++)
+      for (int k = 0; k < Chunk::CHUNK_SIZE * 2; k++)
       {
         chunk_manager->set(i, j, k, BlockType::Active);
       }
@@ -133,30 +133,21 @@ void TestGLCanvas::Render()
   // Background color
   glClearColor(background_color, background_color, background_color, 1.0);
 
-  // Render the graphics and swap the buffers.
+  // The context contains all the graphics utils.
   TestGLContext& context = wxGetApp().GetContext(this);
 
   auto program = context.shaderProgram();
-  GLuint MatrixID = glGetUniformLocation(program, "mvp");
-  glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+  auto MatrixID = glGetUniformLocation(program, "mvp");
+  auto Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
   // Camera matrix
-  glm::mat4 View = glm::lookAt(
-    position,
-    position + lookat,
-    up
-    );
-  // Model matrix : an identity matrix (model will be at the origin)
-  glm::mat4 Model = glm::mat4(1.0f);
-  // Our ModelViewProjection : multiplication of our 3 matrices
-  glm::mat4 MVP = Projection * View * Model;
-
-  // Send our transformation to the currently bound shader, 
-  // in the "MVP" uniform
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+  auto View = glm::lookAt(position, position + lookat, up);
+  // Just generate our view and projection; the model will be chosen
+  // by individual chunks.
+  auto VP = Projection * View;
 
   // 1rst attribute buffer : vertices
-  chunk_manager->render();
+  chunk_manager->render(VP, MatrixID);
 
   SwapBuffers();
 }

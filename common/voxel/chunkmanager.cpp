@@ -76,9 +76,19 @@ void ChunkManager::update()
   chunksToUpdate.clear();
 }
 
-void ChunkManager::render()
+void ChunkManager::render(const glm::mat4 &vp, const GLuint mpv_id)
 {
-  // DRAW ONE CHUNK.
-  chunks[index(0, 0, 0)]->render();
-
+  for(auto &chunk: chunks)
+  {
+    if(chunk != nullptr)
+    {
+      auto model = glm::translate(glm::mat4(1.0f),
+                                  glm::vec3(chunk->X * Chunk::CHUNK_SIZE,
+                                            chunk->Y * Chunk::CHUNK_SIZE,
+                                            chunk->Z * Chunk::CHUNK_SIZE));
+      auto mvp = vp * model;
+      glUniformMatrix4fv(mpv_id, 1, GL_FALSE, &mvp[0][0]);
+      chunk->render();
+    }
+  }
 }

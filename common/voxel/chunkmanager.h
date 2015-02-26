@@ -38,7 +38,7 @@ public:
   BlockType get(int x, int y, int z);
   void set(int x, int y, int z, BlockType type);
   void update();
-  void render();
+  void render(const glm::mat4 &vp, const GLuint mpv_id);
   static const int BOUNDX = CMX * Chunk::CHUNK_SIZE;
   static const int BOUNDY = CMY * Chunk::CHUNK_SIZE;
   static const int BOUNDZ = CMZ * Chunk::CHUNK_SIZE;
