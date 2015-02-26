@@ -5,6 +5,6 @@
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include "easylogging++.h"
 
-void init_log(int argc, char* argv[]);
+void init_log();
 
 #endif

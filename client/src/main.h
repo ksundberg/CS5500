@@ -1,6 +1,5 @@
 #ifndef _MAIN_HEADER_
 #define _MAIN_HEADER_
-#include <wxwidget.h>
 #include "MainWindow.h"
 #include "canvas.h"
 #include "chunkmanager.h"

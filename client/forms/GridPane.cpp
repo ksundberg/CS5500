@@ -1,6 +1,7 @@
 #include "GridPane.h"
 #include "logger.h"
 
+#include <wx/event.h>
 #include <algorithm>
 
 enum
@@ -82,12 +83,6 @@ void GridPane::showLumberDensity(wxCommandEvent&)
 void GridPane::OnKeyDown(wxKeyEvent& event)
 {
   LOG(DEBUG) << "GridPane::" << __FUNCTION__;
-
-  wxChar uc = event.GetUnicodeKey();
-  if (uc != WXK_NONE && uc >= 'A' && uc <= 'z')
-  {
-    LOG(DEBUG) << "You pressed " << uc << " " << (char)uc;
-  }
 
   switch (event.GetKeyCode())
   {

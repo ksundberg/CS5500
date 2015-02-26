@@ -19,7 +19,7 @@ private:
   void OnDisplayWorld(wxCommandEvent& event);
   void OnDisplayCubes(wxCommandEvent& event);
 
-  wxDECLARE_EVENT_TABLE();
+  DECLARE_EVENT_TABLE();
 
   std::shared_ptr<TestGLCanvas> testCanvas;
   std::shared_ptr<GridPane> gridPane;
