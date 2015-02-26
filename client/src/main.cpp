@@ -8,7 +8,8 @@ bool MyApp::OnInit()
   init_log();
   LOG(INFO) << "Initializing";
 
-  frame.reset(new MainWindow(wxT("Hello World"), wxPoint(50, 50), wxSize(300, 400)));
+  frame.reset(
+    new MainWindow(wxT("Hello World"), wxPoint(50, 50), wxSize(300, 400)));
   manager.reset(new ChunkManager());
 
   return true;

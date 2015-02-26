@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   wxMenu* menuFile = new wxMenu;
   menuFile->Append(ID_Help,
                    wxT("&Help...\tCtrl-H"),
-                    wxT("Help string shown in status bar for this menu item"));
+                   wxT("Help string shown in status bar for this menu item"));
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
 

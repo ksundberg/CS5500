@@ -1,37 +1,31 @@
 #include "rectangular_prism.h"
 
-int
-RectangularPrism::getX ()
+int RectangularPrism::getX()
 {
   return x;
 }
 
-int
-RectangularPrism::getY ()
+int RectangularPrism::getY()
 {
   return y;
 }
 
-int
-RectangularPrism::getZ ()
+int RectangularPrism::getZ()
 {
   return z;
 }
 
-int
-RectangularPrism::getLengthX ()
+int RectangularPrism::getLengthX()
 {
   return length;
 }
 
-int
-RectangularPrism::getWidthY ()
+int RectangularPrism::getWidthY()
 {
   return width;
 }
 
-int
-RectangularPrism::getHeightZ ()
+int RectangularPrism::getHeightZ()
 {
   return height;
 }
