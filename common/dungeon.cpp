@@ -24,7 +24,7 @@ void Dungeon::makeChunksActive(ChunkList& chunkList)
 {
   for (auto& c : chunkList)
   {
-    c->setAllBlocks(BlockType::Active);
+    c->setAllBlocks(BlockType::Ground);
   }
 }
 

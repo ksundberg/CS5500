@@ -32,22 +32,55 @@ GameLoopCanvas::~GameLoopCanvas()
 
 void GameLoopCanvas::GameInit()
 {
-  // Init for the game loop.
   m_spinTimer.Start(60); // in milliseconds.
   chunk_manager = new ChunkManager();
 
-  // Fill the first few chunks.
-  for (int i = 0; i < Chunk::CHUNK_SIZE * 2; i++)
+  // Just an example of how to use the ChunkManager
+  for (int i = 0; i < Chunk::CHUNK_SIZE * 3; i++)
   {
     for (int j = 0; j < Chunk::CHUNK_SIZE * 2; j++)
     {
-      for (int k = 0; k < Chunk::CHUNK_SIZE * 2; k++)
+      for (int k = 0; k < Chunk::CHUNK_SIZE * 3; k++)
       {
-        chunk_manager->set(
-          i,
-          j,
-          k,
-          ((rand() % 100) < 1) ? BlockType::Active : BlockType::Inactive);
+        BlockType type;
+        auto branchOn = rand() % 1000;
+        if (branchOn < 950)
+        {
+          type = BlockType::Inactive;
+        }
+        else if (branchOn < 955)
+        {
+          type = BlockType::Ground;
+        }
+        else if (branchOn < 960)
+        {
+          type = BlockType::Water;
+        }
+        else if (branchOn < 965)
+        {
+          type = BlockType::Sand;
+        }
+        else if (branchOn < 970)
+        {
+          type = BlockType::Wood;
+        }
+        else if (branchOn < 975)
+        {
+          type = BlockType::Stone;
+        }
+        else if (branchOn < 980)
+        {
+          type = BlockType::Grass;
+        }
+        else if (branchOn < 985)
+        {
+          type = BlockType::Brick;
+        }
+        else
+        {
+          type = BlockType::Party;
+        }
+        chunk_manager->set(i, j, k, type);
       }
     }
   }

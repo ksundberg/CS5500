@@ -5,7 +5,7 @@
 
 ChunkManager::ChunkManager()
 {
-  chunks.resize(index(CMX, CMY, CMZ));
+  chunks.resize(CMX * CMY * CMZ);
 }
 
 BlockType ChunkManager::get(int x, int y, int z)

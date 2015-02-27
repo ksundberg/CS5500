@@ -6,7 +6,14 @@
 enum BlockType
 {
   Inactive = 0,
-  Active
+  Ground,
+  Water,
+  Sand,
+  Wood,
+  Stone,
+  Grass,
+  Brick,
+  Party
 };
 
 class Block
