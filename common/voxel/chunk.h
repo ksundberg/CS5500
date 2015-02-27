@@ -20,9 +20,9 @@ public:
 
   static const int CHUNK_SIZE = 16;
 
-  int X; // World Chunk Position;
-  int Y; // World Chunk Position;
-  int Z; // World Chunk Position;
+  const int X; // World Chunk Position;
+  const int Y; // World Chunk Position;
+  const int Z; // World Chunk Position;
 private:
   // The blocks data
   BlockType*** mBlocks;

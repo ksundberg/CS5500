@@ -3,10 +3,8 @@
 #include "chunk.h"
 
 Chunk::Chunk(int x, int y, int z)
+    : X(x), Y(y), Z(z)
 {
-  X = x;
-  Y = y;
-  Z = z;
   // Block array creation
   mBlocks = new BlockType** [CHUNK_SIZE];
   for (int i = 0; i < CHUNK_SIZE; i++)
