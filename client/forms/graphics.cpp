@@ -141,14 +141,12 @@ void GraphicsContext::initRendering()
   glEnable(GL_LIGHT0);
   glEnable(GL_TEXTURE_2D);
 
+  glEnable(GL_CULL_FACE);
+  
   // add slightly more light, the default lighting is rather dark
   GLfloat ambient[] = {0.5, 0.5, 0.5, 0.5};
   glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 
-  // set viewing projection
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity(); // Reset the camera.
-  glFrustum(-0.5f, 0.5f, -0.5f, 0.5f, 1.0f, 3.0f);
 
 
   // Inititialize GLEW.

@@ -70,7 +70,7 @@ void Chunk::update()
   byte4 vertex[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36];
   int vindex = 0;
 
-  auto squareX = [&](int i, int j, int k, BlockType type)
+  auto negSquareX = [&](int i, int j, int k, BlockType type)
   {
     // Create vertices for the X side of a block, making the square we
     // draw perpendicular to the X-axis. We need two triangles to
@@ -83,9 +83,8 @@ void Chunk::update()
     vertex[vindex++] = byte4(i, j + 1, k + 1, type);
   };
 
-  auto squareY = [&](int i, int j, int k, BlockType type)
+  auto negSquareY = [&](int i, int j, int k, BlockType type)
   {
-    // Vertices for a square perpendicular to the Y-axis.
     vertex[vindex++] = byte4(i, j, k, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
     vertex[vindex++] = byte4(i, j, k + 1, type);
@@ -94,15 +93,44 @@ void Chunk::update()
     vertex[vindex++] = byte4(i + 1, j, k + 1, type);
   };
 
-  auto squareZ = [&](int i, int j, int k, BlockType type)
+  auto negSquareZ = [&](int i, int j, int k, BlockType type)
   {
-    // Vertices for a square perpendicular to the Z-axis.
     vertex[vindex++] = byte4(i, j, k, type);
     vertex[vindex++] = byte4(i, j + 1, k, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
     vertex[vindex++] = byte4(i, j + 1, k, type);
     vertex[vindex++] = byte4(i + 1, j + 1, k, type);
+  };
+
+  auto posSquareX = [&](int i, int j, int k, BlockType type)
+  {
+    vertex[vindex++] = byte4(i, j + 1, k + 1, type);
+    vertex[vindex++] = byte4(i, j, k + 1, type);
+    vertex[vindex++] = byte4(i, j + 1, k, type);
+    vertex[vindex++] = byte4(i, j + 1, k, type);
+    vertex[vindex++] = byte4(i, j, k + 1, type);
+    vertex[vindex++] = byte4(i, j, k, type);
+  };
+
+  auto posSquareY = [&](int i, int j, int k, BlockType type)
+  {
+    vertex[vindex++] = byte4(i + 1, j, k + 1, type);
+    vertex[vindex++] = byte4(i + 1, j, k, type);
+    vertex[vindex++] = byte4(i, j, k + 1, type);
+    vertex[vindex++] = byte4(i, j, k + 1, type);
+    vertex[vindex++] = byte4(i + 1, j, k, type);
+    vertex[vindex++] = byte4(i, j, k, type);
+  };
+
+  auto posSquareZ = [&](int i, int j, int k, BlockType type)
+  {
+    vertex[vindex++] = byte4(i + 1, j + 1, k, type);
+    vertex[vindex++] = byte4(i, j + 1, k, type);
+    vertex[vindex++] = byte4(i + 1, j, k, type);
+    vertex[vindex++] = byte4(i + 1, j, k, type);
+    vertex[vindex++] = byte4(i, j + 1, k, type);
+    vertex[vindex++] = byte4(i, j, k, type);
   };
 
   for (int i = 0; i < CHUNK_SIZE; i++)
@@ -121,37 +149,37 @@ void Chunk::update()
           if (0 == i || !(mBlocks[i - 1][j][k]))
           {
             // Square in the negative x direction.
-            squareX(i, j, k, type);
+            negSquareX(i, j, k, type);
           }
 
           if ((CHUNK_SIZE - 1) == i || !(mBlocks[i + 1][j][k]))
           {
             // Now for the positive x.
-            squareX(i + 1, j, k, type);
+            posSquareX(i + 1, j, k, type);
           }
 
           if (0 == j || !(mBlocks[i][j - 1][k]))
           {
             // Negative y direction.
-            squareY(i, j, k, type);
+            negSquareY(i, j, k, type);
           }
 
           if ((CHUNK_SIZE - 1) == j || !(mBlocks[i][j + 1][k]))
           {
             // Positive y direction
-            squareY(i, j + 1, k, type);
+            posSquareY(i, j + 1, k, type);
           }
 
           if (0 == k || !(mBlocks[i][j][k - 1]))
           {
             // Negative z direction.
-            squareZ(i, j, k, type);
+            negSquareZ(i, j, k, type);
           }
 
           if ((CHUNK_SIZE - 1) == k || !(mBlocks[i][j][k + 1]))
           {
             // Positive z direction.
-            squareZ(i, j, k + 1, type);
+            posSquareZ(i, j, k + 1, type);
           }
         }
       }
