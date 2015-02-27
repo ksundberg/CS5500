@@ -44,45 +44,41 @@ void GameLoopCanvas::GameInit()
       {
         BlockType type;
         auto branchOn = rand() % 1000;
-        if (branchOn < 950)
+        if (branchOn < 990)
         {
           type = BlockType::Inactive;
         }
-        else if (branchOn < 955)
+        else if (branchOn < 991)
         {
           type = BlockType::Ground;
         }
-        else if (branchOn < 960)
+        else if (branchOn < 992)
         {
           type = BlockType::Water;
         }
-        else if (branchOn < 965)
+        else if (branchOn < 993)
         {
           type = BlockType::Sand;
         }
-        else if (branchOn < 970)
+        else if (branchOn < 994)
         {
           type = BlockType::Wood;
         }
-        else if (branchOn < 975)
+        else if (branchOn < 995)
         {
           type = BlockType::Stone;
         }
-        else if (branchOn < 980)
+        else if (branchOn < 996)
         {
           type = BlockType::Grass;
         }
-        else if (branchOn < 985)
+        else if (branchOn < 998)
         {
           type = BlockType::Brick;
         }
-        else if (branchOn < 990)
+        else 
         {
           type = BlockType::Party;
-        }
-        else
-        {
-          type = BlockType::Inactive;
         }
 
         chunk_manager->set(i, j, k, type);
