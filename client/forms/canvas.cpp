@@ -43,7 +43,11 @@ void GameLoopCanvas::GameInit()
     {
       for (int k = 0; k < Chunk::CHUNK_SIZE * 2; k++)
       {
-        chunk_manager->set(i, j, k, BlockType::Active);
+        chunk_manager->set(
+          i,
+          j,
+          k,
+          ((rand() % 100) < 1) ? BlockType::Active : BlockType::Inactive);
       }
     }
   }

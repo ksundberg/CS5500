@@ -136,7 +136,6 @@ static GLuint loadShaders(const char* vertex_file_path, const char* fragment_fil
 void GraphicsContext::initRendering()
 {
   // set up the parameters we want to use
-  glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);

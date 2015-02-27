@@ -2,8 +2,7 @@
 #include "block.h"
 #include "chunk.h"
 
-Chunk::Chunk(int x, int y, int z)
-    : X(x), Y(y), Z(z)
+Chunk::Chunk(int x, int y, int z) : X(x), Y(y), Z(z)
 {
   // Block array creation
   mBlocks = new BlockType** [CHUNK_SIZE];
@@ -79,8 +78,8 @@ void Chunk::update()
     vertex[vindex++] = byte4(i, j, k, type);
     vertex[vindex++] = byte4(i, j, k + 1, type);
     vertex[vindex++] = byte4(i, j + 1, k, type);
-    vertex[vindex++] = byte4(i, j, k + 1, type);
     vertex[vindex++] = byte4(i, j + 1, k, type);
+    vertex[vindex++] = byte4(i, j, k + 1, type);
     vertex[vindex++] = byte4(i, j + 1, k + 1, type);
   };
 
@@ -88,8 +87,8 @@ void Chunk::update()
   {
     // Vertices for a square perpendicular to the Y-axis.
     vertex[vindex++] = byte4(i, j, k, type);
-    vertex[vindex++] = byte4(i, j, k + 1, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
+    vertex[vindex++] = byte4(i, j, k + 1, type);
     vertex[vindex++] = byte4(i, j, k + 1, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
     vertex[vindex++] = byte4(i + 1, j, k + 1, type);
@@ -101,8 +100,8 @@ void Chunk::update()
     vertex[vindex++] = byte4(i, j, k, type);
     vertex[vindex++] = byte4(i, j + 1, k, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
-    vertex[vindex++] = byte4(i, j + 1, k, type);
     vertex[vindex++] = byte4(i + 1, j, k, type);
+    vertex[vindex++] = byte4(i, j + 1, k, type);
     vertex[vindex++] = byte4(i + 1, j + 1, k, type);
   };
 
@@ -125,7 +124,7 @@ void Chunk::update()
             squareX(i, j, k, type);
           }
 
-          if ((CHUNK_SIZE - 1) == i || !(mBlocks[i+1][j][k]))
+          if ((CHUNK_SIZE - 1) == i || !(mBlocks[i + 1][j][k]))
           {
             // Now for the positive x.
             squareX(i + 1, j, k, type);
@@ -137,7 +136,7 @@ void Chunk::update()
             squareY(i, j, k, type);
           }
 
-          if ((CHUNK_SIZE - 1) == j || !(mBlocks[i][j+1][k]))
+          if ((CHUNK_SIZE - 1) == j || !(mBlocks[i][j + 1][k]))
           {
             // Positive y direction
             squareY(i, j + 1, k, type);
@@ -149,7 +148,7 @@ void Chunk::update()
             squareZ(i, j, k, type);
           }
 
-          if ((CHUNK_SIZE - 1) == k || !(mBlocks[i][j][k+1]))
+          if ((CHUNK_SIZE - 1) == k || !(mBlocks[i][j][k + 1]))
           {
             // Positive z direction.
             squareZ(i, j, k + 1, type);
