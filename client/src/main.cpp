@@ -17,7 +17,6 @@ bool MyApp::OnInit()
 int MyApp::OnExit()
 {
   delete m_glContext;
-  delete frame;
   delete manager;
   return wxApp::OnExit();
 }

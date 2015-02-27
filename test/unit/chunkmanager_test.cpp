@@ -11,19 +11,17 @@ TEST_CASE("ChunkManager is a 3-dimmensional matrix of blocks under the hood.")
     REQUIRE(cm.get(1, 2, 3));
     cm.set(1, 4, 5, BlockType::Inactive);
     REQUIRE(!(cm.get(1, 4, 5)));
+    cm.set(cm.BOUNDX - 1, cm.BOUNDY - 1, cm.BOUNDZ - 1, BlockType::Water);
+    REQUIRE(cm.get(cm.BOUNDX - 1, cm.BOUNDY - 1, cm.BOUNDZ - 1) ==
+            BlockType::Water);
   }
   SECTION("Out of bounds blocks are inactive.")
   {
-    cm.set(cm.BOUNDX,
-           cm.BOUNDY,
-           cm.BOUNDZ,
-           BlockType::Ground);
-    REQUIRE(cm.get(cm.BOUNDX,
-                   cm.BOUNDY,
-                   cm.BOUNDZ) == BlockType::Inactive);
+    cm.set(cm.BOUNDX, cm.BOUNDY, cm.BOUNDZ, BlockType::Ground);
+    REQUIRE(cm.get(cm.BOUNDX, cm.BOUNDY, cm.BOUNDZ) == BlockType::Inactive);
 
-    cm.set(-1,-1,-1,BlockType::Ground);
-    REQUIRE(cm.get(-1,-1,-1) == BlockType::Inactive);
+    cm.set(-1, -1, -1, BlockType::Ground);
+    REQUIRE(cm.get(-1, -1, -1) == BlockType::Inactive);
   }
 }
 
