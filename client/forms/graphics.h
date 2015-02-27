@@ -1,7 +1,11 @@
 #ifndef _GRAPHICS_HEADER_
 #define _GRAPHICS_HEADER_
 #include <GL/glew.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

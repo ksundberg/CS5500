@@ -88,6 +88,11 @@ set(common_srcs
 
   client/forms/graphics.cpp
   client/forms/graphics.h
+  
+  common/density/material_density.cpp
+  common/density/material_density.h
+  common/density/rectangular_prism.cpp
+  common/density/rectangular_prism.h
 )
 source_group("common" FILES ${common_srcs})
 
