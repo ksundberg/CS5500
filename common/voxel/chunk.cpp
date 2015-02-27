@@ -194,9 +194,8 @@ void Chunk::update()
     GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
 }
 
-void Chunk::render()
+void Chunk::render(GLuint attribute_coord)
 {
-  GLint attribute_coord = 0;
   if (vertex_count >= 1)
   {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);

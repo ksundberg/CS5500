@@ -192,8 +192,8 @@ void GameLoopCanvas::Render()
   // by individual chunks.
   auto VP = Projection * View;
 
-  // 1rst attribute buffer : vertices
-  chunk_manager->render(VP, MatrixID);
+  auto attribute_coord = glGetAttribLocation(program, "coord");
+  chunk_manager->render(VP, MatrixID, attribute_coord);
 
   SwapBuffers();
 }
