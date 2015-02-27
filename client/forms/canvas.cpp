@@ -76,10 +76,15 @@ void GameLoopCanvas::GameInit()
         {
           type = BlockType::Brick;
         }
-        else
+        else if (branchOn < 990)
         {
           type = BlockType::Party;
         }
+        else
+        {
+          type = BlockType::Inactive;
+        }
+
         chunk_manager->set(i, j, k, type);
       }
     }
