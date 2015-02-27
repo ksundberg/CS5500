@@ -133,7 +133,7 @@ static GLuint loadShaders(const char* vertex_file_path, const char* fragment_fil
   return ProgramID;
 }
 
-void TestGLContext::initRendering()
+void GraphicsContext::initRendering()
 {
   // set up the parameters we want to use
   glEnable(GL_CULL_FACE);
@@ -166,7 +166,7 @@ void TestGLContext::initRendering()
   glEnableVertexAttribArray(0);
 }
 
-TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
+GraphicsContext::GraphicsContext(wxGLCanvas* canvas) : wxGLContext(canvas)
 {
   SetCurrent(*canvas);
 
@@ -175,7 +175,7 @@ TestGLContext::TestGLContext(wxGLCanvas* canvas) : wxGLContext(canvas)
 }
 
 
-GLuint TestGLContext::shaderProgram()
+GLuint GraphicsContext::shaderProgram()
 {
   return shader_program;
 }

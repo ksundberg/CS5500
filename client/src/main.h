@@ -10,7 +10,7 @@ class MyApp : public wxApp
 {
 private:
   // the GL context we use for all our mono rendering windows
-  TestGLContext* m_glContext;
+  GraphicsContext* m_glContext;
   MainWindow* frame;
   ChunkManager* manager;
 
@@ -19,7 +19,7 @@ public:
 
   // Returns the shared context used by all frames and sets it as current for
   // the given canvas.
-  TestGLContext& GetContext(wxGLCanvas* canvas);
+  GraphicsContext& GetContext(wxGLCanvas* canvas);
 
   // virtual wxApp methods
   virtual bool OnInit();

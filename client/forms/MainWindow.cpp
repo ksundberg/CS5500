@@ -44,9 +44,9 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   menuBar->Append(menuTools, "&Tools");
   SetMenuBar(menuBar);
   CreateStatusBar();
-  SetStatusText("Welcome to Torus World!");
+  SetStatusText("WASD keys to move, JK to go up and down, ESC to toggle mouse.");
 
-  new TestGLCanvas(this, NULL);
+  new GameLoopCanvas(this, NULL);
   SetClientSize(600, 600);
   Show();
 }

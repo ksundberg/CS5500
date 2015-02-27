@@ -10,10 +10,10 @@
 typedef glm::tvec4<GLbyte> byte4;
 
 // the rendering context used by all GL canvases
-class TestGLContext : public wxGLContext
+class GraphicsContext : public wxGLContext
 {
 public:
-  TestGLContext(wxGLCanvas* canvas);
+  GraphicsContext(wxGLCanvas* canvas);
 
   GLuint shaderProgram();
 private:
