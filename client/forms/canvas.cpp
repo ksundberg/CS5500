@@ -167,7 +167,6 @@ void GameLoopCanvas::OnGameTimer(wxTimerEvent& WXUNUSED(event))
 
 void GameLoopCanvas::Render()
 {
-  LOG(DEBUG) << "Rendering";
   // With perspective OpenGL graphics, the wxFULL_REPAINT_ON_RESIZE style
   // flag should always be set, because even making the canvas smaller should
   // be followed by a paint event that updates the entire canvas with new
