@@ -1,5 +1,6 @@
 // Example application modified from the wxWidgets demo here:
 // http://fossies.org/dox/wxWidgets-3.0.2/cube_8cpp_source.html
+#include "logger.h"
 #include "canvas.h"
 
 // control ids
@@ -13,12 +14,12 @@ wxBEGIN_EVENT_TABLE(GameLoopCanvas, wxGLCanvas)
   EVT_TIMER(GameTimer, GameLoopCanvas::OnGameTimer)
   EVT_MOTION(GameLoopCanvas::OnMouseUpdate) wxEND_EVENT_TABLE()
 
-  GameLoopCanvas::GameLoopCanvas(wxWindow* parent, int* attribList)
+  GameLoopCanvas::GameLoopCanvas(wxWindow* parent, wxSize size, int* attribList)
   : wxGLCanvas(parent,
                wxID_ANY,
                attribList,
                wxDefaultPosition,
-               wxDefaultSize,
+               size,
                wxFULL_REPAINT_ON_RESIZE)
   , m_spinTimer(this, GameTimer)
 {
@@ -95,9 +96,10 @@ void GameLoopCanvas::GameInit()
   mouse_changed = false;
 }
 
+
 // Needed to use wxGetApp(). Usually you get the same result
 // by using wxIMPLEMENT_APP(), but that can only be in main.
-wxDECLARE_APP(MyApp);
+DECLARE_APP(MyApp);
 
 void GameLoopCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
@@ -114,6 +116,8 @@ void GameLoopCanvas::Resize()
 
 void GameLoopCanvas::OnKeyDown(wxKeyEvent& event)
 {
+  LOG(DEBUG) << "GameLoopCanvas::" << __FUNCTION__;
+
   switch (event.GetKeyCode())
   {
   case WXK_RIGHT:
@@ -163,6 +167,7 @@ void GameLoopCanvas::OnGameTimer(wxTimerEvent& WXUNUSED(event))
 
 void GameLoopCanvas::Render()
 {
+  LOG(DEBUG) << "Rendering";
   // With perspective OpenGL graphics, the wxFULL_REPAINT_ON_RESIZE style
   // flag should always be set, because even making the canvas smaller should
   // be followed by a paint event that updates the entire canvas with new

@@ -7,7 +7,7 @@
 class GameLoopCanvas : public wxGLCanvas
 {
 public:
-  GameLoopCanvas(wxWindow* parent, int* attribList = NULL);
+  GameLoopCanvas(wxWindow* parent, wxSize size, int* attribList = NULL);
   ~GameLoopCanvas();
 
 private:
@@ -36,7 +36,7 @@ private:
   glm::vec3 lookat;
   glm::vec3 player_angle;
 
-  wxDECLARE_EVENT_TABLE();
+  DECLARE_EVENT_TABLE();
 };
 
 #endif

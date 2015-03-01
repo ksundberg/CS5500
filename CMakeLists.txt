@@ -118,7 +118,7 @@ find_package(TBB)
 include_directories(${TBB_INCLUDE_DIRS})
 link_directories(${TBB_LIBRARY_DIRS})
 
-add_library(common STATIC ${common_srcs} ${TBB_LIBRARIES})
+add_library(common STATIC ${common_srcs})
 
 # OpenGL
 find_package(OpenGL REQUIRED)

@@ -1,6 +1,5 @@
 #ifndef _MAIN_HEADER_
 #define _MAIN_HEADER_
-#include <wxwidget.h>
 #include "MainWindow.h"
 #include "graphics.h"
 #include "chunkmanager.h"
@@ -12,7 +11,6 @@ private:
   // the GL context we use for all our mono rendering windows
   GraphicsContext* m_glContext;
   MainWindow* frame;
-  ChunkManager* manager;
 
 public:
   MyApp() { m_glContext = NULL; }

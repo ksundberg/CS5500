@@ -62,9 +62,9 @@ Vector3 PhysicsEngine::CalculateGravity(Block block)
 Vector3 PhysicsEngine::CalculateAirDrag(Block block)
 {
   // set up constant values
-  auto area = 1.0f; // 1 meter?
+  auto area = 1.0f;  // 1 meter?
   auto drag = 1.05f; // wiki drag coefficient for cube
-  auto rho = 1.2f; // air density
+  auto rho = 1.2f;   // air density
 
   auto vel = block.velocity;
 

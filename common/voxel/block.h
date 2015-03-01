@@ -25,9 +25,9 @@ public:
   BlockType get();
   void set(BlockType type);
 
-  double mass; // in kg
+  double mass;          // in kg
   Vector3 acceleration; // in m/s^2
-  Vector3 velocity; // in m/s
+  Vector3 velocity;     // in m/s
 
 private:
   BlockType type;
