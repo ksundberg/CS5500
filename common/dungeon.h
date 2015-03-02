@@ -30,7 +30,7 @@ public:
   static float distanceBetween(Vector3 a, Vector3 b);
   static int dungeonBlockLength();
   static void printDungeon(ChunkList& list);
-  static Vector3 chunkToBlockDistance(Vector3 incoming);
+  static glm::vec3 chunkToBlockDistance(glm::vec3 incoming);
   static const int DUNGEON_SIZE = 16;
 
 private:

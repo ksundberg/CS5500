@@ -14,7 +14,7 @@ public:
   void setAllBlocks(BlockType type);
   BlockType get(int x, int y, int z);
   void set(int x, int y, int z, BlockType type);
-  Vector3 getPosition();
+  glm::vec3 getPosition();
   void update();
   void render(GLuint attribute_coord);
 

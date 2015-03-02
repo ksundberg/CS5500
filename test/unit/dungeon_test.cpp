@@ -23,7 +23,7 @@ TEST_CASE("We have a dungeon to work with.")
       return Dungeon::chunkToBlockDistance(c->getPosition());
     };
     auto shouldBeZero =
-      fabs(Dungeon::distanceBetween(pos(a), pos(b)) -
+      fabs(glm::distance(pos(a), pos(b)) -
            sqrt(pow(Chunk::CHUNK_SIZE, 2) + pow(3 * Chunk::CHUNK_SIZE, 2) +
                 pow(2 * Chunk::CHUNK_SIZE, 2)));
     REQUIRE(shouldBeZero < 0.001);

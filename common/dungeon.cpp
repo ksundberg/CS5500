@@ -100,19 +100,19 @@ void Dungeon::connectRoom(ChunkList& list,
   auto pos1 = chunkToBlockDistance(chunk1->getPosition());
   auto pos2 = chunkToBlockDistance(chunk2->getPosition());
 
-  auto dist = distanceBetween(pos1, pos2);
+  auto dist = glm::distance(pos1, pos2);
   auto unit = -((pos1 - pos2) / dist);
 
   auto start = pos1;
 
-  auto in_dungeon = [](Vector3 v)
+  auto in_dungeon = [](glm::vec3 v)
   {
     return (0 < v.x && v.x < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1 && 0 < v.y &&
             v.y < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1 && 0 < v.x &&
             v.x < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1);
   };
 
-  while (distanceBetween(start, pos2) > 1.0 && in_dungeon(start))
+  while (glm::distance(start, pos2) > 1.0 && in_dungeon(start))
   {
     start += unit;
     list[index((static_cast<int>(start.x)) / Chunk::CHUNK_SIZE,
@@ -217,13 +217,9 @@ float Dungeon::distanceBetween(Vector3 pos1, Vector3 pos2)
               pow(fabs(pos1.z - pos2.z), 2.0));
 }
 
-Vector3 Dungeon::chunkToBlockDistance(Vector3 incoming)
+glm::vec3 Dungeon::chunkToBlockDistance(glm::vec3 incoming)
 {
-  Vector3 forYou;
-
-  forYou.x = incoming.x * Chunk::CHUNK_SIZE;
-  forYou.y = incoming.y * Chunk::CHUNK_SIZE;
-  forYou.z = incoming.z * Chunk::CHUNK_SIZE;
-
-  return forYou;
+  return glm::vec3(incoming.x * Chunk::CHUNK_SIZE,
+                   incoming.y * Chunk::CHUNK_SIZE,
+                   incoming.z * Chunk::CHUNK_SIZE);
 }

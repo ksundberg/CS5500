@@ -1,4 +1,3 @@
-#include <iostream>
 #include "block.h"
 #include "chunk.h"
 
@@ -35,9 +34,9 @@ Chunk::~Chunk()
   delete[] mBlocks;
 }
 
-Vector3 Chunk::getPosition()
+glm::vec3 Chunk::getPosition()
 {
-  return Vector3(X, Y, Z);
+  return glm::vec3(X, Y, Z);
 }
 
 BlockType Chunk::get(int x, int y, int z)
