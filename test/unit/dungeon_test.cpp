@@ -18,14 +18,8 @@ TEST_CASE("We have a dungeon to work with.")
   {
     auto a = new Chunk(0, 0, 0);
     auto b = new Chunk(1, 3, 2);
-    auto pos = [](Chunk* c)
-    {
-      return Dungeon::chunkToBlockDistance(c->getPosition());
-    };
-    auto shouldBeZero =
-      fabs(glm::distance(pos(a), pos(b)) -
-           sqrt(pow(Chunk::CHUNK_SIZE, 2) + pow(3 * Chunk::CHUNK_SIZE, 2) +
-                pow(2 * Chunk::CHUNK_SIZE, 2)));
+    auto shouldBeZero = fabs(glm::distance(a->getPosition(), b->getPosition()) -
+                             sqrt(pow(1, 2) + pow(3, 2) + pow(2, 2)));
     REQUIRE(shouldBeZero < 0.001);
     delete a;
     delete b;

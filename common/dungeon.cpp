@@ -12,7 +12,8 @@ void Dungeon::makeDungeon(ChunkList& list)
     {
       for (int k = 0; k < DUNGEON_SIZE; k++)
       {
-        list[index(i, j, k)] = std::make_shared<Chunk>(i, j, k);
+        list[index(i, j, k)] = std::make_shared<Chunk>(
+          i * Chunk::CHUNK_SIZE, j * Chunk::CHUNK_SIZE, k * Chunk::CHUNK_SIZE);
       }
     }
   }
@@ -97,11 +98,10 @@ void Dungeon::connectRoom(ChunkList& list,
                           std::shared_ptr<Chunk> chunk1,
                           std::shared_ptr<Chunk> chunk2)
 {
-  auto pos1 = chunkToBlockDistance(chunk1->getPosition());
-  auto pos2 = chunkToBlockDistance(chunk2->getPosition());
+  auto pos1 = chunk1->getPosition();
+  auto pos2 = chunk2->getPosition();
 
-  auto dist = glm::distance(pos1, pos2);
-  auto unit = -((pos1 - pos2) / dist);
+  auto unit = glm::normalize(pos2 - pos1);
 
   auto start = pos1;
 
@@ -208,18 +208,4 @@ bool Dungeon::isChunkAnyActive(std::shared_ptr<Chunk> chunk)
     }
   }
   return false;
-}
-
-float Dungeon::distanceBetween(Vector3 pos1, Vector3 pos2)
-{
-  return sqrt(pow(fabs(pos1.x - pos2.x), 2.0) +
-              pow(fabs(pos1.y - pos2.y), 2.0) +
-              pow(fabs(pos1.z - pos2.z), 2.0));
-}
-
-glm::vec3 Dungeon::chunkToBlockDistance(glm::vec3 incoming)
-{
-  return glm::vec3(incoming.x * Chunk::CHUNK_SIZE,
-                   incoming.y * Chunk::CHUNK_SIZE,
-                   incoming.z * Chunk::CHUNK_SIZE);
 }

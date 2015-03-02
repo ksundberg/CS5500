@@ -49,8 +49,13 @@ void ChunkManager::set(int x, int y, int z, BlockType type)
   z %= CMZ;
 
   // Allocate this chunk if it doesn't exist yet.
-  if(chunks[index(cmx, cmy, cmz)] == nullptr)
-    chunks[index(cmx,cmy,cmz)] = std::make_shared<Chunk>(cmx, cmy, cmz);
+  if (chunks[index(cmx, cmy, cmz)] == nullptr)
+  {
+    chunks[index(cmx, cmy, cmz)] =
+      std::make_shared<Chunk>(cmx * Chunk::CHUNK_SIZE,
+                              cmy * Chunk::CHUNK_SIZE,
+                              cmz * Chunk::CHUNK_SIZE);
+  }
 
   auto chunk = chunks[index(cmx,cmy,cmz)];
 
@@ -84,9 +89,7 @@ void ChunkManager::render(const glm::mat4& vp,
   {
     if(chunk != nullptr)
     {
-      auto position = glm::vec3(chunk->X * Chunk::CHUNK_SIZE,
-                                chunk->Y * Chunk::CHUNK_SIZE,
-                                chunk->Z * Chunk::CHUNK_SIZE);
+      auto position = chunk->getPosition();
       auto model = glm::translate(glm::mat4(1.0f), position);
       auto mvp = vp * model;
       glUniformMatrix4fv(mpv_id, 1, GL_FALSE, &mvp[0][0]);
