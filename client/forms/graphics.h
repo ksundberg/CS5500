@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <wx/glcanvas.h>
 
-typedef glm::tvec4<GLbyte> byte4;
+typedef glm::detail::tvec4<GLbyte, glm::lowp> byte4;
 
 // the rendering context used by all GL canvases
 class GraphicsContext : public wxGLContext

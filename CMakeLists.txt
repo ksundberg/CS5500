@@ -121,6 +121,7 @@ link_directories(${TBB_LIBRARY_DIRS})
 add_library(common STATIC ${common_srcs})
 
 # OpenGL
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGLM/")
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(GLM REQUIRED)
