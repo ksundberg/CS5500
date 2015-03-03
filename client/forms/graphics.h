@@ -11,7 +11,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <wx/glcanvas.h>
 
+#if (GLM_VERSION == 96)
+typedef glm::tvec4<GLbyte> byte4;
+#elif (GLM_VERSION == 95)
 typedef glm::detail::tvec4<GLbyte, glm::lowp> byte4;
+#else
+typedef glm::detail::tvec4<GLbyte> byte4;
+#endif
 
 // the rendering context used by all GL canvases
 class GraphicsContext : public wxGLContext
