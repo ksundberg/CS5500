@@ -1,7 +1,8 @@
+#include "logger.h"
 #include "block.h"
 #include "chunk.h"
 
-Chunk::Chunk(int x, int y, int z) : X(x), Y(y), Z(z)
+Chunk::Chunk(int x, int y, int z) : X(x), Y(y), Z(z), vertex_count(0)
 {
   // Block array creation
   mBlocks = new BlockType** [CHUNK_SIZE];
@@ -200,5 +201,9 @@ void Chunk::render(GLuint attribute_coord)
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(attribute_coord, 4, GL_BYTE, GL_FALSE, 0, 0);
     glDrawArrays(GL_TRIANGLES, 0, vertex_count);
+  }
+  else
+  {
+      LOG(INFO) << "No vertex to display";
   }
 }
