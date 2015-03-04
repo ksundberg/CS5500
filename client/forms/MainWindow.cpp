@@ -50,7 +50,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   menuBar->Append(menuTools, wxT("&Tools"));
   SetMenuBar(menuBar);
   CreateStatusBar();
-  SetStatusText("WASD keys to move, JK to go up and down, ESC to toggle mouse.");
+  SetStatusText(wxT("WASD keys to move, JK to go up and down, ESC to toggle mouse."));
 
   SetClientSize(600, 600);
   int lpAttribList[] = {WX_GL_RGBA, WX_GL_DEPTH_SIZE, 1, 0};

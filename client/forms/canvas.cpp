@@ -9,10 +9,10 @@ enum
   GameTimer = wxID_HIGHEST + 1
 };
 
-wxBEGIN_EVENT_TABLE(GameLoopCanvas, wxGLCanvas)
+BEGIN_EVENT_TABLE(GameLoopCanvas, wxGLCanvas)
   EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
   EVT_TIMER(GameTimer, GameLoopCanvas::OnGameTimer)
-  EVT_MOTION(GameLoopCanvas::OnMouseUpdate) wxEND_EVENT_TABLE()
+  EVT_MOTION(GameLoopCanvas::OnMouseUpdate) END_EVENT_TABLE()
 
   GameLoopCanvas::GameLoopCanvas(wxWindow* parent, wxSize size, int* attribList)
   : wxGLCanvas(parent,
