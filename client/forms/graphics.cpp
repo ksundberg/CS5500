@@ -137,17 +137,7 @@ void GraphicsContext::initRendering()
 {
   // set up the parameters we want to use
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_TEXTURE_2D);
-
   glEnable(GL_CULL_FACE);
-  
-  // add slightly more light, the default lighting is rather dark
-  GLfloat ambient[] = {0.5, 0.5, 0.5, 0.5};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-
-
 
   // Inititialize GLEW.
   if (glewInit() != GLEW_OK)
@@ -169,6 +159,11 @@ GraphicsContext::GraphicsContext(wxGLCanvas* canvas) : wxGLContext(canvas)
 
   CheckGLError();
   initRendering();
+}
+
+GraphicsContext::~GraphicsContext()
+{
+  glDeleteProgram(shader_program);
 }
 
 

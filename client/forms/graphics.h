@@ -24,6 +24,7 @@ class GraphicsContext : public wxGLContext
 {
 public:
   GraphicsContext(wxGLCanvas* canvas);
+  ~GraphicsContext();
 
   GLuint shaderProgram();
 private:
