@@ -47,7 +47,7 @@ void GameLoopCanvas::GameInit()
         auto branchOn = rand() % 1000;
         if (branchOn < 990)
         {
-          type = BlockType::Inactive;
+          type = BlockType::Ground;
         }
         else if (branchOn < 991)
         {
@@ -91,7 +91,6 @@ void GameLoopCanvas::GameInit()
   player_angle = glm::vec3(0, -0.5, 0);
   up = glm::vec3(0, 1, 0);
   VectorUpdate(player_angle);
-  background_color = 0.5;
   steal_mouse = true;
   mouse_changed = false;
 }
@@ -175,9 +174,6 @@ void GameLoopCanvas::Render()
 
   // Clear screen.
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // Background color
-  glClearColor(background_color, background_color, background_color, 1.0);
 
   // The context contains all the graphics utils.
   GraphicsContext& context = wxGetApp().GetContext(this);

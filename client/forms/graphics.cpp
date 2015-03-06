@@ -153,6 +153,8 @@ void GraphicsContext::initRendering()
   // Lets us send vertices to the shaders.
   auto attribute_coord = attributeCoord();
   glEnableVertexAttribArray(attribute_coord);
+
+  glClearColor(0.8, 0.6, 0.7, 1.0);
 }
 
 GraphicsContext::GraphicsContext(wxGLCanvas* canvas) : wxGLContext(canvas)

@@ -24,7 +24,6 @@ private:
 
   // angles of rotation around x- and y- axis
   const float player_speed = 0.5;
-  float background_color;
   bool steal_mouse;
   bool mouse_changed;
   wxTimer m_spinTimer;
