@@ -194,12 +194,12 @@ void Chunk::update()
     GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
 }
 
-void Chunk::render(GLuint attribute_coord)
+void Chunk::render(GraphicsContext &context)
 {
   if (vertex_count >= 1)
   {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glVertexAttribPointer(attribute_coord, 4, GL_BYTE, GL_FALSE, 0, 0);
+    glVertexAttribPointer(context.attributeCoord(), 4, GL_BYTE, GL_FALSE, 0, 0);
     glDrawArrays(GL_TRIANGLES, 0, vertex_count);
   }
   else

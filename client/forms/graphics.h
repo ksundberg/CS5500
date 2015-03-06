@@ -27,6 +27,8 @@ public:
   ~GraphicsContext();
 
   GLuint shaderProgram();
+  GLuint attributeCoord();
+  GLuint mvp();
 private:
   void initRendering();
   // textures for the cube faces

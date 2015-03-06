@@ -150,7 +150,9 @@ void GraphicsContext::initRendering()
   shader_program = loadShaders("world.v.glsl", "world.f.glsl");
   glUseProgram(shader_program);
 
-  glEnableVertexAttribArray(0);
+  // Lets us send vertices to the shaders.
+  auto attribute_coord = attributeCoord();
+  glEnableVertexAttribArray(attribute_coord);
 }
 
 GraphicsContext::GraphicsContext(wxGLCanvas* canvas) : wxGLContext(canvas)
@@ -170,4 +172,14 @@ GraphicsContext::~GraphicsContext()
 GLuint GraphicsContext::shaderProgram()
 {
   return shader_program;
+}
+
+GLuint GraphicsContext::attributeCoord()
+{
+  return glGetAttribLocation(shader_program, "coord");
+}
+
+GLuint GraphicsContext::mvp()
+{
+  return glGetUniformLocation(shader_program, "mvp");
 }

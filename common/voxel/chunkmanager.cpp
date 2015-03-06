@@ -81,9 +81,7 @@ void ChunkManager::update()
   chunksToUpdate.clear();
 }
 
-void ChunkManager::render(const glm::mat4& vp,
-                          const GLuint mpv_id,
-                          const GLuint attribute_coord)
+void ChunkManager::render(GraphicsContext &context, const glm::mat4 &vp)
 {
   for(auto &chunk: chunks)
   {
@@ -92,8 +90,8 @@ void ChunkManager::render(const glm::mat4& vp,
       auto position = chunk->getPosition();
       auto model = glm::translate(glm::mat4(1.0f), position);
       auto mvp = vp * model;
-      glUniformMatrix4fv(mpv_id, 1, GL_FALSE, &mvp[0][0]);
-      chunk->render(attribute_coord);
+      glUniformMatrix4fv(context.mvp(), 1, GL_FALSE, &mvp[0][0]);
+      chunk->render(context);
     }
   }
 }

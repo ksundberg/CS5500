@@ -182,8 +182,6 @@ void GameLoopCanvas::Render()
   // The context contains all the graphics utils.
   GraphicsContext& context = wxGetApp().GetContext(this);
 
-  auto program = context.shaderProgram();
-  auto MatrixID = glGetUniformLocation(program, "mvp");
   auto Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
   // Camera matrix
@@ -192,8 +190,7 @@ void GameLoopCanvas::Render()
   // by individual chunks.
   auto VP = Projection * View;
 
-  auto attribute_coord = glGetAttribLocation(program, "coord");
-  chunk_manager->render(VP, MatrixID, attribute_coord);
+  chunk_manager->render(context, VP);
 
   SwapBuffers();
 }
