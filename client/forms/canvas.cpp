@@ -2,6 +2,7 @@
 // http://fossies.org/dox/wxWidgets-3.0.2/cube_8cpp_source.html
 #include "logger.h"
 #include "canvas.h"
+#include <glm/gtc/noise.hpp>
 
 // control ids
 enum
@@ -37,57 +38,59 @@ void GameLoopCanvas::GameInit()
   chunk_manager = new ChunkManager();
 
   // Just an example of how to use the ChunkManager
-  for (int i = 0; i < Chunk::CHUNK_SIZE * 3; i++)
+  auto noise2d = [](int x, int y, int amplitude, int height)
   {
-    for (int j = 0; j < Chunk::CHUNK_SIZE * 2; j++)
-    {
-      for (int k = 0; k < Chunk::CHUNK_SIZE * 3; k++)
-      {
-        BlockType type;
-        auto branchOn = rand() % 1000;
-        if (branchOn < 990)
-        {
-          type = BlockType::Ground;
-        }
-        else if (branchOn < 991)
-        {
-          type = BlockType::Ground;
-        }
-        else if (branchOn < 992)
-        {
-          type = BlockType::Water;
-        }
-        else if (branchOn < 993)
-        {
-          type = BlockType::Sand;
-        }
-        else if (branchOn < 994)
-        {
-          type = BlockType::Wood;
-        }
-        else if (branchOn < 995)
-        {
-          type = BlockType::Stone;
-        }
-        else if (branchOn < 996)
-        {
-          type = BlockType::Grass;
-        }
-        else if (branchOn < 998)
-        {
-          type = BlockType::Brick;
-        }
-        else 
-        {
-          type = BlockType::Party;
-        }
+    return (height + amplitude * glm::simplex(glm::vec2(x,y)));
+  };
 
-        chunk_manager->set(i, j, k, type);
+  for (int i = 0; i < chunk_manager->BOUNDX / 5; i++)
+  {
+    for (int j = 0; j < chunk_manager->BOUNDY / 5; j++)
+    {
+      BlockType type;
+      auto branchOn = rand() % 1000;
+      if (branchOn < 200)
+      {
+        type = BlockType::Ground;
+      }
+      else if (branchOn < 300)
+      {
+        type = BlockType::Water;
+      }
+      else if (branchOn < 400)
+      {
+        type = BlockType::Sand;
+      }
+      else if (branchOn < 500)
+      {
+        type = BlockType::Wood;
+      }
+      else if (branchOn < 650)
+      {
+        type = BlockType::Stone;
+      }
+      else if (branchOn < 800)
+      {
+        type = BlockType::Grass;
+      }
+      else if (branchOn < 900)
+      {
+        type = BlockType::Brick;
+      }
+      else
+      {
+        type = BlockType::Party;
+      }
+
+      int height = noise2d(i, j, 8, 32);
+      for (int k = height; k >= 0; k--)
+      {
+        chunk_manager->set(j, k, i, type);
       }
     }
   }
 
-  position = glm::vec3(3, 3, 3);
+  position = glm::vec3(3, chunk_manager->BOUNDY / 4, 3);
   player_angle = glm::vec3(0, -0.5, 0);
   up = glm::vec3(0, 1, 0);
   VectorUpdate(player_angle);
