@@ -53,7 +53,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   SetStatusText(wxT("WASD keys to move, JK to go up and down, ESC to toggle mouse."));
 
   SetClientSize(600, 600);
-  int lpAttribList[] = {WX_GL_RGBA, WX_GL_DEPTH_SIZE, 1, 0};
+  int lpAttribList[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 1, 0};
   gameCanvas.reset(new GameLoopCanvas(this, GetClientSize(), lpAttribList));
 
   // world setup
