@@ -2,6 +2,8 @@
 #define _MAINWINDOW_H_
 
 #include "wxwidget.h"
+#include "graphics.h"
+#include "GridPane.h"
 
 class MainWindow : public wxFrame
 {
@@ -13,7 +15,15 @@ private:
   void OnExit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
   void OnInventory(wxCommandEvent& event);
-  wxDECLARE_EVENT_TABLE();
+  void OnDungeonTest(wxCommandEvent& event);
+  void OnDisplayWorld(wxCommandEvent& event);
+  void OnDisplayCubes(wxCommandEvent& event);
+
+  DECLARE_EVENT_TABLE();
+
+  std::shared_ptr<wxGLCanvas> gameCanvas;
+  std::shared_ptr<GridPane> gridPane;
+  wxBoxSizer* sizer;
 };
 
 #endif //_MAINWINDOW_H_

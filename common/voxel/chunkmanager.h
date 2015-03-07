@@ -3,68 +3,44 @@
 
 // Class dependencies
 #include <vector>
+#include <unordered_set>
+#include <memory>
+#include <tbb/concurrent_vector.h>
+#include <tbb/blocked_range.h>
 #include "chunk.h"
 #include "vector3.h"
-#include "tbb/concurrent_vector.h"
-#include "tbb/blocked_range.h"
+#include "graphics.h"
 
 // typedefs
-typedef tbb::concurrent_vector<Chunk*> ChunkList;
+typedef tbb::concurrent_vector<std::shared_ptr<Chunk>> ChunkList;
+typedef std::unordered_set<std::shared_ptr<Chunk>> ChunkQueue;
 typedef tbb::blocked_range<ChunkList::iterator> chunkListRange;
 
 class ChunkManager
 {
 private:
-  Vector3* pCameraPosition; // the previous camera position
-  Vector3* pCameraRotation; // the previous camera rotation
-  bool forceVisibilityUpdate = false;
-  void insert(ChunkList, int index, Chunk* to_insert);
-  // The following 4 constants will later be stored in a configuration file per
-  // world and set on world load.
-  // final removed
-  const int NUM_CHUNKS_PER_FRAME = 20; // The maximum number of chunks to be
-                                       // processed per frame(This must be an
-                                       // even number for processing purposes)
-  const int MAX_VIEW_DISTANCE = 4;
-  const int MAX_CHUNKS_INDEX_X =
-    100; // The maximum width of the world in chunks(1600 blocks)(index is for
-         // use in chunk vector list calculations)(index goes from 0 to 99)
-  const int MAX_CHUNKS_INDEX_Y =
-    100; // The maximum depth of the world in chunks(1600 blocks)
-  const int MAX_CHUNKS_INDEX_Z =
-    16; // The maximum height of the world in chunks(256 blocks )
+  int index(int x, int y, int z);
+  // Chunks are a 16 x 16 x 16 containers of voxels.  The ChunkManager
+  // is sort of a super Chunk, in that it contains 16 x 16 x 16 of
+  // these Chunks. The reason this is done instead of using a 256 x
+  // 256 x 256 container of voxels is for optimization concerns. We
+  // only want to store rendering data for each Chunk, rather than
+  // each voxel.
+  ChunkList chunks;
+  ChunkQueue chunksToUpdate;
+
+  static const int CMX = 16; // The maximum width of the world in chunks.
+  static const int CMY = 16; // The maximum depth of the world in chunks.
+  static const int CMZ = 16; // The maximum height of the world in chunks.
 
 public:
-  ChunkList chunkProcessingList; // A list for processing in the parallel for
-                                 // loop in the update function
-  ChunkList
-    chunkRenderList; // A vector list of loaded Chunks that should be rendered
-  ChunkList chunkRebuildList; // A vector list of chunks that require rebuilding
-  ChunkList chunkUnloadList; // A vector list of Chunks that need to be unloaded
-                             // from memory
-  ChunkList
-    nchunkVisibilityList; // A vector list of Chunks that could be rendered
-  ChunkList pChunkVisibilityList; // A list for comparing to the new processing
-                                  // list to determine which chunks should be
-                                  // unloaded;
-  ChunkList chunkMeshGenList; // A vector list of chunks that should have their
-                              // meshes generated either because they have just
-                              // been loaded or because they have been modified;
-
-  ChunkManager(); // A constructor stub, in future it will accept a game
-                  // context(specifically a game seed and save file)
-
-  void Update(float deltaTime,
-              Vector3 cameraPosition,
-              Vector3 cameraRotation); // An game update function for the
-                                       // rendering engine, it accepts the
-                                       // change in time since the last frame, a
-                                       // camera position, and a camera view
-                                       // angle as a Vector3 of floats
-
-  int translatePositionToIndex(Vector3 chunkPosition);
-  Vector3* translateIndexToPosition(int chunkIndex);
-  Vector3 translateCameraPositionToChunk(Vector3 cameraPosition);
+  ChunkManager();
+  BlockType get(int x, int y, int z);
+  void set(int x, int y, int z, BlockType type);
+  void update();
+  void render(GraphicsContext &context, const glm::mat4 &vp);
+  static const int BOUNDX = CMX * Chunk::CHUNK_SIZE;
+  static const int BOUNDY = CMY * Chunk::CHUNK_SIZE;
+  static const int BOUNDZ = CMZ * Chunk::CHUNK_SIZE;
 };
-
 #endif

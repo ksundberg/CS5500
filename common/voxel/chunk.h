@@ -3,6 +3,7 @@
 
 #include "block.h"
 #include "vector3.h"
+#include "graphics.h"
 
 class Chunk
 {
@@ -10,41 +11,23 @@ public:
   Chunk(int x, int y, int z);
   ~Chunk();
 
-  void Update(float dt);
-  bool IsLoaded();
-  void load();
-  bool IsSetup();
-  void setup();
-  int getIndex();
-  void setIndex(int ind);
-  bool getRebuild();
-  void setRebuild();
-  void activateBlock(int x, int y, int z);
-  void deactivateBlock(int x, int y, int z);
-  void activateAllBlocks();
-  void deactivateAllBlocks();
-  bool isBlockActive(int x, int y, int z);
-  Vector3 getPosition();
-
-  /*
-  ** Assuming the use of OpenGLRenderer class from JUCE  Currently commented out
-  *to prevent compile errors
-  ** void Render(OpenGLRenderer* pRenderer);
-  ** To be added back in next sprint for rendering compatibility
-  */
+  void setAllBlocks(BlockType type);
+  BlockType get(int x, int y, int z);
+  void set(int x, int y, int z, BlockType type);
+  glm::vec3 getPosition();
+  void update();
+  void render(GraphicsContext &context);
 
   static const int CHUNK_SIZE = 16;
 
+  const int X; // World Chunk Position;
+  const int Y; // World Chunk Position;
+  const int Z; // World Chunk Position;
 private:
   // The blocks data
-  Block*** mBlocks;
-  bool loaded = false;
-  bool setupd = false;
-  bool rebuild = false;
-  int X; // World Chunk Position;
-  int Y; // World Chunk Position;
-  int Z; // World Chunk Position;
-  int index;
+  BlockType*** mBlocks;
+  int vertex_count;
+  GLuint vertex_buffer;
 };
 
 #endif

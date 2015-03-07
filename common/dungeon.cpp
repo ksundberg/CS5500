@@ -1,7 +1,8 @@
 #include <cmath>
 #include <time.h>
-#include "dungeon.h"
 #include "logger.h"
+#include "dungeon.h"
+#include <memory>
 
 void Dungeon::makeDungeon(ChunkList& list)
 {
@@ -12,7 +13,8 @@ void Dungeon::makeDungeon(ChunkList& list)
     {
       for (int k = 0; k < DUNGEON_SIZE; k++)
       {
-        list[index(i, j, k)] = new Chunk(i, j, k);
+        list[index(i, j, k)] = std::make_shared<Chunk>(
+          i * Chunk::CHUNK_SIZE, j * Chunk::CHUNK_SIZE, k * Chunk::CHUNK_SIZE);
       }
     }
   }
@@ -24,7 +26,7 @@ void Dungeon::makeChunksActive(ChunkList& chunkList)
 {
   for (auto& c : chunkList)
   {
-    c->activateAllBlocks();
+    c->setAllBlocks(BlockType::Ground);
   }
 }
 
@@ -41,28 +43,27 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
     return false;
   }
 
-  auto chunk =
-    list[index(x / DUNGEON_SIZE, y / DUNGEON_SIZE, z / DUNGEON_SIZE)];
+  auto chunk = list[index(
+    x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE, z / Chunk::CHUNK_SIZE)];
 
-  return chunk->isBlockActive(
-    x % DUNGEON_SIZE, y % DUNGEON_SIZE, z % DUNGEON_SIZE);
+  return chunk->get(x % DUNGEON_SIZE, y % DUNGEON_SIZE, z % DUNGEON_SIZE);
 }
 
 void Dungeon::createRooms(ChunkList& list)
 {
 	// Entrance is at the top of our dungeon cube.
 
-	std::vector<Chunk*> roomList;
+	std::vector<std::shared_ptr<Chunk>> roomList;
 	struct roomPair
 	{
-		Chunk* chunka;
-		Chunk* chunkb;
+		std::shared_ptr<Chunk> chunka;
+		std::shared_ptr<Chunk> chunkb;
 	};
 	std::vector<roomPair> connectList;
 	roomPair pair;
-	Chunk* closestChunk;
+	std::shared_ptr<Chunk> closestChunk;
 	//float closestDist;
-	Chunk* currentChunk;
+	std::shared_ptr<Chunk> currentChunk;
 	srand(time(NULL));
 	int j;
 	unsigned int i;
@@ -110,40 +111,44 @@ void Dungeon::createRooms(ChunkList& list)
 		connectList.clear();
 
 	}
+
 }
 
-void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
+void Dungeon::connectRoom(ChunkList& list,
+                          std::shared_ptr<Chunk> chunk1,
+                          std::shared_ptr<Chunk> chunk2)
 {
-  auto pos1 = chunkToBlockDistance(chunk1->getPosition());
-  auto pos2 = chunkToBlockDistance(chunk2->getPosition());
+  auto pos1 = chunk1->getPosition();
+  auto pos2 = chunk2->getPosition();
 
-  auto dist = distanceBetween(pos1, pos2);
-  auto unit = -((pos1 - pos2) / dist);
+  auto unit = glm::normalize(pos2 - pos1);
 
   auto start = pos1;
 
-  auto in_dungeon = [](Vector3 v)
+  auto in_dungeon = [](glm::vec3 v)
   {
     return (0 < v.x && v.x < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1 && 0 < v.y &&
             v.y < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1 && 0 < v.x &&
             v.x < DUNGEON_SIZE * Chunk::CHUNK_SIZE - 1);
   };
-  while (distanceBetween(start, pos2) > 1.0 && in_dungeon(start))
+
+  while (glm::distance(start, pos2) > 1.0 && in_dungeon(start))
   {
     start += unit;
-    list[index((static_cast<int>(start.x)) / DUNGEON_SIZE,
-               (static_cast<int>(start.y)) / DUNGEON_SIZE,
-               (static_cast<int>(start.z)) / DUNGEON_SIZE)]
-        ->deactivateBlock((static_cast<int>(start.x)) % DUNGEON_SIZE,
-                          (static_cast<int>(start.y)) % DUNGEON_SIZE,
-                          (static_cast<int>(start.z)) % DUNGEON_SIZE);
+    list[index((static_cast<int>(start.x)) / Chunk::CHUNK_SIZE,
+               (static_cast<int>(start.y)) / Chunk::CHUNK_SIZE,
+               (static_cast<int>(start.z)) / Chunk::CHUNK_SIZE)]
+      ->set((static_cast<int>(start.x)) % DUNGEON_SIZE,
+            (static_cast<int>(start.y)) % DUNGEON_SIZE,
+            (static_cast<int>(start.z)) % DUNGEON_SIZE,
+            BlockType::Inactive);
   }
 }
 
-void Dungeon::createRoom(Chunk* chunk)
+void Dungeon::createRoom(std::shared_ptr<Chunk> chunk)
 {
   // Rooms are just empty chunks for now.
-  chunk->deactivateAllBlocks();
+  chunk->setAllBlocks(BlockType::Inactive);
 }
 
 int Dungeon::dungeonBlockLength()
@@ -182,9 +187,20 @@ void Dungeon::printDungeon(ChunkList& list)
     }
     std::cout << std::endl;
   }
+  std::cout << "Dungeon representation:" << std::endl;
+  std::cout << " . represents solid chunks." << std::endl;
+  std::cout << " R represents a room." << std::endl;
+  std::cout << " o represents a path." << std::endl;
+  std::cout
+    << "\nEach solid chunk should be a 16 x 16 x 16 container of voxels."
+    << std::endl;
+  std::cout << "\nA room is also a 16 x 16 x 16 container of voxels, but"
+            << "\nall of its voxels are inactive (air)." << std::endl;
+  std::cout << "\nA path chunk is a mixture of both air and solid voxels."
+            << std::endl;
 }
 
-bool Dungeon::isChunkAllActive(Chunk* chunk)
+bool Dungeon::isChunkAllActive(std::shared_ptr<Chunk> chunk)
 {
   for (int i = 0; i < Chunk::CHUNK_SIZE; i++)
   {
@@ -192,14 +208,14 @@ bool Dungeon::isChunkAllActive(Chunk* chunk)
     {
       for (int k = 0; k < Chunk::CHUNK_SIZE; k++)
       {
-        if (!(chunk->isBlockActive(i, j, k))) return false;
+        if (!(chunk->get(i, j, k))) return false;
       }
     }
   }
   return true;
 }
 
-bool Dungeon::isChunkAnyActive(Chunk* chunk)
+bool Dungeon::isChunkAnyActive(std::shared_ptr<Chunk> chunk)
 {
   for (int i = 0; i < Chunk::CHUNK_SIZE; i++)
   {
@@ -207,27 +223,9 @@ bool Dungeon::isChunkAnyActive(Chunk* chunk)
     {
       for (int k = 0; k < Chunk::CHUNK_SIZE; k++)
       {
-        if (chunk->isBlockActive(i, j, k)) return true;
+        if (chunk->get(i, j, k)) return true;
       }
     }
   }
   return false;
-}
-
-float Dungeon::distanceBetween(Vector3 pos1, Vector3 pos2)
-{
-  return sqrt(pow(fabs(pos1.x - pos2.x), 2.0) +
-              pow(fabs(pos1.y - pos2.y), 2.0) +
-              pow(fabs(pos1.z - pos2.z), 2.0));
-}
-
-Vector3 Dungeon::chunkToBlockDistance(Vector3 incoming)
-{
-  Vector3 forYou;
-
-  forYou.x = incoming.x * Chunk::CHUNK_SIZE;
-  forYou.y = incoming.y * Chunk::CHUNK_SIZE;
-  forYou.z = incoming.z * Chunk::CHUNK_SIZE;
-
-  return forYou;
 }

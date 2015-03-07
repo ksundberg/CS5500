@@ -3,11 +3,11 @@
 // Unit testing header
 #define CATCH_CONFIG_RUNNER
 #include <catch.hpp>
-#include <logger.h>
+#include "logger.h"
 
 int main(int argc, char* argv[])
 {
-  init_log(argc, argv);
+  init_log();
   try
   {
     return Catch::Session().run(argc, argv);

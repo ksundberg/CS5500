@@ -7,12 +7,12 @@ Block::Block()
 Block::~Block()
 {
 }
-bool Block::IsActive()
+BlockType Block::get()
 {
-  return mActive;
+  return type;
 }
 
-void Block::SetActive(bool active)
+void Block::set(BlockType type_)
 {
-  mActive = active;
+  type = type_;
 }
