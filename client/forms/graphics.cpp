@@ -5,6 +5,7 @@
 #include <fstream>
 #include <algorithm>
 #include "graphics.h"
+#include "textures.h"
 
 // ----------------------------------------------------------------------------
 // helper functions
@@ -155,6 +156,21 @@ void GraphicsContext::initRendering()
   glEnableVertexAttribArray(attribute_coord);
 
   glClearColor(0.8, 0.6, 0.7, 1.0);
+
+  // Send textures to shaders.
+  glActiveTexture(GL_TEXTURE0);
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexImage2D(GL_TEXTURE_2D,
+               0,
+               GL_RGBA,
+               Texture::atlas.width,
+               Texture::atlas.height,
+               0,
+               GL_RGBA,
+               GL_UNSIGNED_BYTE,
+               Texture::atlas.pixel_data);
+  glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 GraphicsContext::GraphicsContext(wxGLCanvas* canvas) : wxGLContext(canvas)

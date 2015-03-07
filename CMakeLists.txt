@@ -88,6 +88,7 @@ set(common_srcs
 
   client/forms/graphics.cpp
   client/forms/graphics.h
+  client/forms/textures.h
   
   common/density/material_density.cpp
   common/density/material_density.h

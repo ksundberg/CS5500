@@ -34,7 +34,7 @@ GameLoopCanvas::~GameLoopCanvas()
 
 void GameLoopCanvas::GameInit()
 {
-  m_spinTimer.Start(60); // in milliseconds.
+  m_spinTimer.Start(100); // in milliseconds.
   chunk_manager = new ChunkManager();
 
   // Just an example of how to use the ChunkManager
@@ -48,32 +48,44 @@ void GameLoopCanvas::GameInit()
     for (int j = 0; j < chunk_manager->BOUNDY / 5; j++)
     {
       BlockType type;
-      auto branchOn = rand() % 1000;
-      if (branchOn < 200)
+      auto branchOn = rand() % 11;
+      if (branchOn < 1)
       {
         type = BlockType::Ground;
       }
-      else if (branchOn < 300)
+      else if (branchOn < 2)
       {
         type = BlockType::Water;
       }
-      else if (branchOn < 400)
+      else if (branchOn < 3)
       {
         type = BlockType::Sand;
       }
-      else if (branchOn < 500)
+      else if (branchOn < 4)
       {
         type = BlockType::Wood;
       }
-      else if (branchOn < 650)
+      else if (branchOn < 5)
+      {
+        type = BlockType::Flowers;
+      }
+      else if (branchOn < 6)
+      {
+        type = BlockType::Ruby;
+      }
+      else if (branchOn < 7)
+      {
+        type = BlockType::Leaves;
+      }
+      else if (branchOn < 8)
       {
         type = BlockType::Stone;
       }
-      else if (branchOn < 800)
+      else if (branchOn < 9)
       {
         type = BlockType::Grass;
       }
-      else if (branchOn < 900)
+      else if (branchOn < 10)
       {
         type = BlockType::Brick;
       }
@@ -85,7 +97,7 @@ void GameLoopCanvas::GameInit()
       int height = noise2d(i, j, 8, 32);
       for (int k = height; k >= 0; k--)
       {
-        chunk_manager->set(j, k, i, type);
+        chunk_manager->set(i, k, j, type);
       }
     }
   }
