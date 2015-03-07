@@ -51,13 +51,21 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
 void Dungeon::createRooms(ChunkList& list)
 {
 	// Entrance is at the top of our dungeon cube.
-	//auto chunk1 =
-	//	list[index(DUNGEON_SIZE / 2, DUNGEON_SIZE / 2, DUNGEON_SIZE - 1)];
-		//auto chunk2 = list[index(0, 0, DUNGEON_SIZE - 1)];
 
-	// initialize rand()
+	std::vector<Chunk*> roomList;
+	struct roomPair
+	{
+		Chunk* chunka;
+		Chunk* chunkb;
+	};
+	std::vector<roomPair> connectList;
+	roomPair pair;
+	Chunk* closestChunk;
+	//float closestDist;
+	Chunk* currentChunk;
 	srand(time(NULL));
-	int i;
+	int j;
+	unsigned int i;
 	int roomcount;
 	int x,y,z; //location
 	// make entrance
@@ -66,25 +74,42 @@ void Dungeon::createRooms(ChunkList& list)
 	z = DUNGEON_SIZE -1;
 	auto chunkrand = list[index( x , y , z)];
 	createRoom(chunkrand);
-
+	roomList.push_back(chunkrand);
 	roomcount  = DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE * .05;
 
-	for(i = 0; i < roomcount; i++)
+	// Create random rooms
+	for(j = DUNGEON_SIZE-1; j >= 0; j--)
 	{
-		x = rand() % DUNGEON_SIZE;
-		y = rand() % DUNGEON_SIZE;
-		z = rand() % DUNGEON_SIZE;
 
-		chunkrand = list[index(x, y, z)];
+		z = j; //floor j
 
-		createRoom(chunkrand);
+		for(i = 0; i < (unsigned int)(roomcount/DUNGEON_SIZE); i++)
+		{
+			y = rand() % DUNGEON_SIZE;
+			x = rand() % DUNGEON_SIZE;
+			chunkrand = list[index(x, y, z)];
+			roomList.push_back(chunkrand);
+			createRoom(chunkrand);
+			if(roomList.size() > 1)
+			{
+				closestChunk = roomList[roomList.size()-1];
+				currentChunk = roomList[roomList.size()-2];
+				pair.chunka = closestChunk;
+				pair.chunkb = currentChunk;
+				connectList.push_back(pair);
+			}
+		}
+
+
+
+		// Till vector is empty, connect all rooms on this floor
+		for(i = 0;i < connectList.size(); i++)
+		{
+			connectRoom(list, connectList[i].chunka,connectList[i].chunkb);
+		}
+		connectList.clear();
+
 	}
-
-
-
-  //createRoom(chunk1);
-  //createRoom(chunk2);
-  //connectRoom(list, chunk1, chunk2);
 }
 
 void Dungeon::connectRoom(ChunkList& list, Chunk* chunk1, Chunk* chunk2)
