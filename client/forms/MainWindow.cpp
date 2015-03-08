@@ -40,9 +40,9 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
 
   wxMenu* menuTools = new wxMenu;
   menuTools->Append(ID_Inventory, wxT("&Inventory...\tCtrl-I"));
-  menuTools->Append(ID_Dungeon, wxT("&Dungeon...\tCtrl-d"));
-  menuTools->Append(ID_World, wxT("&World...\tCtrl-w"));
-  menuTools->Append(ID_Cubes, wxT("&Cubes...\tCtrl-c"));
+  menuTools->Append(ID_Dungeon, wxT("&Dungeon...\tCtrl-g"));
+  menuTools->Append(ID_World, wxT("&Map...\tCtrl-m"));
+  menuTools->Append(ID_Cubes, wxT("&Voxels...\tCtrl-v"));
 
   wxMenuBar* menuBar = new wxMenuBar;
   menuBar->Append(menuFile, wxT("&File"));
