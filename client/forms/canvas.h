@@ -19,6 +19,7 @@ private:
   void Render();
   void Update();
   void GameInit();
+  void GenerateBlocks(ChunkManager *cm);
   void VectorUpdate(glm::vec3 angle);
   void OnMouseUpdate(wxMouseEvent& event);
 

@@ -32,20 +32,17 @@ GameLoopCanvas::~GameLoopCanvas()
   delete chunk_manager;
 }
 
-void GameLoopCanvas::GameInit()
+void GameLoopCanvas::GenerateBlocks(ChunkManager *cm)
 {
-  m_spinTimer.Start(100); // in milliseconds.
-  chunk_manager = new ChunkManager();
-
   // Just an example of how to use the ChunkManager
   auto noise2d = [](int x, int y, int amplitude, int height)
   {
     return (height + amplitude * glm::simplex(glm::vec2(x,y)));
   };
 
-  for (int i = 0; i < chunk_manager->BOUNDX / 5; i++)
+  for (int i = 0; i < cm->BOUNDX / 5; i++)
   {
-    for (int j = 0; j < chunk_manager->BOUNDY / 5; j++)
+    for (int j = 0; j < cm->BOUNDY / 5; j++)
     {
       BlockType type;
       auto branchOn = rand() % 11;
@@ -97,11 +94,18 @@ void GameLoopCanvas::GameInit()
       int height = noise2d(i, j, 8, 32);
       for (int k = height; k >= 0; k--)
       {
-        chunk_manager->set(i, k, j, type);
+        cm->set(i, k, j, type);
       }
     }
   }
+}
 
+void GameLoopCanvas::GameInit()
+{
+  m_spinTimer.Start(100); // in milliseconds.
+  chunk_manager = new ChunkManager();
+
+  GenerateBlocks(chunk_manager);
   position = glm::vec3(3, chunk_manager->BOUNDY / 4, 3);
   player_angle = glm::vec3(0, -0.5, 0);
   up = glm::vec3(0, 1, 0);
