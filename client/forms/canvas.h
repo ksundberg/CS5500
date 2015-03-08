@@ -1,8 +1,19 @@
 #ifndef _CANVAS_HEADER_
 #define _CANVAS_HEADER_
 #include <wxwidget.h>
+#include <map>
 #include "main.h"
 #include "chunkmanager.h"
+
+enum class Direction
+{
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+  FORWARD,
+  BACKWARD
+};
 
 class GameLoopCanvas : public wxGLCanvas
 {
@@ -15,6 +26,7 @@ private:
   void Resize();
   void Spin(float xSpin, float ySpin);
   void OnKeyDown(wxKeyEvent& event);
+  void OnKeyUp(wxKeyEvent& event);
   void OnGameTimer(wxTimerEvent& WXUNUSED(event));
   void Render();
   void Update();
@@ -24,7 +36,7 @@ private:
   void OnMouseUpdate(wxMouseEvent& event);
 
   // angles of rotation around x- and y- axis
-  const float player_speed = 0.5;
+  const float player_speed = 0.7;
   bool steal_mouse;
   bool mouse_changed;
   wxTimer m_spinTimer;
@@ -35,6 +47,7 @@ private:
   glm::vec3 up;
   glm::vec3 lookat;
   glm::vec3 player_angle;
+  std::map<Direction, bool> moves;
 
   DECLARE_EVENT_TABLE();
 };

@@ -12,6 +12,7 @@ enum
 
 BEGIN_EVENT_TABLE(GameLoopCanvas, wxGLCanvas)
   EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
+EVT_KEY_UP(GameLoopCanvas::OnKeyUp)
   EVT_TIMER(GameTimer, GameLoopCanvas::OnGameTimer)
   EVT_MOTION(GameLoopCanvas::OnMouseUpdate) END_EVENT_TABLE()
 
@@ -106,6 +107,12 @@ void GameLoopCanvas::GameInit()
   chunk_manager = new ChunkManager();
 
   GenerateBlocks(chunk_manager);
+  moves = {std::make_pair(Direction::FORWARD, false),
+           std::make_pair(Direction::BACKWARD, false),
+           std::make_pair(Direction::UP, false),
+           std::make_pair(Direction::DOWN, false),
+           std::make_pair(Direction::RIGHT, false),
+           std::make_pair(Direction::LEFT, false)};
   position = glm::vec3(3, chunk_manager->BOUNDY / 4, 3);
   player_angle = glm::vec3(0, -0.5, 0);
   up = glm::vec3(0, 1, 0);
@@ -140,30 +147,30 @@ void GameLoopCanvas::OnKeyDown(wxKeyEvent& event)
   {
   case WXK_RIGHT:
   case 'D':
-    position += right * player_speed;
+    moves[Direction::RIGHT] = true;
     break;
 
   case WXK_LEFT:
   case 'A':
-    position -= right * player_speed;
+    moves[Direction::LEFT] = true;
     break;
 
   case WXK_UP:
   case 'W':
-    position += forward * player_speed;
+    moves[Direction::FORWARD] = true;
     break;
 
   case WXK_DOWN:
   case 'S':
-    position -= forward * player_speed;
+    moves[Direction::BACKWARD] = true;
     break;
 
   case 'K':
-    position += up * player_speed;
+    moves[Direction::UP] = true;
     break;
 
   case 'J':
-    position -= up * player_speed;
+    moves[Direction::DOWN] = true;
     break;
 
   case WXK_ESCAPE:
@@ -175,6 +182,45 @@ void GameLoopCanvas::OnKeyDown(wxKeyEvent& event)
     event.Skip();
     return;
   }
+}
+
+void GameLoopCanvas::OnKeyUp(wxKeyEvent& event)
+{
+  switch (event.GetKeyCode())
+  {
+  case WXK_RIGHT:
+  case 'D':
+    moves[Direction::RIGHT] = false;
+    break;
+
+  case WXK_LEFT:
+  case 'A':
+    moves[Direction::LEFT] = false;
+    break;
+
+  case WXK_UP:
+  case 'W':
+    moves[Direction::FORWARD] = false;
+    break;
+
+  case WXK_DOWN:
+  case 'S':
+    moves[Direction::BACKWARD] = false;
+    break;
+
+  case 'K':
+    moves[Direction::UP] = false;
+    break;
+
+  case 'J':
+    moves[Direction::DOWN] = false;
+    break;
+
+  default:
+    event.Skip();
+    return;
+  }
+
 }
 
 void GameLoopCanvas::OnGameTimer(wxTimerEvent& WXUNUSED(event))
@@ -232,6 +278,34 @@ void GameLoopCanvas::VectorUpdate(glm::vec3 angle)
   lookat.x = sinf(angle.x) * cosf(angle.y);
   lookat.y = sinf(angle.y);
   lookat.z = cosf(angle.x) * cosf(angle.y);
+
+  for(const auto &move: moves)
+  {
+    if(move.second)
+    {
+      switch(move.first)
+      {
+        case Direction::RIGHT:
+          position += right * player_speed;
+          break;
+        case Direction::LEFT:
+          position -= right * player_speed;
+          break;
+        case Direction::FORWARD:
+          position += forward * player_speed;
+          break;
+        case Direction::BACKWARD:
+          position -= forward * player_speed;
+          break;
+        case Direction::UP:
+          position += up * player_speed;
+          break;
+        case Direction::DOWN:
+          position -= up * player_speed;
+          break;
+      }
+    }
+  }
 }
 
 void GameLoopCanvas::OnMouseUpdate(wxMouseEvent& event)
