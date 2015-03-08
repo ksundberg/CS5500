@@ -24,7 +24,7 @@ BlockType ChunkManager::get(int x, int y, int z)
   y %= CMY;
   z %= CMZ;
 
-  if(chunks[index(cmx, cmy, cmz)] == nullptr)
+  if (chunks[index(cmx, cmy, cmz)] == nullptr)
   {
     // Chunk hasn't been allocated yet.
     return BlockType::Inactive;
@@ -57,7 +57,7 @@ void ChunkManager::set(int x, int y, int z, BlockType type)
                               cmz * Chunk::CHUNK_SIZE);
   }
 
-  auto chunk = chunks[index(cmx,cmy,cmz)];
+  auto chunk = chunks[index(cmx, cmy, cmz)];
 
   // Set this Chunk's specified voxel to its new type.
   chunk->set(x % CMX, y % CMY, z % CMZ, type);
@@ -73,7 +73,7 @@ int ChunkManager::index(int x, int y, int z)
 
 void ChunkManager::update()
 {
-  for(auto &c: chunksToUpdate)
+  for (auto& c : chunksToUpdate)
   {
     c->update();
   }
@@ -81,11 +81,11 @@ void ChunkManager::update()
   chunksToUpdate.clear();
 }
 
-void ChunkManager::render(GraphicsContext &context, const glm::mat4 &vp)
+void ChunkManager::render(GraphicsContext& context, const glm::mat4& vp)
 {
-  for(auto &chunk: chunks)
+  for (auto& chunk : chunks)
   {
-    if(chunk != nullptr)
+    if (chunk != nullptr)
     {
       auto position = chunk->getPosition();
       auto model = glm::translate(glm::mat4(1.0f), position);

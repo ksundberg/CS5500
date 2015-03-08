@@ -16,7 +16,7 @@ public:
   void set(int x, int y, int z, BlockType type);
   glm::vec3 getPosition();
   void update();
-  void render(GraphicsContext &context);
+  void render(GraphicsContext& context);
 
   static const int CHUNK_SIZE = 16;
 

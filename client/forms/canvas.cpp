@@ -11,8 +11,8 @@ enum
 };
 
 BEGIN_EVENT_TABLE(GameLoopCanvas, wxGLCanvas)
-  EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
-EVT_KEY_UP(GameLoopCanvas::OnKeyUp)
+EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
+  EVT_KEY_UP(GameLoopCanvas::OnKeyUp)
   EVT_TIMER(GameTimer, GameLoopCanvas::OnGameTimer)
   EVT_MOTION(GameLoopCanvas::OnMouseUpdate) END_EVENT_TABLE()
 
@@ -33,12 +33,12 @@ GameLoopCanvas::~GameLoopCanvas()
   delete chunk_manager;
 }
 
-void GameLoopCanvas::GenerateBlocks(ChunkManager *cm)
+void GameLoopCanvas::GenerateBlocks(ChunkManager* cm)
 {
   // Just an example of how to use the ChunkManager
   auto noise2d = [](int x, int y, int amplitude, int height)
   {
-    return (height + amplitude * glm::simplex(glm::vec2(x,y)));
+    return (height + amplitude * glm::simplex(glm::vec2(x, y)));
   };
 
   for (int i = 0; i < cm->BOUNDX / 5; i++)
@@ -120,7 +120,6 @@ void GameLoopCanvas::GameInit()
   steal_mouse = true;
   mouse_changed = false;
 }
-
 
 // Needed to use wxGetApp(). Usually you get the same result
 // by using wxIMPLEMENT_APP(), but that can only be in main.
@@ -220,7 +219,6 @@ void GameLoopCanvas::OnKeyUp(wxKeyEvent& event)
     event.Skip();
     return;
   }
-
 }
 
 void GameLoopCanvas::OnGameTimer(wxTimerEvent& WXUNUSED(event))
@@ -279,30 +277,30 @@ void GameLoopCanvas::VectorUpdate(glm::vec3 angle)
   lookat.y = sinf(angle.y);
   lookat.z = cosf(angle.x) * cosf(angle.y);
 
-  for(const auto &move: moves)
+  for (const auto& move : moves)
   {
-    if(move.second)
+    if (move.second)
     {
-      switch(move.first)
+      switch (move.first)
       {
-        case Direction::RIGHT:
-          position += right * player_speed;
-          break;
-        case Direction::LEFT:
-          position -= right * player_speed;
-          break;
-        case Direction::FORWARD:
-          position += forward * player_speed;
-          break;
-        case Direction::BACKWARD:
-          position -= forward * player_speed;
-          break;
-        case Direction::UP:
-          position += up * player_speed;
-          break;
-        case Direction::DOWN:
-          position -= up * player_speed;
-          break;
+      case Direction::RIGHT:
+        position += right * player_speed;
+        break;
+      case Direction::LEFT:
+        position -= right * player_speed;
+        break;
+      case Direction::FORWARD:
+        position += forward * player_speed;
+        break;
+      case Direction::BACKWARD:
+        position -= forward * player_speed;
+        break;
+      case Direction::UP:
+        position += up * player_speed;
+        break;
+      case Direction::DOWN:
+        position -= up * player_speed;
+        break;
       }
     }
   }

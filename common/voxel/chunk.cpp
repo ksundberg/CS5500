@@ -194,7 +194,7 @@ void Chunk::update()
     GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
 }
 
-void Chunk::render(GraphicsContext &context)
+void Chunk::render(GraphicsContext& context)
 {
   if (vertex_count >= 1)
   {
@@ -204,6 +204,6 @@ void Chunk::render(GraphicsContext &context)
   }
   else
   {
-      LOG(INFO) << "No vertex to display";
+    LOG(INFO) << "No vertex to display";
   }
 }

@@ -13,7 +13,7 @@
 
 #if (GLM_VERSION == 96)
 typedef glm::tvec4<GLbyte> byte4;
-#elif (GLM_VERSION == 95)
+#elif(GLM_VERSION == 95)
 typedef glm::detail::tvec4<GLbyte, glm::mediump> byte4;
 #else
 typedef glm::detail::tvec4<GLbyte> byte4;
@@ -29,6 +29,7 @@ public:
   GLuint shaderProgram();
   GLuint attributeCoord();
   GLuint mvp();
+
 private:
   void initRendering();
   GLuint shader_program;

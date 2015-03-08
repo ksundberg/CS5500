@@ -37,7 +37,8 @@ static void CheckGLError()
 
 // Function sourced from the tutorial code here:
 // http://www.opengl-tutorial.org/download/
-static GLuint loadShaders(const char* vertex_file_path, const char* fragment_file_path)
+static GLuint loadShaders(const char* vertex_file_path,
+                          const char* fragment_file_path)
 {
 
   // Create the shaders
@@ -185,7 +186,6 @@ GraphicsContext::~GraphicsContext()
 {
   glDeleteProgram(shader_program);
 }
-
 
 GLuint GraphicsContext::shaderProgram()
 {

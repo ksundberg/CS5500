@@ -51,67 +51,63 @@ bool Dungeon::isBlockActive(const ChunkList& list, int x, int y, int z)
 
 void Dungeon::createRooms(ChunkList& list)
 {
-	// Entrance is at the top of our dungeon cube.
+  // Entrance is at the top of our dungeon cube.
 
-	std::vector<std::shared_ptr<Chunk>> roomList;
-	struct roomPair
-	{
-		std::shared_ptr<Chunk> chunka;
-		std::shared_ptr<Chunk> chunkb;
-	};
-	std::vector<roomPair> connectList;
-	roomPair pair;
-	std::shared_ptr<Chunk> closestChunk;
-	//float closestDist;
-	std::shared_ptr<Chunk> currentChunk;
-	srand(time(NULL));
-	int j;
-	unsigned int i;
-	int roomcount;
-	int x,y,z; //location
-	// make entrance
-	x = DUNGEON_SIZE / 2;
-	y = DUNGEON_SIZE / 2;
-	z = DUNGEON_SIZE -1;
-	auto chunkrand = list[index( x , y , z)];
-	createRoom(chunkrand);
-	roomList.push_back(chunkrand);
-	roomcount  = DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE * .05;
+  std::vector<std::shared_ptr<Chunk>> roomList;
+  struct roomPair
+  {
+    std::shared_ptr<Chunk> chunka;
+    std::shared_ptr<Chunk> chunkb;
+  };
+  std::vector<roomPair> connectList;
+  roomPair pair;
+  std::shared_ptr<Chunk> closestChunk;
+  // float closestDist;
+  std::shared_ptr<Chunk> currentChunk;
+  srand(time(NULL));
+  int j;
+  unsigned int i;
+  int roomcount;
+  int x, y, z; // location
+  // make entrance
+  x = DUNGEON_SIZE / 2;
+  y = DUNGEON_SIZE / 2;
+  z = DUNGEON_SIZE - 1;
+  auto chunkrand = list[index(x, y, z)];
+  createRoom(chunkrand);
+  roomList.push_back(chunkrand);
+  roomcount = DUNGEON_SIZE * DUNGEON_SIZE * DUNGEON_SIZE * .05;
 
-	// Create random rooms
-	for(j = DUNGEON_SIZE-1; j >= 0; j--)
-	{
+  // Create random rooms
+  for (j = DUNGEON_SIZE - 1; j >= 0; j--)
+  {
 
-		z = j; //floor j
+    z = j; // floor j
 
-		for(i = 0; i < (unsigned int)(roomcount/DUNGEON_SIZE); i++)
-		{
-			y = rand() % DUNGEON_SIZE;
-			x = rand() % DUNGEON_SIZE;
-			chunkrand = list[index(x, y, z)];
-			roomList.push_back(chunkrand);
-			createRoom(chunkrand);
-			if(roomList.size() > 1)
-			{
-				closestChunk = roomList[roomList.size()-1];
-				currentChunk = roomList[roomList.size()-2];
-				pair.chunka = closestChunk;
-				pair.chunkb = currentChunk;
-				connectList.push_back(pair);
-			}
-		}
+    for (i = 0; i < (unsigned int)(roomcount / DUNGEON_SIZE); i++)
+    {
+      y = rand() % DUNGEON_SIZE;
+      x = rand() % DUNGEON_SIZE;
+      chunkrand = list[index(x, y, z)];
+      roomList.push_back(chunkrand);
+      createRoom(chunkrand);
+      if (roomList.size() > 1)
+      {
+        closestChunk = roomList[roomList.size() - 1];
+        currentChunk = roomList[roomList.size() - 2];
+        pair.chunka = closestChunk;
+        pair.chunkb = currentChunk;
+        connectList.push_back(pair);
+      }
+    }
 
-
-
-		// Till vector is empty, connect all rooms on this floor
-		for(i = 0;i < connectList.size(); i++)
-		{
-			connectRoom(list, connectList[i].chunka,connectList[i].chunkb);
-		}
-		connectList.clear();
-
-	}
-
+    // Till vector is empty, connect all rooms on this floor
+    for (i = 0; i < connectList.size(); i++)
+    {
+      connectRoom(list, connectList[i].chunka, connectList[i].chunkb);
+    }
+    connectList.clear();
+  }
 }
 
 void Dungeon::connectRoom(ChunkList& list,
