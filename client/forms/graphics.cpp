@@ -140,6 +140,8 @@ void GraphicsContext::initRendering()
   // set up the parameters we want to use
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
+  glEnable(GL_TEXTURE_2D);
+  glEnable(GL_BLEND);
 
   // Inititialize GLEW.
   if (glewInit() != GLEW_OK)
