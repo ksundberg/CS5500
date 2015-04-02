@@ -30,7 +30,7 @@ std::shared_ptr<ChunkManager> MyApp::GenerateWorld()
     {
       int height = (*noiseMap)[i][j] * 11;
       for (int k = 0; k <= height; k++)
-        world->set(i, k, j, BlockType(std::min(k,11)));
+        world->set(i, k, j, BlockType(std::min(k, 11)));
     }
   return world;
 }

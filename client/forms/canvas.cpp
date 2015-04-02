@@ -173,7 +173,7 @@ void GameLoopCanvas::Render()
   // The context contains all the graphics utils.
   GraphicsContext& context = wxGetApp().GetContext(this);
 
-  auto Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+  auto Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 500.0f);
 
   // Camera matrix
   auto View = glm::lookAt(position, position + lookat, up);

@@ -81,7 +81,7 @@ void ChunkManager::update()
   chunksToUpdate.clear();
 }
 
-//TODO: remove drawing code from here. expose list of chunks only
+// TODO: remove drawing code from here. expose list of chunks only
 void ChunkManager::render(GraphicsContext& context, const glm::mat4& vp)
 {
   for (auto& chunk : chunks)

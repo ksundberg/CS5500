@@ -64,7 +64,7 @@ void Chunk::setAllBlocks(BlockType type)
   }
 }
 
-//TODO: uhh... this is very coupled to opengl. separate responsibilities
+// TODO: uhh... this is very coupled to opengl. separate responsibilities
 void Chunk::update()
 {
   // Max number of vertices a block could have is 36.
