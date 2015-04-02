@@ -4,6 +4,7 @@
 #include "canvas.h"
 #include "itemgen.h"
 #include "dungeon.h"
+#include <glm/gtc/noise.hpp>
 
 enum
 {
@@ -55,7 +56,10 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
 
   SetClientSize(600, 600);
   int lpAttribList[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 1, 0};
-  gameCanvas.reset(new GameLoopCanvas(this, GetClientSize(), lpAttribList));
+  world = std::make_shared<ChunkManager>();
+  GenerateBlocks(world);
+  gameCanvas.reset(
+    new GameLoopCanvas(this, world, GetClientSize(), lpAttribList));
 
   // world setup
   sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -70,6 +74,18 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   gridPane->Hide();
 
   Show();
+}
+
+// TODO: move to a more model oriented data location
+void MainWindow::GenerateBlocks(std::shared_ptr<ChunkManager> cm)
+{
+  for (int i = 0; i < cm->BOUNDX / 5; i++)
+    for (int j = 0; j < cm->BOUNDY / 5; j++)
+    {
+      int height = 32 + 8 * glm::simplex(glm::vec2(i, j));
+      for (int k = 0; k <= height; k++)
+        cm->set(i, k, j, BlockType(rand() % 11));
+    }
 }
 
 void MainWindow::OnExit(wxCommandEvent&)

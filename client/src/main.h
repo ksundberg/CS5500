@@ -9,11 +9,11 @@ class MyApp : public wxApp
 {
 private:
   // the GL context we use for all our mono rendering windows
-  GraphicsContext* m_glContext;
-  MainWindow* frame;
+  std::shared_ptr<GraphicsContext> m_glContext;
+  std::shared_ptr<MainWindow> frame;
 
 public:
-  MyApp() { m_glContext = NULL; }
+  MyApp() : m_glContext(nullptr) {}
 
   // Returns the shared context used by all frames and sets it as current for
   // the given canvas.

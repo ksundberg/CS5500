@@ -18,7 +18,7 @@ enum class Direction
 class GameLoopCanvas : public wxGLCanvas
 {
 public:
-  GameLoopCanvas(wxWindow* parent, wxSize size, int* attribList = NULL);
+  GameLoopCanvas(wxWindow* parent, std::shared_ptr<ChunkManager> manager, wxSize size, int* attribList = NULL);
   ~GameLoopCanvas();
 
 private:
@@ -31,7 +31,6 @@ private:
   void Render();
   void Update();
   void GameInit();
-  void GenerateBlocks(ChunkManager* cm);
   void VectorUpdate(glm::vec3 angle);
   void OnMouseUpdate(wxMouseEvent& event);
 
@@ -40,7 +39,7 @@ private:
   bool steal_mouse;
   bool mouse_changed;
   wxTimer m_spinTimer;
-  ChunkManager* chunk_manager;
+  std::shared_ptr<ChunkManager> chunk_manager;
   glm::vec3 position;
   glm::vec3 forward;
   glm::vec3 right;

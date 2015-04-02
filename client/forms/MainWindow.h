@@ -4,6 +4,7 @@
 #include "wxwidget.h"
 #include "graphics.h"
 #include "GridPane.h"
+#include "chunkmanager.h"
 
 class MainWindow : public wxFrame
 {
@@ -21,8 +22,11 @@ private:
 
   DECLARE_EVENT_TABLE();
 
+  void GenerateBlocks(std::shared_ptr<ChunkManager> cm);
+
   std::shared_ptr<wxGLCanvas> gameCanvas;
   std::shared_ptr<GridPane> gridPane;
+  std::shared_ptr<ChunkManager> world;
   wxBoxSizer* sizer;
 };
 

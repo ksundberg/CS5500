@@ -2,7 +2,6 @@
 // http://fossies.org/dox/wxWidgets-3.0.2/cube_8cpp_source.html
 #include "logger.h"
 #include "canvas.h"
-#include <glm/gtc/noise.hpp>
 
 // control ids
 enum
@@ -16,7 +15,10 @@ EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
   EVT_TIMER(GameTimer, GameLoopCanvas::OnGameTimer)
   EVT_MOTION(GameLoopCanvas::OnMouseUpdate) END_EVENT_TABLE()
 
-  GameLoopCanvas::GameLoopCanvas(wxWindow* parent, wxSize size, int* attribList)
+  GameLoopCanvas::GameLoopCanvas(wxWindow* parent,
+                                 std::shared_ptr<ChunkManager> manager,
+                                 wxSize size,
+                                 int* attribList)
   : wxGLCanvas(parent,
                wxID_ANY,
                attribList,
@@ -24,89 +26,19 @@ EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
                size,
                wxFULL_REPAINT_ON_RESIZE)
   , m_spinTimer(this, GameTimer)
+  , chunk_manager(manager)
 {
   GameInit();
 }
 
 GameLoopCanvas::~GameLoopCanvas()
 {
-  delete chunk_manager;
-}
-
-void GameLoopCanvas::GenerateBlocks(ChunkManager* cm)
-{
-  // Just an example of how to use the ChunkManager
-  auto noise2d = [](int x, int y, int amplitude, int height)
-  {
-    return (height + amplitude * glm::simplex(glm::vec2(x, y)));
-  };
-
-  for (int i = 0; i < cm->BOUNDX / 5; i++)
-  {
-    for (int j = 0; j < cm->BOUNDY / 5; j++)
-    {
-      BlockType type;
-      auto branchOn = rand() % 11;
-      if (branchOn < 1)
-      {
-        type = BlockType::Ground;
-      }
-      else if (branchOn < 2)
-      {
-        type = BlockType::Water;
-      }
-      else if (branchOn < 3)
-      {
-        type = BlockType::Sand;
-      }
-      else if (branchOn < 4)
-      {
-        type = BlockType::Wood;
-      }
-      else if (branchOn < 5)
-      {
-        type = BlockType::Flowers;
-      }
-      else if (branchOn < 6)
-      {
-        type = BlockType::Ruby;
-      }
-      else if (branchOn < 7)
-      {
-        type = BlockType::Leaves;
-      }
-      else if (branchOn < 8)
-      {
-        type = BlockType::Stone;
-      }
-      else if (branchOn < 9)
-      {
-        type = BlockType::Grass;
-      }
-      else if (branchOn < 10)
-      {
-        type = BlockType::Brick;
-      }
-      else
-      {
-        type = BlockType::Party;
-      }
-
-      int height = noise2d(i, j, 8, 32);
-      for (int k = height; k >= 0; k--)
-      {
-        cm->set(i, k, j, type);
-      }
-    }
-  }
 }
 
 void GameLoopCanvas::GameInit()
 {
   m_spinTimer.Start(100); // in milliseconds.
-  chunk_manager = new ChunkManager();
 
-  GenerateBlocks(chunk_manager);
   moves = {std::make_pair(Direction::FORWARD, false),
            std::make_pair(Direction::BACKWARD, false),
            std::make_pair(Direction::UP, false),
@@ -174,7 +106,7 @@ void GameLoopCanvas::OnKeyDown(wxKeyEvent& event)
 
   case WXK_ESCAPE:
     // Toggle stealing the mouse.
-    steal_mouse = (steal_mouse) ? false : true;
+    steal_mouse = !steal_mouse;
     break;
 
   default:
