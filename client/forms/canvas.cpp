@@ -37,7 +37,7 @@ GameLoopCanvas::~GameLoopCanvas()
 
 void GameLoopCanvas::GameInit()
 {
-  m_spinTimer.Start(100); // in milliseconds.
+  m_spinTimer.Start(1000 / 60); // 60 fps
 
   moves = {std::make_pair(Direction::FORWARD, false),
            std::make_pair(Direction::BACKWARD, false),

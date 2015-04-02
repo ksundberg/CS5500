@@ -18,7 +18,10 @@ enum class Direction
 class GameLoopCanvas : public wxGLCanvas
 {
 public:
-  GameLoopCanvas(wxWindow* parent, std::shared_ptr<ChunkManager> manager, wxSize size, int* attribList = NULL);
+  GameLoopCanvas(wxWindow* parent,
+                 std::shared_ptr<ChunkManager> manager,
+                 wxSize size,
+                 int* attribList = NULL);
   ~GameLoopCanvas();
 
 private:

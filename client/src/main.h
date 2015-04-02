@@ -7,11 +7,6 @@
 // Define a new application type
 class MyApp : public wxApp
 {
-private:
-  // the GL context we use for all our mono rendering windows
-  std::shared_ptr<GraphicsContext> m_glContext;
-  std::shared_ptr<MainWindow> frame;
-
 public:
   MyApp() : m_glContext(nullptr) {}
 
@@ -20,8 +15,16 @@ public:
   GraphicsContext& GetContext(wxGLCanvas* canvas);
 
   // virtual wxApp methods
-  virtual bool OnInit();
-  virtual int OnExit();
+  bool OnInit() override;
+  int OnExit() override;
+
+  std::shared_ptr<ChunkManager> GenerateWorld();
+
+private:
+  // the GL context we use for all our mono rendering windows
+  std::shared_ptr<GraphicsContext> m_glContext;
+  std::shared_ptr<MainWindow> frame;
+  std::shared_ptr<ChunkManager> world;
 };
 
 #endif

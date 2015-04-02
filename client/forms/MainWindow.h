@@ -9,7 +9,10 @@
 class MainWindow : public wxFrame
 {
 public:
-  MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
+  MainWindow(const wxString& title,
+             std::shared_ptr<ChunkManager> world,
+             const wxPoint& pos,
+             const wxSize& size);
 
 private:
   void OnHelp(wxCommandEvent& event);
@@ -26,7 +29,6 @@ private:
 
   std::shared_ptr<wxGLCanvas> gameCanvas;
   std::shared_ptr<GridPane> gridPane;
-  std::shared_ptr<ChunkManager> world;
   wxBoxSizer* sizer;
 };
 
