@@ -14,7 +14,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/common/player
   ${CMAKE_CURRENT_SOURCE_DIR}/common/util
   ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/materialContainer
   ${CMAKE_CURRENT_SOURCE_DIR}/common/Controls
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/log
@@ -54,8 +53,6 @@ set(common_srcs
   common/voxel/block.cpp
   common/voxel/chunk.cpp
   common/voxel/chunkmanager.cpp
-
-  common/materialContainer/MaterialContainer.cpp
 
   common/object.cpp
   common/dungeon.cpp
