@@ -10,7 +10,7 @@
 #include <tbb/concurrent_vector.h>
 
 #include "rectangular_prism.h"
-#include "../world.h"
+#include "vector3.h"
 
 class Material
 {
@@ -44,7 +44,6 @@ public:
 namespace material_density
 {
 // basic functions that can be used in place of lambda functions if desired
-std::string basicCoordinate2materialNameFunction(Coordinate coordinate);
 float basicXYZWeightingFunction(int x, int y, int z);
 float basicMaterialWeightingFunction(std::string material);
 
@@ -52,7 +51,7 @@ float basicMaterialWeightingFunction(std::string material);
 // returns a vector of reducible materialDensity maps
 tbb::concurrent_vector<MaterialDensityMap> prism_2_mapVector(
   RectangularPrism prism,
-  std::function<std::string(Coordinate)> coordinate2materialNameFunction,
+  std::function<std::string(Vector3)> coordinate2materialNameFunction,
   std::function<float(int, int, int)> xyzWeightingFunction);
 
 // takes a vector of materialDensityMaps and reduces them to a single

@@ -64,7 +64,7 @@ MaterialDensityMap MaterialDensityMap::operator+(MaterialDensityMap& mdMap)
 
 tbb::concurrent_vector<MaterialDensityMap> material_density::prism_2_mapVector(
   RectangularPrism prism,
-  std::function<std::string(Coordinate)> coordinate2materialNameFunction,
+  std::function<std::string(Vector3)> coordinate2materialNameFunction,
   std::function<float(int, int, int)> xyzWeightingFunction)
 {
   tbb::blocked_range3d<int, int, int> range(prism.getX(),
@@ -100,7 +100,7 @@ tbb::concurrent_vector<MaterialDensityMap> material_density::prism_2_mapVector(
         {
           for (int zIt = zBegin; zIt != zEnd; ++zIt)
           {
-            Coordinate coordinate(xIt, yIt, zIt);
+            Vector3 coordinate(xIt, yIt, zIt);
             std::string materialName =
               coordinate2materialNameFunction(coordinate);
             float weight = xyzWeightingFunction(xIt, yIt, zIt);
@@ -188,14 +188,6 @@ float material_density::parallel_reduce_MDM(
 
 ///////////////////////////////////////////////////////////////////////////////
 // Basic weightings functions that may be used in place of lambdas
-
-std::string material_density::basicCoordinate2materialNameFunction(
-  Coordinate coordinate)
-{
-  // This is a filler function until the World and Material are linked
-  (void)coordinate;
-  return "Stone";
-}
 
 float material_density::basicXYZWeightingFunction(int x, int y, int z)
 {

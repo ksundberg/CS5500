@@ -58,7 +58,6 @@ set(common_srcs
   common/materialContainer/MaterialContainer.cpp
 
   common/object.cpp
-  common/world.cpp
   common/dungeon.cpp
 
   common/density/material_density.cpp
