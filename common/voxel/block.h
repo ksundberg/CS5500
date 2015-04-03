@@ -16,7 +16,12 @@ enum BlockType
   Stone,
   Grass,
   Brick,
-  Party
+  Party,
+  Coal,
+  Iron,
+  Gravel,
+  Diamond,
+  Gold
 };
 
 class Block
@@ -34,8 +39,6 @@ public:
 
 private:
   BlockType type;
-
-  //		BlockType mBlockType;
 };
 
 #endif

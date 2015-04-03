@@ -10,7 +10,7 @@
 
 Biosphere Biosphere::getBasicBiosphere()
 {
-  std::vector<Biome> vec;
+  std::vector<std::shared_ptr<Biome>> vec;
   vec.push_back(Biome::sandyDesert());
   vec.push_back(Biome::mountain());
   vec.push_back(Biome::fertileFarmland());
@@ -19,103 +19,96 @@ Biosphere Biosphere::getBasicBiosphere()
   return bs;
 }
 
-Biome Biome::sandyDesert()
+std::shared_ptr<Biome> Biome::sandyDesert()
 {
-  std::vector<Ground> vec;
-  vec.push_back(Ground::noOre());
-  vec.push_back(Ground::sand());
-  vec.push_back(Ground::oasis());
+  std::vector<std::shared_ptr<GroundContainer>> vec;
+  vec.push_back(GroundContainer::noOre());
+  vec.push_back(GroundContainer::sand());
+  vec.push_back(GroundContainer::oasis());
 
   std::string name = "sandyDesert";
-  Biome bi(name, vec, .33, 10.0);
-  return bi;
+  return std::make_shared<Biome>(name, vec, .33, 10.0);
 }
 
-Biome Biome::mountain()
+std::shared_ptr<Biome> Biome::mountain()
 {
-  std::vector<Ground> vec;
-  vec.push_back(Ground::noOre());
-  vec.push_back(Ground::diamondDeposits());
-  vec.push_back(Ground::goldDeposits());
-  vec.push_back(Ground::ironDeposits());
+  std::vector<std::shared_ptr<GroundContainer>> vec;
+  vec.push_back(GroundContainer::noOre());
+  vec.push_back(GroundContainer::diamondDeposits());
+  vec.push_back(GroundContainer::goldDeposits());
+  vec.push_back(GroundContainer::ironDeposits());
 
   std::string name = "Mountain";
-  Biome bi(name, vec, .33, 10.0);
-  return bi;
+  return std::make_shared<Biome>(name, vec, .33, 10.0);
 }
 
-Biome Biome::fertileFarmland()
+std::shared_ptr<Biome> Biome::fertileFarmland()
 {
-  std::vector<Ground> vec;
-  vec.push_back(Ground::soil());
-  vec.push_back(Ground::rockySoil());
-  vec.push_back(Ground::sandySoil());
+  std::vector<std::shared_ptr<GroundContainer>> vec;
+  vec.push_back(GroundContainer::soil());
+  vec.push_back(GroundContainer::rockySoil());
+  vec.push_back(GroundContainer::sandySoil());
 
   std::string name = "fertileFarmland";
-  Biome bi(name, vec, .33, 10.0);
-  return bi;
+  return std::make_shared<Biome>(name, vec, .33, 10.0);
 }
 
-Ground Ground::sand()
+std::shared_ptr<GroundContainer> GroundContainer::sand()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Sand());
 
   std::string name = "sand";
-  Ground g(name, vec, .3, 5.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .3, 5.0);
+
 }
 
-Ground Ground::oasis()
+std::shared_ptr<GroundContainer> GroundContainer::oasis()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Sand());
 
   vec.push_back(Material::Soil());
 
   std::string name = "oasis";
-  Ground g(name, vec, .05, 5.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .05, 5.0);
 }
 
-Ground Ground::ironDeposits()
+std::shared_ptr<GroundContainer> GroundContainer::ironDeposits()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Stone());
   vec.push_back(Material::Iron());
 
   std::string name = "ironDeposits";
-  Ground g(name, vec, .2, 5.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .2, 5.0);
 }
 
-Ground Ground::goldDeposits()
+std::shared_ptr<GroundContainer> GroundContainer::goldDeposits()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Stone());
   vec.push_back(Material::Gold());
   vec.push_back(Material::Iron());
 
   std::string name = "goldDeposits";
-  Ground g(name, vec, .1, 5.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .1, 5.0);
 }
 
-Ground Ground::diamondDeposits()
+std::shared_ptr<GroundContainer> GroundContainer::diamondDeposits()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Stone());
   vec.push_back(Material::Diamond());
   vec.push_back(Material::Coal());
 
   std::string name = "diamondDeposits";
-  Ground g(name, vec, .03, 5.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .03, 5.0);
 }
 
-Ground Ground::noOre()
+std::shared_ptr<GroundContainer> GroundContainer::noOre()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Stone());
   vec.push_back(Material::Soil());
   vec.push_back(Material::Coal());
@@ -123,83 +116,153 @@ Ground Ground::noOre()
   vec.push_back(Material::Sand());
 
   std::string name = "noOre";
-  Ground g(name, vec, .5, 10.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .5, 10.0);
 }
 
-Ground Ground::soil()
+std::shared_ptr<GroundContainer> GroundContainer::soil()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Soil());
 
   std::string name = "soil";
-  Ground g(name, vec, .5, 10.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .5, 10.0);
 }
 
-Ground Ground::rockySoil()
+std::shared_ptr<GroundContainer> GroundContainer::rockySoil()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Stone());
   vec.push_back(Material::Soil());
   vec.push_back(Material::Gravel());
 
   std::string name = "rockySoil";
-  Ground g(name, vec, .2, 10.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .2, 10.0);
 }
 
-Ground Ground::sandySoil()
+std::shared_ptr<GroundContainer> GroundContainer::sandySoil()
 {
-  std::vector<Material> vec;
+  std::vector<std::shared_ptr<Material>> vec;
   vec.push_back(Material::Sand());
   vec.push_back(Material::Soil());
 
   std::string name = "sandySoil";
-  Ground g(name, vec, .2, 10.0);
-  return g;
+  return std::make_shared<GroundContainer>(name, vec, .2, 10.0);
 }
 
-Material Ground::getMaterial()
+std::shared_ptr<Material> GroundContainer::getMaterial(int x, int y, int z)
 {
-  double noise = PerlinNoise();
+  double noise = PN(x, y, z);
   return getElement(noise);
 }
 
-Material Material::Coal()
-{
-  return Material("Coal", .2);
-}
-Material Material::Iron()
-{
-  return Material("Iron", .1);
-}
-Material Material::Soil()
-{
-  return Material("Soil", 1.0);
-}
-Material Material::Gravel()
-{
-  return Material("Gravel", .2);
-}
-Material Material::Sand()
-{
-  return Material("Sand", .7);
-}
-Material Material::Diamond()
-{
-  return Material("Diamond", .05);
-}
-Material Material::Stone()
-{
-  return Material("Stone", .6);
-}
-Material Material::Gold()
-{
-  return Material("Gold", .1);
+std::shared_ptr<Material> Material::makenew(std::string name, BlockType type, double freq){
+  materialMap.insert(std::pair<std::string,std::shared_ptr<Material>>(name,std::make_shared<Material>(name,type,freq)));
+  return materialMap[name];
 }
 
-Material Material::getMaterial()
+std::shared_ptr<Material> Material::getFromType(BlockType BT)
 {
-  return Material(*this);
+  switch(BT)
+  {
+    case BlockType::Coal:
+       return Material::Coal(); 
+     
+     case BlockType::Iron:
+       return Material::Iron(); 
+
+     case BlockType::Ground:
+       return Material::Soil(); 
+
+     case BlockType::Gravel:
+       return Material::Gravel(); 
+
+     case BlockType::Sand:
+       return Material::Sand(); 
+
+     case BlockType::Diamond:
+       return Material::Diamond(); 
+
+     case BlockType::Stone:
+       return Material::Stone(); 
+
+     case BlockType::Gold:
+       return Material::Gold();
+
+     default:
+       return Material::Default(); 
+  }
 }
+
+
+std::shared_ptr<Material> Material::Default()
+{
+  if(materialMap.count("None")>0)
+    return materialMap["None"]; 
+
+  return Material::makenew("None", BlockType::Inactive, .2);
+}
+std::shared_ptr<Material> Material::Coal()
+{
+  if(materialMap.count("Coal")>0)
+    return materialMap["Coal"]; 
+  return Material::makenew("Coal", BlockType::Coal, .2);
+}
+std::shared_ptr<Material> Material::Iron()
+{
+  if(materialMap.count("Iron")>0)
+    return materialMap["Iron"]; 
+  return Material::makenew("Iron", BlockType::Iron, .1);
+}
+std::shared_ptr<Material> Material::Soil()
+{
+  if(materialMap.count("Soil")>0)
+    return materialMap["Soil"]; 
+  return Material::makenew("Soil", BlockType::Ground, 1.0);
+}
+std::shared_ptr<Material> Material::Gravel()
+{
+  if(materialMap.count("Gravel")>0)
+    return materialMap["Gravel"]; 
+  return Material::makenew("Gravel", BlockType::Gravel, .2);
+}
+std::shared_ptr<Material> Material::Sand()
+{
+  if(materialMap.count("Sand")>0)
+    return materialMap["Sand"]; 
+  return Material::makenew("Sand", BlockType::Sand, .7);
+}
+std::shared_ptr<Material> Material::Diamond()
+{
+  if(materialMap.count("Diamond")>0)
+    return materialMap["Diamond"]; 
+  return Material::makenew("Diamond", BlockType::Diamond, .05);
+}
+std::shared_ptr<Material> Material::Stone()
+{
+  if(materialMap.count("Stone")>0)
+    return materialMap["Stone"]; 
+  return Material::makenew("Stone", BlockType::Stone, .6);
+}
+std::shared_ptr<Material> Material::Gold()
+{
+  if(materialMap.count("Gold")>0)
+    return materialMap["Gold"]; 
+  return Material::makenew("Gold", BlockType::Gold, .1);
+}
+
+std::shared_ptr<Material> Material::getMaterial(int x, int y, int z)
+{
+  (void) x;
+  (void) y;
+  (void) z;
+  return Default();
+}
+
+const double GROUND_OFFSET=2e5;
+const double GROUND_SMOOTHNESS=2;
+
+const double BIOME_OFFSET=1e5;
+const double BIOME_SMOOTHNESS=1e-1;
+
+const double BIOSPHERE_OFFSET=0;
+const double BIOSPHERE_SMOOTHNESS=1e-3;
