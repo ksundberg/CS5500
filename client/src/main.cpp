@@ -23,14 +23,14 @@ bool MyApp::OnInit()
 std::shared_ptr<ChunkManager> MyApp::GenerateWorld()
 {
   PerlinNoise perlin;
-  auto noiseMap = perlin.createMatrix2D(world->BOUNDX, world->BOUNDY, 5);
+  auto noiseMap = perlin.createMatrix2D(world->BOUNDX, world->BOUNDY, 11);
   auto world = std::make_shared<ChunkManager>();
   for (int i = 0; i < world->BOUNDX; i++)
     for (int j = 0; j < world->BOUNDY; j++)
     {
       int height = (*noiseMap)[i][j] * 11;
       for (int k = 0; k <= height; k++)
-        world->set(i, k, j, BlockType(std::min(k, 11)));
+        world->set(i, k, j, BlockType(k));
     }
   return world;
 }

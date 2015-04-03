@@ -23,19 +23,14 @@ class Block
 {
 public:
   Block();
-  ~Block();
-
-  BlockType get();
-  void set(BlockType type);
+  virtual ~Block();
 
   double mass;          // in kg
   Vector3 acceleration; // in m/s^2
   Vector3 velocity;     // in m/s
-
-private:
+  Vector3 position;
   BlockType type;
 
-  //		BlockType mBlockType;
 };
 
 #endif

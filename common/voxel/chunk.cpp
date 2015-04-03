@@ -142,8 +142,7 @@ void Chunk::update()
       {
         auto type = mBlocks[i][j][k];
 
-        // BlockType::Inactive is 0; this tests if our block is non-empty.
-        if (type)
+        if (type != Inactive)
         {
           // Create vertices for all 6 sides of our block.
 

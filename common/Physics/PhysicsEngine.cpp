@@ -110,15 +110,14 @@ Vector3 PhysicsEngine::SumForces(Block block)
   return forces;
 }
 
-bool PhysicsEngine::IsFalling(Block block)
+bool PhysicsEngine::IsFalling(Block)
 {
   // Will need to lookup block position in the block datastructure
   // and determine if the other blocks around it can support it.
   // This will be a stencil
 
   // Since this datastructure doesn't exist yet...
-  auto remove_warning = block.get();
-  return !remove_warning;
+  return false;
 }
 
 bool PhysicsEngine::IsMoving(Block block)
