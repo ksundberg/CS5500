@@ -60,7 +60,6 @@ set(common_srcs
   common/object.cpp
   common/dungeon.cpp
 
-  common/density/material_density.cpp
   common/density/rectangular_prism.cpp
 
   client/forms/graphics.cpp
