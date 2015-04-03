@@ -18,13 +18,11 @@ public:
   bool OnInit() override;
   int OnExit() override;
 
-  std::shared_ptr<ChunkManager> GenerateWorld();
-
 private:
   // the GL context we use for all our mono rendering windows
   std::shared_ptr<GraphicsContext> m_glContext;
   std::shared_ptr<MainWindow> frame;
-  std::shared_ptr<ChunkManager> world;
+  std::shared_ptr<World> world;
 };
 
 #endif

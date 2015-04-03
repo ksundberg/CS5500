@@ -16,7 +16,7 @@ EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
   EVT_MOTION(GameLoopCanvas::OnMouseUpdate) END_EVENT_TABLE()
 
   GameLoopCanvas::GameLoopCanvas(wxWindow* parent,
-                                 std::shared_ptr<ChunkManager> manager,
+                                 std::shared_ptr<World> world,
                                  wxSize size,
                                  int* attribList)
   : wxGLCanvas(parent,
@@ -26,13 +26,20 @@ EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
                size,
                wxFULL_REPAINT_ON_RESIZE)
   , m_spinTimer(this, GameTimer)
-  , chunk_manager(manager)
+  , world(world)
 {
   GameInit();
 }
 
 GameLoopCanvas::~GameLoopCanvas()
 {
+}
+
+void GameLoopCanvas::CreateChunks()
+{
+  LOG(INFO) << "Blocks count: " << world->blocks.size();
+  for (auto& block : world->blocks)
+    chunk_manager->set(block.position, block.type);
 }
 
 void GameLoopCanvas::GameInit()
@@ -45,6 +52,8 @@ void GameLoopCanvas::GameInit()
            std::make_pair(Direction::DOWN, false),
            std::make_pair(Direction::RIGHT, false),
            std::make_pair(Direction::LEFT, false)};
+  chunk_manager = std::unique_ptr<ChunkManager>(new ChunkManager());
+  CreateChunks();
   position = glm::vec3(3, chunk_manager->BOUNDY / 4, 3);
   player_angle = glm::vec3(0, -0.5, 0);
   up = glm::vec3(0, 1, 0);

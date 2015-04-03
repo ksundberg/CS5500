@@ -19,7 +19,7 @@ class GameLoopCanvas : public wxGLCanvas
 {
 public:
   GameLoopCanvas(wxWindow* parent,
-                 std::shared_ptr<ChunkManager> manager,
+                 std::shared_ptr<World> world,
                  wxSize size,
                  int* attribList = NULL);
   ~GameLoopCanvas();
@@ -37,12 +37,15 @@ private:
   void VectorUpdate(glm::vec3 angle);
   void OnMouseUpdate(wxMouseEvent& event);
 
+  void CreateChunks();
+
   // angles of rotation around x- and y- axis
   const float player_speed = 0.7;
   bool steal_mouse;
   bool mouse_changed;
   wxTimer m_spinTimer;
-  std::shared_ptr<ChunkManager> chunk_manager;
+  std::shared_ptr<World> world;
+  std::unique_ptr<ChunkManager> chunk_manager;
   glm::vec3 position;
   glm::vec3 forward;
   glm::vec3 right;

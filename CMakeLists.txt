@@ -56,6 +56,8 @@ set(common_srcs
 
   common/object.cpp
   common/dungeon.cpp
+  common/critter.cpp
+  common/world.cpp
 
   common/density/rectangular_prism.cpp
 

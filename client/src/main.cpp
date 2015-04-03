@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include <glm/gtc/noise.hpp>
-#include "PerlinNoise.h"
 
 bool MyApp::OnInit()
 {
@@ -12,27 +11,11 @@ bool MyApp::OnInit()
 
   init_log();
 
-  world = GenerateWorld();
+  world = World::Generate(100, 11);
 
   frame = std::make_shared<MainWindow>(
     wxT("Hello World"), world, wxPoint(50, 50), wxSize(300, 400));
   return true;
-}
-
-// TODO: move to a more model oriented data location
-std::shared_ptr<ChunkManager> MyApp::GenerateWorld()
-{
-  PerlinNoise perlin;
-  auto noiseMap = perlin.createMatrix2D(world->BOUNDX, world->BOUNDY, 11);
-  auto world = std::make_shared<ChunkManager>();
-  for (int i = 0; i < world->BOUNDX; i++)
-    for (int j = 0; j < world->BOUNDY; j++)
-    {
-      int height = (*noiseMap)[i][j] * 11;
-      for (int k = 0; k <= height; k++)
-        world->set(i, k, j, BlockType(k));
-    }
-  return world;
 }
 
 int MyApp::OnExit()

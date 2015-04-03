@@ -4,13 +4,13 @@
 #include "wxwidget.h"
 #include "graphics.h"
 #include "GridPane.h"
-#include "chunkmanager.h"
+#include "world.h"
 
 class MainWindow : public wxFrame
 {
 public:
   MainWindow(const wxString& title,
-             std::shared_ptr<ChunkManager> world,
+             std::shared_ptr<World> world,
              const wxPoint& pos,
              const wxSize& size);
 
@@ -24,8 +24,6 @@ private:
   void OnDisplayCubes(wxCommandEvent& event);
 
   DECLARE_EVENT_TABLE();
-
-  void GenerateBlocks(std::shared_ptr<ChunkManager> cm);
 
   std::shared_ptr<wxGLCanvas> gameCanvas;
   std::shared_ptr<GridPane> gridPane;

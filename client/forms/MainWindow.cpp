@@ -23,7 +23,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   EVT_MENU(ID_Cubes, MainWindow::OnDisplayCubes) END_EVENT_TABLE()
 
   MainWindow::MainWindow(const wxString& title,
-                         std::shared_ptr<ChunkManager> world,
+                         std::shared_ptr<World> world,
                          const wxPoint& pos,
                          const wxSize& size)
   : wxFrame(NULL, wxID_ANY, title, pos, size)
