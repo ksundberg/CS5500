@@ -1,131 +1,250 @@
 #include "PhysicsEngine.h"
 
-PhysicsEngine::PhysicsEngine(float deltaTime) : dt(deltaTime)
+PhysicsEngine::PhysicsEngine()
+{}
+
+void PhysicsEngine::Create(RectangularPrism prism)
 {
+	for (int i = prism.getX(); i < prism.getLengthX(); ++i)
+	{
+		for (int j = prism.getY(); j < prism.getWidthY(); ++j)
+		{
+			for (int k = prism.getZ(); k < prism.getHeightZ(); ++k)
+			{
+				auto position = Vector3((float)i, (float)j, (float)k);
+				objList[position] = MovingObject(position);
+				activeList.push_back(position);
+			}
+		}
+	}
 }
 
-void PhysicsEngine::UpdateSingle(Block block, Vector3 force)
+void PhysicsEngine::Destroy(RectangularPrism prism)
 {
-  Vector3 position(0.0f, 0.0f, 0.0f); // will come from block datastructure
-  auto mass = block.mass;
-  auto lastAcceleration = block.acceleration;
-  auto velocity = block.velocity;
-
-  position += (velocity * dt) + (lastAcceleration * (0.5f * dt * dt));
-  auto newAcceleration = force / mass;
-  auto avgAcceleration = (lastAcceleration + newAcceleration) / 2.0f;
-  velocity += avgAcceleration * dt;
-
-  block.velocity = velocity;
-  block.acceleration = avgAcceleration;
-
-  // Somehow apply position move to voxel datastructure
-  // datastructure has not been implemented yet
+	for (int i = prism.getX(); i < prism.getLengthX(); ++i)
+	{
+		for (int j = prism.getY(); j < prism.getWidthY(); ++j)
+		{
+			for (int k = prism.getZ(); k < prism.getHeightZ(); ++k)
+			{
+				auto position = Vector3((float)i, (float)j, (float)k);
+				objList.erase(position);
+				Remove(position);
+			}
+		}
+	}
 }
 
-void PhysicsEngine::UpdateChunk(std::vector<Block> blockList)
+void PhysicsEngine::UpdateSingle(MovingObject& obj, int dt)
 {
-  // Position of blocks is held in block datastructure which hasn't been
-  // implemented yet.
-  // std::sort(blockList.begin(), blockList.end(), [](){}); //sort block list
-  // based on lowest height
+	Vector3 defaultVector(0.0f, 0.0f, 0.0f);
+	obj.changeInPosition = defaultVector;
+	Vector3 force = SumForces(obj);
 
-  std::vector<Vector3> forceList;
+	if (force != defaultVector)
+	{
+		if (!obj.isMoving)
+		{
+			obj.isMoving = true;
+			activeList.push_back(obj.Id);
+		}
+		auto mass = obj.mass;
+		auto lastAcceleration = obj.acceleration;
+		auto velocity = obj.velocity;
 
-  for (unsigned j = 0; j < blockList.size(); ++j)
-  {
-    forceList.push_back(SumForces(blockList[j]));
-  }
+		obj.changeInPosition += (velocity * dt) + (lastAcceleration * (0.5f * dt * dt));
+		auto newAcceleration = force / mass;
+		auto avgAcceleration = (lastAcceleration + newAcceleration) / 2.0f;
+		velocity += avgAcceleration * dt;
 
-  tbb::parallel_for(tbb::blocked_range<int>(0, blockList.size()),
-                    [&](const tbb::blocked_range<int>& r)
-                    {
-    for (int i = r.begin(); i < r.end(); ++i)
-    {
-      UpdateSingle(blockList[i], forceList[i]);
-    }
-  });
+		obj.velocity = velocity;
+		obj.acceleration = avgAcceleration;
+		UpdatePosition(obj);
+	}
+	else
+	{
+		if (obj.isMoving)
+		{
+			obj.isMoving = false;
+			Remove(obj.Id);
+		}
+	}
 }
 
-Vector3 PhysicsEngine::CalculateGravity(Block block)
+//set unstable = true if you want all the blocks in the list to be considered in motion
+void PhysicsEngine::Update(RectangularPrism prism, int dt, bool unstable = false)
 {
-  // F = ma
-  auto mass = block.mass;
+	std::vector<Vector3> blocks;
 
-  float force = (mass * 9.81f) * -1.0f;
+	for (int i = prism.getX(); i < prism.getLengthX(); ++i)
+	{
+		for (int j = prism.getY(); j < prism.getWidthY(); ++j)
+		{
+			for (int k = prism.getZ(); k < prism.getHeightZ(); ++k)
+			{
+				auto position = Vector3((float)i, (float)j, (float)k);
+				blocks.push_back(position);
+			}
+		}
+	}
 
-  Vector3 temp(0.0f, 0.0f, force);
-
-  return temp;
+	if (!unstable)
+	{
+		//Find which blocks are moving and update
+		tbb::parallel_for(tbb::blocked_range<int>(0, blocks.size()),
+			[&](const tbb : blocked_range<int>& r)
+		{
+			for (int i = r.begin(); i < r.end(); ++i)
+			{
+				if (objList[blocks[i]].isMoving)
+				{
+					UpdateSingle(objList[blocks[i]], dt);
+				}
+			}
+		});
+	}
+	else
+	{
+		//Consider all blocks in motion and run physics on all
+		tbb::parallel_for(tbb::blocked_range<int>(0, blocks.size()),
+			[&](const tbb : blocked_range<int>& r)
+		{
+			for (int i = r.begin(); i < r.end(); ++i)
+			{
+				UpdateSingle(objList[blocks[i]], dt);
+			}
+		});
+	}
 }
 
-Vector3 PhysicsEngine::CalculateAirDrag(Block block)
+void PhysicsEngine::UpdateActive(int dt)
 {
-  // set up constant values
-  auto area = 1.0f;  // 1 meter?
-  auto drag = 1.05f; // wiki drag coefficient for cube
-  auto rho = 1.2f;   // air density
-
-  auto vel = block.velocity;
-
-  // calculate drag in just z for now
-  auto force = (vel * vel) * (0.5f * rho * drag * area);
-
-  Vector3 temp(0.0f, 0.0f, force);
-
-  // return resulting force vector
-  return temp;
+	tbb::parallel_for(tbb::blocked_range<int>(0, activeList.size()),
+		[&](const tbb : blocked_range<int>& r)
+	{
+		for (int i = r.begin(); i < r.end(); ++i)
+		{
+			UpdateSingle(objList[activeList[i]], dt);
+		}
+	});
 }
 
-Vector3 PhysicsEngine::CalculateFriction(Block block)
+void PhysicsEngine::Remove(Vector3 id)
 {
-  // Could read in coefficients of frictions from the materials guys but
-  // for now we'll just use 0.5 (wood on wood)
-  Vector3 direction = block.velocity.Normalize() * -1.0f;
-
-  float friction = block.mass * 9.81f * 0.5f;
-
-  // friction will always opose the direction the block is moving
-  return direction * friction;
+	for (int i = 0; i < activeList.size(); ++i)
+	{
+		if (activeList[i] == id)
+		{
+			activeList.erase(activeList.begin() + i);
+			return;
+		}
+	}
 }
 
-Vector3 PhysicsEngine::SumForces(Block block)
+Vector3 PhysicsEngine::CalculateGravity(MovingObject obj)
 {
-  // Find all the forces on a given object
-  Vector3 forces(0.0f, 0.0f, 0.0f);
+	// F = ma
+	auto mass = obj.mass;
 
-  // if falling Calculate Force due to gravity and factor in air drag
-  if (block.velocity.z < 0.0f || block.velocity.z > 0.0f)
-  {
-    forces = CalculateGravity(block);
-    forces += CalculateAirDrag(block);
-  }
-  // if moving (but not in freefall) calculate friction
-  else if (IsMoving(block))
-  {
-    forces = CalculateFriction(block);
-  }
-  // sum up the Vector for all
+	float force = (mass * 9.81f) * -1.0f;
 
-  return forces;
+	Vector3 temp(0.0f, 0.0f, force);
+
+	return temp;
 }
 
-bool PhysicsEngine::IsFalling(Block block)
+Vector3 PhysicsEngine::CalculateAirDrag(MovingObject obj)
 {
-  // Will need to lookup block position in the block datastructure
-  // and determine if the other blocks around it can support it.
-  // This will be a stencil
+	// set up constant values
+	auto area = 1.0f;  // 1 meter?
+	auto drag = 1.05f; // wiki drag coefficient for cube
+	auto rho = 1.2f;   // air density
 
-  // Since this datastructure doesn't exist yet...
-  auto remove_warning = block.get();
-  return !remove_warning;
+	auto vel = obj.velocity;
+
+	// calculate drag in just z for now
+	auto force = (vel * vel) * (0.5f * rho * drag * area);
+
+	Vector3 temp(0.0f, 0.0f, force);
+
+	// return resulting force vector
+	return temp;
 }
 
-bool PhysicsEngine::IsMoving(Block block)
+Vector3 PhysicsEngine::CalculateFriction(MovingObject obj)
 {
-  if (block.velocity.x > 0.0f || block.velocity.y > 0.0f ||
-      block.velocity.x < 0.0f || block.velocity.y < 0.0f)
-    return true;
-  else
-    return false;
+	// Could read in coefficients of frictions from the materials guys but
+	// for now we'll just use 0.5 (wood on wood)
+	Vector3 direction = obj.velocity.Normalize() * -1.0f;
+
+	float friction = obj.mass * 9.81f * 0.5f;
+
+	// friction will always opose the direction the object is moving
+	return direction * friction;
+}
+
+Vector3 PhysicsEngine::SumForces(MovingObject obj)
+{
+	// Find all the forces on a given object
+	Vector3 forces(0.0f, 0.0f, 0.0f);
+
+	// if falling Calculate Force due to gravity and factor in air drag
+	if (IsFalling(obj))
+	{
+		forces = CalculateGravity(obj);
+		forces += CalculateAirDrag(obj);
+	}
+	else
+	{
+		obj.velocity.z = 0.0f;
+
+		// if moving in x or y along ground calculate friction
+		if (IsSliding(obj))
+		{
+			forces = CalculateFriction(obj);
+		}
+	}
+
+	return forces;
+}
+
+bool PhysicsEngine::IsFalling(MovingObject obj)
+{
+	// Will need to lookup object position in the object datastructure
+	// and determine if the other blocks around it can support it.
+	// This will be a stencil
+
+	// Since this datastructure doesn't exist yet...
+	auto remove_warning = (obj.velocity.z + 0.0f);
+	return remove_warning == 0.0f;
+}
+
+bool PhysicsEngine::IsSliding(MovingObject obj)
+{
+	if (obj.velocity.x > 0.0f || obj.velocity.y > 0.0f ||
+		obj.velocity.x < 0.0f || obj.velocity.y < 0.0f)
+		return true;
+	else
+		return false;
+}
+
+void PhysicsEngine::UpdatePosition(MovingObject& obj)
+{
+	Vector3 defaultVector(0.0f, 0.0f, 0.0f);
+
+	auto newPosition = obj.Id + obj.changeInPosition;
+	MovingObject newBlock(newPosition);
+	newBlock.acceleration = obj.acceleration;
+	newBlock.velocity = obj.velocity;
+	newBlock.isMoving = obj.isMoving;
+	newBlock.mass = obj.mass;
+
+	obj.acceleration = defaultVector;
+	obj.velocity = defaultVector;
+	obj.isMoving = false;
+	obj.mass = 0;
+
+	objList[newBlock.Id] = newBlock;
+
+	//Lookup block by Id and update position
 }

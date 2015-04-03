@@ -3,27 +3,36 @@
 #ifndef PHYSICSENGINE_H
 #define PHYSICSENGINE_H
 
-#include "block.h"
-#include "vector3.h"
+#include "MovingObject.h"
 #include <vector>
 #include <algorithm>
 #include "tbb/parallel_for.h"
+#include "../object.h"
+#include "../world.h"
+#include "../util/vector3.h"
+#include "../density/rectangular_prism.h"
+#include <map>
 
 class PhysicsEngine
 {
 public:
-  PhysicsEngine(float deltaTime);
-  void UpdateSingle(Block block, Vector3 force);
-  void UpdateChunk(std::vector<Block> blockList);
-
+	PhysicsEngine();
+	void Update(std::vector<int> blocks, int dt, bool unstable = false);
+	void UpdateActive(int dt);
+	void Create(RectangularPrism prism);
+	void Destroy(RectangularPrism prism);
 private:
-  float dt;
-  Vector3 CalculateGravity(Block block);
-  Vector3 CalculateFriction(Block block);
-  Vector3 CalculateAirDrag(Block block);
-  Vector3 SumForces(Block block);
-  bool IsFalling(Block block);
-  bool IsMoving(Block block);
+	void UpdateSingle(MovingObject& obj, int dt);
+	Vector3 CalculateGravity(MovingObject obj);
+	Vector3 CalculateFriction(MovingObject obj);
+	Vector3 CalculateAirDrag(MovingObject obj);
+	Vector3 SumForces(MovingObject obj);
+	bool IsFalling(MovingObject obj);
+	bool IsSliding(MovingObject obj);
+	std::vector<Vector3> activeList;
+	void Remove(Vector3 id);
+	std::map<Vector3, MovingObject> objList;
+	void UpdatePosition(MovingObject& obj);
 };
 
 #endif
