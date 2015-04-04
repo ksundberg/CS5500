@@ -24,6 +24,7 @@ private:
 
   std::vector<std::shared_ptr<IVContainer>> _objs;
   std::vector<GLuint> _vbufs;
+  std::vector<GLuint> _elembufs;
   std::vector<int> _vcount;
 };
 

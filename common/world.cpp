@@ -30,7 +30,7 @@ std::shared_ptr<World> World::Generate(int size, int height)
   return world;
 }
 
-//Called every update loop
+// Called every update loop
 void World::Update()
 {
 }

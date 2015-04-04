@@ -13,7 +13,11 @@ public:
   glm::vec3 pos;
 
 private:
-  std::vector<byte4> _get_vertices() const override;
-  glm::vec3 _get_position() const override;
+  const std::vector<byte4>& _get_vertices() const override;
+  const std::vector<GLuint>& _get_elements() const override;
+  const glm::vec3& _get_position() const override;
+
+  std::vector<byte4> _verts;
+  std::vector<GLuint> _elems;
 };
 #endif //__CRITTER_H_

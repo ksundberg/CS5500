@@ -13,16 +13,18 @@ public:
   IVContainer(IVContainer const&) = delete;
   IVContainer& operator=(IVContainer const&) = delete;
 
-  std::vector<byte4> Vertices() const { return _get_vertices(); }
-  glm::vec3 Position() const { return _get_position(); }
+  const std::vector<byte4>& Vertices() const { return _get_vertices(); }
+  const std::vector<GLuint>& Elements() const { return _get_elements(); }
+  const glm::vec3& Position() const { return _get_position(); }
 
 protected:
   // allow construction for only child classes
   IVContainer() {}
 
 private:
-  virtual std::vector<byte4> _get_vertices() const = 0;
-  virtual glm::vec3 _get_position() const = 0;
+  virtual const std::vector<byte4>& _get_vertices() const = 0;
+  virtual const std::vector<GLuint>& _get_elements() const = 0;
+  virtual const glm::vec3& _get_position() const = 0;
 };
 
 #endif //__I_VCONTAINER_H_

@@ -9,6 +9,7 @@ VertexViewer::VertexViewer(
   : _objs(objs)
 {
   _vbufs.resize(_objs.size());
+  _elembufs.resize(_objs.size());
   _vcount.resize(_objs.size());
   int i = 0;
   for (auto& obj : _objs)
@@ -21,6 +22,15 @@ VertexViewer::VertexViewer(
                  verts.data(),
                  GL_STATIC_DRAW);
     _vcount[i] = verts.size();
+
+    auto elems = obj->Elements();
+    glGenBuffers(1, &_elembufs[i]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elembufs[i]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 elems.size() * sizeof(GLuint),
+                 elems.data(),
+                 GL_STATIC_DRAW);
+
     i++;
   }
 }
@@ -38,7 +48,12 @@ void VertexViewer::_do_render(GraphicsContext& context,
 
     glBindBuffer(GL_ARRAY_BUFFER, _vbufs[i]);
     glVertexAttribPointer(context.attributeCoord(), 4, GL_BYTE, GL_FALSE, 0, 0);
-    glDrawArrays(GL_TRIANGLES, 0, _vcount[i]);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elembufs[i]);
+    int size;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+    glDrawElements(GL_TRIANGLES, size / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+
     i++;
   }
 }
