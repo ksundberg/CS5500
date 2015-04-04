@@ -33,7 +33,7 @@ BlockType ChunkManager::get(int x, int y, int z)
   return chunks[index(cmx, cmy, cmz)]->get(x, y, z);
 }
 
-void ChunkManager::set(Vector3 pos, BlockType type)
+void ChunkManager::set(glm::vec3 pos, BlockType type)
 {
   set(int(pos.x), int(pos.y), int(pos.z), type);
 }

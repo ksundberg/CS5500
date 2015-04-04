@@ -1,6 +1,9 @@
 #include "world.h"
 
 #include "PerlinNoise.h"
+#include "logger.h"
+
+std::shared_ptr<Block> World::_critterBlock = nullptr;
 
 std::vector<std::shared_ptr<IVContainer>> World::Containers() const
 {
@@ -11,26 +14,65 @@ std::vector<std::shared_ptr<IVContainer>> World::Containers() const
   return containers;
 }
 
-std::shared_ptr<World> World::Generate(int size, int height)
+std::shared_ptr<World> World::Generate(int size, int height, int critterCount)
 {
+  std::srand(std::time(0));
+  if (_critterBlock == nullptr)
+    _critterBlock =
+      std::make_shared<Block>(glm::vec3(0, 0, 0), BlockType::Grass);
+
   auto world = std::make_shared<World>();
-  auto noiseMap = PerlinNoise::matrix2D(size, size, height);
+  world->_noise = PerlinNoise::matrix2D(size, size, height);
   world->blocks.reserve(size * size * height);
   for (int i = 0; i < size; i++)
     for (int j = 0; j < size; j++)
     {
-      int h = (*noiseMap)[i][j] * height;
+      int h = (*world->_noise)[i][j] * height;
       for (int k = 0; k <= h; k++)
-        world->blocks.emplace_back(
-          Block({float(i), float(k), float(j)}, BlockType(k)));
+        world->blocks.emplace_back(std::make_shared<Block>(
+          glm::vec3(float(i), float(k), float(j)), BlockType(k)));
     }
 
-  world->critters.emplace_back(std::make_shared<Critter>(glm::vec3(0, -12, 0)));
+  world->critters.reserve(critterCount);
+  for (int i = 0; i < critterCount; i++)
+    world->critters.emplace_back(std::make_shared<Critter>(
+      glm::vec3(int(std::rand()) % size, 0, int(std::rand()) % size),
+      std::dynamic_pointer_cast<IVContainer>(_critterBlock)));
 
+  world->_size = size;
+  world->_height = height;
   return world;
 }
 
 // Called every update loop
 void World::Update()
 {
+  for (auto c : critters)
+  {
+    auto p = c->Position();
+    if (int(p.x) <= 0 || int(p.x) >= _size)
+    {
+      c->dir.x = -c->dir.x;
+      if (p.x >= _size)
+      {
+        p.x = _size - 0.1;
+      }
+      else
+      {
+        p.x = 0.1;
+      }
+    }
+    if (int(p.z) <= 0 || int(p.z) >= _size)
+    {
+      c->dir.y = -c->dir.y;
+      if (p.z >= _size)
+        p.z = _size - 0.1;
+      else
+        p.z = 0.1;
+    }
+    if (std::rand() % 100 == 0) c->dir.x = std::rand() % 3 - 1;
+    if (std::rand() % 100 == 0) c->dir.y = std::rand() % 3 - 1;
+
+    c->move(glm::vec3(0.1, (*_noise)[int(p.x)][int(p.z)] * _height + 1, 0.1));
+  }
 }

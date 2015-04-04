@@ -53,7 +53,7 @@ TEST_CASE("Can activate and deactivate all blocks in a chunk.")
 
 TEST_CASE("Can check if blocks are active or not.")
 {
-  Block block;
+  Block block({0, 0, 0}, BlockType::Inactive);
   block.type = BlockType::Ground;
   REQUIRE(block.type != BlockType::Inactive);
   block.type = BlockType::Inactive;

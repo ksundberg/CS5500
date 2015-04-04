@@ -40,7 +40,7 @@ void GameLoopCanvas::CreateChunks()
 {
   LOG(INFO) << "Blocks count: " << world->blocks.size();
   for (auto& block : world->blocks)
-    chunk_manager->set(block.position, block.type);
+    chunk_manager->set(block->position, block->type);
 }
 
 void GameLoopCanvas::GameInit()
@@ -55,7 +55,7 @@ void GameLoopCanvas::GameInit()
            std::make_pair(Direction::LEFT, false)};
   chunk_manager = std::unique_ptr<ChunkManager>(new ChunkManager());
   CreateChunks();
-  position = glm::vec3(3, chunk_manager->BOUNDY / 4, 3);
+  position = glm::vec3(3, 4, 3);
   player_angle = glm::vec3(0, -0.5, 0);
   up = glm::vec3(0, 1, 0);
   VectorUpdate(player_angle);
@@ -63,8 +63,8 @@ void GameLoopCanvas::GameInit()
   mouse_changed = false;
 }
 
-// Needed to use wxGetApp(). Usually you get the same result
-// by using wxIMPLEMENT_APP(), but that can only be in main.
+// Needed to use GetApp(). Usually you get the same result
+// by using IMPLEMENT_APP(), but that can only be in main.
 DECLARE_APP(MyApp);
 
 void GameLoopCanvas::OnPaint(wxPaintEvent&)

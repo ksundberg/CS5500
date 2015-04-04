@@ -11,7 +11,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/common/interfaces
   ${CMAKE_CURRENT_SOURCE_DIR}/common/log
   ${CMAKE_CURRENT_SOURCE_DIR}/common/noise
-  ${CMAKE_CURRENT_SOURCE_DIR}/common/Physics
   ${CMAKE_CURRENT_SOURCE_DIR}/common/player
   ${CMAKE_CURRENT_SOURCE_DIR}/common/util
   ${CMAKE_CURRENT_SOURCE_DIR}/common/voxel
@@ -40,8 +39,6 @@ set(common_srcs
   common/log/logger.cpp
 
   common/noise/PerlinNoise.cpp
-
-  common/Physics/PhysicsEngine.cpp
 
   common/player/inventory.cpp
   common/player/Camera.cpp

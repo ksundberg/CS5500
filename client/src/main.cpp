@@ -9,7 +9,7 @@ bool MyApp::OnInit()
 
   init_log();
 
-  world = World::Generate(100, 11);
+  world = World::Generate(100, 11, 5);
 
   frame = std::make_shared<MainWindow>(
     wxT("Hello World"), world, wxPoint(50, 50), wxSize(300, 400));

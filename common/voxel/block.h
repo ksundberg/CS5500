@@ -1,7 +1,10 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include "vector3.h"
+#include "graphics.h"
+#include "IVertexContainer.h"
+
+#include <vector>
 
 enum BlockType
 {
@@ -19,24 +22,27 @@ enum BlockType
   Party
 };
 
-class Block
+class Block : public IVContainer
 {
 public:
-  // We really should delete this and force a block to only be constructed when
-  // we know its type and position
-  // ie. Block() = delete;
-  Block();
-  Block(Vector3 p, BlockType t) : position(p), type(t) {}
+  Block() = delete;
+  Block(glm::vec3 p, BlockType t);
   virtual ~Block();
 
-  // important members
-  Vector3 position;
+  // forbid copying
+  Block(Block const&) = delete;
+  Block& operator=(Block const&) = delete;
+
+  glm::vec3 position;
   BlockType type;
 
-  // unimportant members
-  double mass;          // in kg
-  Vector3 acceleration; // in m/s^2
-  Vector3 velocity;     // in m/s
+private:
+  const std::vector<byte4>& _get_vertices() const override;
+  const std::vector<GLuint>& _get_elements() const override;
+  const glm::vec3& _get_position() const override;
+
+  std::vector<byte4> _verts;
+  std::vector<GLuint> _elems;
 };
 
 #endif

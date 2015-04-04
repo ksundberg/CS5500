@@ -8,7 +8,6 @@
 #include <tbb/concurrent_vector.h>
 #include <tbb/blocked_range.h>
 #include "chunk.h"
-#include "vector3.h"
 #include "graphics.h"
 
 // typedefs
@@ -36,7 +35,7 @@ private:
 public:
   ChunkManager();
   BlockType get(int x, int y, int z);
-  void set(Vector3 pos, BlockType type);
+  void set(glm::vec3 pos, BlockType type);
   void set(int x, int y, int z, BlockType type);
   void update();
   void render(GraphicsContext& context, const glm::mat4& vp);
