@@ -1,14 +1,19 @@
 #ifndef __CRITTER_H_
 #define __CRITTER_H_
 
-#include "vector3.h"
+#include "IVertexContainer.h"
+#include <glm/glm.hpp>
 
-class Critter
+class Critter : public IVContainer
 {
 public:
-  Critter(Vector3 pos);
+  Critter(glm::vec3 pos);
   virtual ~Critter();
 
-  Vector3 pos;
+  glm::vec3 pos;
+
+private:
+  std::vector<byte4> _get_vertices() const override;
+  glm::vec3 _get_position() const override;
 };
 #endif //__CRITTER_H_

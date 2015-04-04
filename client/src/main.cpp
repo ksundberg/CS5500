@@ -3,8 +3,6 @@
 
 #include <algorithm>
 
-#include <glm/gtc/noise.hpp>
-
 bool MyApp::OnInit()
 {
   if (!wxApp::OnInit()) return false;

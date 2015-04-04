@@ -4,6 +4,7 @@
 #include <map>
 #include "main.h"
 #include "chunkmanager.h"
+#include "vertexviewer.h"
 
 enum class Direction
 {
@@ -32,7 +33,7 @@ private:
   void OnKeyUp(wxKeyEvent& event);
   void OnGameTimer(wxTimerEvent& WXUNUSED(event));
   void Render();
-  void Update();
+  void Update() override;
   void GameInit();
   void VectorUpdate(glm::vec3 angle);
   void OnMouseUpdate(wxMouseEvent& event);
@@ -46,6 +47,7 @@ private:
   wxTimer m_spinTimer;
   std::shared_ptr<World> world;
   std::unique_ptr<ChunkManager> chunk_manager;
+  std::unique_ptr<IRenderable> object_viewer;
   glm::vec3 position;
   glm::vec3 forward;
   glm::vec3 right;

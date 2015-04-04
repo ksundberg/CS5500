@@ -8,6 +8,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/client/src
   ${CMAKE_CURRENT_SOURCE_DIR}/common
   ${CMAKE_CURRENT_SOURCE_DIR}/common/item
+  ${CMAKE_CURRENT_SOURCE_DIR}/common/interfaces
   ${CMAKE_CURRENT_SOURCE_DIR}/common/log
   ${CMAKE_CURRENT_SOURCE_DIR}/common/noise
   ${CMAKE_CURRENT_SOURCE_DIR}/common/Physics
@@ -48,6 +49,9 @@ set(common_srcs
   common/item/item.cpp
   common/item/itemgen.cpp
 
+  common/interfaces/IRenderable.cpp
+  common/interfaces/IVertexContainer.cpp
+
   common/util/vector3.cpp
 
   common/voxel/block.cpp
@@ -62,6 +66,7 @@ set(common_srcs
   common/density/rectangular_prism.cpp
 
   client/forms/graphics.cpp
+  client/forms/vertexviewer.cpp
 )
 source_group("common" FILES ${common_srcs})
 

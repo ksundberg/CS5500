@@ -64,7 +64,6 @@ void Chunk::setAllBlocks(BlockType type)
   }
 }
 
-// TODO: uhh... this is very coupled to opengl. separate responsibilities
 void Chunk::update()
 {
   // Max number of vertices a block could have is 36.
@@ -191,7 +190,7 @@ void Chunk::update()
   glGenBuffers(1, &vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
   glBufferData(
-    GL_ARRAY_BUFFER, vertex_count * sizeof *vertex, vertex, GL_STATIC_DRAW);
+    GL_ARRAY_BUFFER, vertex_count * sizeof(*vertex), vertex, GL_STATIC_DRAW);
 }
 
 void Chunk::render(GraphicsContext& context)

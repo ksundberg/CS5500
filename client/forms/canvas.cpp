@@ -27,6 +27,7 @@ EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
                wxFULL_REPAINT_ON_RESIZE)
   , m_spinTimer(this, GameTimer)
   , world(world)
+  , object_viewer(nullptr)
 {
   GameInit();
 }
@@ -66,10 +67,8 @@ void GameLoopCanvas::GameInit()
 // by using wxIMPLEMENT_APP(), but that can only be in main.
 DECLARE_APP(MyApp);
 
-void GameLoopCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
+void GameLoopCanvas::OnPaint(wxPaintEvent&)
 {
-  // This is required even though dc is not used otherwise.
-  wxPaintDC dc(this);
   Render();
 }
 
@@ -162,7 +161,7 @@ void GameLoopCanvas::OnKeyUp(wxKeyEvent& event)
   }
 }
 
-void GameLoopCanvas::OnGameTimer(wxTimerEvent& WXUNUSED(event))
+void GameLoopCanvas::OnGameTimer(wxTimerEvent&)
 {
   Update();
   Render();
@@ -177,20 +176,18 @@ void GameLoopCanvas::Render()
   Resize();
 
   // Clear screen.
+  glClearColor(0, 0, 0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // The context contains all the graphics utils.
-  GraphicsContext& context = wxGetApp().GetContext(this);
-
   auto Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 500.0f);
-
-  // Camera matrix
   auto View = glm::lookAt(position, position + lookat, up);
-  // Just generate our view and projection; the model will be chosen
-  // by individual chunks.
   auto VP = Projection * View;
 
-  chunk_manager->render(context, VP);
+  chunk_manager->render(wxGetApp().GetContext(this), VP);
+  if (object_viewer == nullptr)
+    object_viewer =
+      std::unique_ptr<VertexViewer>(new VertexViewer(world->Containers()));
+  object_viewer->Render(wxGetApp().GetContext(this), VP);
 
   SwapBuffers();
 }
@@ -199,6 +196,7 @@ void GameLoopCanvas::Update()
 {
   VectorUpdate(player_angle);
   chunk_manager->update();
+  world->Update();
 }
 
 void GameLoopCanvas::VectorUpdate(glm::vec3 angle)
