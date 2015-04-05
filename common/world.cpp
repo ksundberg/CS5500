@@ -1,5 +1,4 @@
 #include "world.h"
-
 #include "PerlinNoise.h"
 #include "logger.h"
 
@@ -47,6 +46,7 @@ std::shared_ptr<World> World::Generate(int size, int height, int critterCount)
 // Called every update loop
 void World::Update()
 {
+ 
   for (auto c : critters)
   {
     auto p = c->Position();
@@ -73,6 +73,23 @@ void World::Update()
     if (std::rand() % 100 == 0) c->dir.x = std::rand() % 3 - 1;
     if (std::rand() % 100 == 0) c->dir.y = std::rand() % 3 - 1;
 
-    c->move(glm::vec3(0.1, (*_noise)[int(p.x)][int(p.z)] * _height + 1, 0.1));
+    double critterYPosition = (*_noise)[int(p.x)][int(p.z)] * _height + 1;
+    c->move(glm::vec3(0.1,critterYPosition,0.1));
+
+    
+    //Collision detection
+    for (auto c2 : critters){
+      auto p1 = c->Position();
+      auto p2 = c2->Position();
+      
+      if ((abs(p1.x - p2.x) * 2 < 2) && (abs(p1.y - p2.y) * 2 < 2) && (abs(p1.z - p2.z) * 2 < 2)){
+          if (c != c2){
+            c->dir.x *= -1;
+            c->dir.y *= -1;
+            c->move(glm::vec3(0.2,critterYPosition,0.2));
+            break;
+          }
+      }
+    }
   }
 }
