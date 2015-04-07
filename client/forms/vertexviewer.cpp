@@ -1,5 +1,5 @@
-#include "vertexviewer.h"
 #include "logger.h"
+#include "vertexviewer.h"
 
 #include <glm/gtc/type_ptr.hpp>
 

@@ -3,7 +3,9 @@
 
 #include "block.h"
 #include "IVertexContainer.h"
+
 #include <glm/glm.hpp>
+#include <memory>
 
 class Critter : public IVContainer
 {

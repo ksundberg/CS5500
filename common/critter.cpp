@@ -1,6 +1,5 @@
-#include "critter.h"
-
 #include "logger.h"
+#include "critter.h"
 
 Critter::Critter(glm::vec3 p, std::shared_ptr<IVContainer> c)
   : dir({1, 1}), _pos(p), _container(c)
