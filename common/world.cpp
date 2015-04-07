@@ -1,6 +1,10 @@
+#include <tbb/tbb.h>
+
 #include "world.h"
 #include "PerlinNoise.h"
 #include "logger.h"
+
+
 
 std::shared_ptr<Block> World::_critterBlock = nullptr;
 
@@ -44,52 +48,64 @@ std::shared_ptr<World> World::Generate(int size, int height, int critterCount)
 }
 
 // Called every update loop
+tbb::queuing_rw_mutex mutex;
+
 void World::Update()
 {
- 
-  for (auto c : critters)
-  {
-    auto p = c->Position();
-    if (int(p.x) <= 0 || int(p.x) >= _size)
+  tbb::parallel_for(
+    tbb::blocked_range<int>(0, critters.size()),
+    [=](const tbb::blocked_range<int>& ri)
     {
-      c->dir.x = -c->dir.x;
-      if (p.x >= _size)
+      for (int i = ri.begin(); i != ri.end(); i++)
       {
-        p.x = _size - 0.1;
-      }
-      else
-      {
-        p.x = 0.1;
-      }
-    }
-    if (int(p.z) <= 0 || int(p.z) >= _size)
-    {
-      c->dir.y = -c->dir.y;
-      if (p.z >= _size)
-        p.z = _size - 0.1;
-      else
-        p.z = 0.1;
-    }
-    if (std::rand() % 100 == 0) c->dir.x = std::rand() % 3 - 1;
-    if (std::rand() % 100 == 0) c->dir.y = std::rand() % 3 - 1;
-
-    double critterYPosition = (*_noise)[int(p.x)][int(p.z)] * _height + 1;
-    c->move(glm::vec3(0.1,critterYPosition,0.1));
-
-    
-    //Collision detection
-    for (auto c2 : critters){
-      auto p1 = c->Position();
-      auto p2 = c2->Position();
-      
-      if ((abs(p1.x - p2.x) * 2 < 2) && (abs(p1.y - p2.y) * 2 < 2) && (abs(p1.z - p2.z) * 2 < 2)){
-          if (c != c2){
-            c->dir.x *= -1;
-            c->dir.y *= -1;
-            c->move(glm::vec3(0.2,critterYPosition,0.2));
-            break;
+        auto c = critters[i];
+        auto p = c->Position();
+        if (int(p.x) <= 0 || int(p.x) >= _size)
+        {
+          c->dir.x = -c->dir.x;
+          if (p.x >= _size)
+          {
+            p.x = _size - 0.1;
           }
+          else
+          {
+            p.x = 0.1;
+          }
+        }
+        if (int(p.z) <= 0 || int(p.z) >= _size)
+        {
+          c->dir.y = -c->dir.y;
+          if (p.z >= _size)
+            p.z = _size - 0.1;
+          else
+            p.z = 0.1;
+        }
+        if (std::rand() % 100 == 0) c->dir.x = std::rand() % 3 - 1;
+        if (std::rand() % 100 == 0) c->dir.y = std::rand() % 3 - 1;
+
+        double critterYPosition = (*_noise)[int(p.x)][int(p.z)] * _height + 1;
+        c->move(glm::vec3(0.1, critterYPosition, 0.1));
+
+        // Collision detection
+        for (auto c2 : critters)
+        {
+          tbb::queuing_rw_mutex::scoped_lock lock(mutex, false);
+          auto p1 = c->Position();
+          auto p2 = c2->Position();
+
+          if ((abs(p1.x - p2.x) * 2 < 2) && (abs(p1.y - p2.y) * 2 < 2) &&
+              (abs(p1.z - p2.z) * 2 < 2))
+          {
+            if (c != c2)
+            {
+              c->dir.x *= -1;
+              c->dir.y *= -1;
+              lock.upgrade_to_writer();
+              c->move(glm::vec3(0.2, critterYPosition, 0.2));
+              break;
+            }
+          }
+        }
       }
-    }
-  }
+    });
 }
