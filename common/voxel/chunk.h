@@ -26,8 +26,8 @@ public:
 private:
   // The blocks data
   BlockType*** mBlocks;
-  int vertex_count;
   GLuint vertex_buffer;
+  std::vector<byte4> vertices;
 };
 
 #endif

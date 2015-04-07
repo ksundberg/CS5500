@@ -1,7 +1,5 @@
 #ifndef CHUNKMANAGER_H
 #define CHUNKMANAGER_H
-
-// Class dependencies
 #include <vector>
 #include <unordered_set>
 #include <memory>
@@ -11,7 +9,6 @@
 #include "vector3.h"
 #include "graphics.h"
 
-// typedefs
 typedef tbb::concurrent_vector<std::shared_ptr<Chunk>> ChunkList;
 typedef std::unordered_set<std::shared_ptr<Chunk>> ChunkQueue;
 typedef tbb::blocked_range<ChunkList::iterator> chunkListRange;

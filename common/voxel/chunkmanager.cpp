@@ -59,10 +59,8 @@ void ChunkManager::set(int x, int y, int z, BlockType type)
 
   auto chunk = chunks[index(cmx, cmy, cmz)];
 
-  // Set this Chunk's specified voxel to its new type.
   chunk->set(x % CMX, y % CMY, z % CMZ, type);
 
-  // Schedule this chunk to be updated.
   chunksToUpdate.insert(chunk);
 }
 
