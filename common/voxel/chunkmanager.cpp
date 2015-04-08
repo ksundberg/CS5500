@@ -8,10 +8,16 @@ ChunkManager::ChunkManager()
   chunks.resize(CMX * CMY * CMZ);
 }
 
+
+inline bool ChunkManager::outOfBounds(int x, int y, int z)
+{
+  return (0 > x || x >= CMX * Chunk::CHUNK_SIZE || 0 > y ||
+          y >= CMY * Chunk::CHUNK_SIZE || 0 > z || z >= CMZ * Chunk::CHUNK_SIZE);
+}
+
 BlockType ChunkManager::get(int x, int y, int z)
 {
-  if (0 > x || x >= CMX * Chunk::CHUNK_SIZE || 0 > y ||
-      y >= CMY * Chunk::CHUNK_SIZE || 0 > z || z >= CMZ * Chunk::CHUNK_SIZE)
+  if (outOfBounds(x,y,z))
   {
     // Out of bounds.
     return BlockType::Inactive;
@@ -35,8 +41,7 @@ BlockType ChunkManager::get(int x, int y, int z)
 
 void ChunkManager::set(int x, int y, int z, BlockType type)
 {
-  if (0 > x || x >= CMX * Chunk::CHUNK_SIZE || 0 > y ||
-      y >= CMY * Chunk::CHUNK_SIZE || 0 > z || z >= CMZ * Chunk::CHUNK_SIZE)
+  if (outOfBounds(x,y,z))
   {
     return;
   }
@@ -69,11 +74,26 @@ int ChunkManager::index(int x, int y, int z)
   return x * CMY * CMZ + y * CMZ + z;
 }
 
+std::shared_ptr<Chunk> ChunkManager::getChunkAtIndex(int x, int y, int z)
+{
+  std::shared_ptr<Chunk> chunk;
+  return (outOfBounds(x, y, z)
+          ? chunk
+          : chunks[index(x / Chunk::CHUNK_SIZE, y / Chunk::CHUNK_SIZE,
+                         z / Chunk::CHUNK_SIZE)]);
+}
+
 void ChunkManager::update()
 {
   for (auto& c : chunksToUpdate)
   {
-    c->update();
+    auto down = getChunkAtIndex(c->X,c->Y - Chunk::CHUNK_SIZE,c->Z);
+    auto up = getChunkAtIndex(c->X,c->Y + Chunk::CHUNK_SIZE,c->Z);
+    auto left = getChunkAtIndex(c->X - Chunk::CHUNK_SIZE,c->Y,c->Z);
+    auto right = getChunkAtIndex(c->X + Chunk::CHUNK_SIZE,c->Y,c->Z);
+    auto back = getChunkAtIndex(c->X,c->Y,c->Z - Chunk::CHUNK_SIZE);
+    auto front = getChunkAtIndex(c->X,c->Y,c->Z + Chunk::CHUNK_SIZE);
+    c->update(down, up, left, right, back, front);
   }
 
   chunksToUpdate.clear();

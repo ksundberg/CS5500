@@ -62,9 +62,15 @@ void Chunk::setAllBlocks(BlockType type)
   }
 }
 
-void Chunk::update()
+void Chunk::update(std::shared_ptr<Chunk> down,
+                   std::shared_ptr<Chunk> up,
+                   std::shared_ptr<Chunk> left,
+                   std::shared_ptr<Chunk> right,
+                   std::shared_ptr<Chunk> back,
+                   std::shared_ptr<Chunk> front)
 {
   vertices.clear();
+  
   auto negSquareX = [&](int i, int j, int k, BlockType type)
   {
     // Create vertices for the X side of a block, making the square we
@@ -138,12 +144,83 @@ void Chunk::update()
 
         if (type)
         {
-          auto upNotCovered = (j == (CHUNK_SIZE - 1) || !(mBlocks[i][j + 1][k]));
-          auto downNotCovered = (j == 0 || !(mBlocks[i][j - 1][k]));
-          auto rightNotCovered = (i == (CHUNK_SIZE - 1) || !(mBlocks[i + 1][j][k]));
-          auto leftNotCovered = (i == 0 || !(mBlocks[i - 1][j][k]));
-          auto frontNotCovered = (k == (CHUNK_SIZE - 1) || !(mBlocks[i][j][k + 1]));
-          auto backNotCovered = (k == 0 || !(mBlocks[i][j][k - 1]));
+          bool downNotCovered;
+          if (j == 0)
+          {
+            downNotCovered =
+              (down != nullptr)
+                ? !(down->get(i, Chunk::CHUNK_SIZE - 1, k))
+                : true;
+          }
+          else
+          {
+            downNotCovered = !(mBlocks[i][j-1][k]);
+          }
+          
+          bool upNotCovered;
+          if (j == (Chunk::CHUNK_SIZE - 1))
+          {
+            upNotCovered =
+              (up != nullptr)
+                ? !(up->get(i, 0, k))
+                : true;
+          }
+          else
+          {
+            upNotCovered = !(mBlocks[i][j+1][k]);
+          }
+
+          bool leftNotCovered;
+          if (i == 0)
+          {
+            leftNotCovered =
+              (left != nullptr)
+                ? !(left->get(Chunk::CHUNK_SIZE - 1, j, k))
+                : true;
+          }
+          else
+          {
+            leftNotCovered = !(mBlocks[i-1][j][k]);
+          }
+          
+          bool rightNotCovered;
+          if (i == (Chunk::CHUNK_SIZE - 1))
+          {
+            rightNotCovered =
+              (right != nullptr)
+                ? !(right->get(0, j, k))
+                : true;
+          }
+          else
+          {
+            rightNotCovered = !(mBlocks[i+1][j][k]);
+          }
+
+          bool backNotCovered;
+          if (k == 0)
+          {
+            backNotCovered =
+              (back != nullptr)
+                ? !(back->get(i, j, Chunk::CHUNK_SIZE - 1))
+                : true;
+          }
+          else
+          {
+            backNotCovered = !(mBlocks[i][j][k-1]);
+          }
+          
+          bool frontNotCovered;
+          if (k == (Chunk::CHUNK_SIZE - 1))
+          {
+            frontNotCovered =
+              (front != nullptr)
+                ? !(front->get(i, j, 0))
+                : true;
+          }
+          else
+          {
+            frontNotCovered = !(mBlocks[i][j][k+1]);
+          }
 
           // Create vertices for all 6 sides of our block.
           if (leftNotCovered)

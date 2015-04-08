@@ -17,6 +17,9 @@ class ChunkManager
 {
 private:
   int index(int x, int y, int z);
+  std::shared_ptr<Chunk> getChunkAtIndex(int x, int y, int z);
+  inline bool outOfBounds(int x, int y, int z);
+
   // Chunks are a 16 x 16 x 16 containers of voxels.  The ChunkManager
   // is sort of a super Chunk, in that it contains 16 x 16 x 16 of
   // these Chunks. The reason this is done instead of using a 256 x
