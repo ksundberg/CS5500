@@ -70,7 +70,7 @@ void Chunk::update(std::shared_ptr<Chunk> down,
                    std::shared_ptr<Chunk> front)
 {
   vertices.clear();
-  
+
   auto negSquareX = [&](int i, int j, int k, BlockType type)
   {
     // Create vertices for the X side of a block, making the square we
@@ -147,79 +147,103 @@ void Chunk::update(std::shared_ptr<Chunk> down,
           bool downNotCovered;
           if (j == 0)
           {
-            downNotCovered =
-              (down != nullptr)
-                ? !(down->get(i, Chunk::CHUNK_SIZE - 1, k))
-                : true;
+            if (down != nullptr)
+            {
+              downNotCovered = !(down->get(i, Chunk::CHUNK_SIZE - 1, k));
+            }
+            else
+            {
+              downNotCovered = true;
+            }
           }
           else
           {
-            downNotCovered = !(mBlocks[i][j-1][k]);
+            downNotCovered = !(mBlocks[i][j - 1][k]);
           }
-          
+
           bool upNotCovered;
           if (j == (Chunk::CHUNK_SIZE - 1))
           {
-            upNotCovered =
-              (up != nullptr)
-                ? !(up->get(i, 0, k))
-                : true;
+            if (up != nullptr)
+            {
+              upNotCovered = !(up->get(i, 0, k));
+            }
+            else
+            {
+              upNotCovered = true;
+            }
           }
           else
           {
-            upNotCovered = !(mBlocks[i][j+1][k]);
+            upNotCovered = !(mBlocks[i][j + 1][k]);
           }
 
           bool leftNotCovered;
           if (i == 0)
           {
-            leftNotCovered =
-              (left != nullptr)
-                ? !(left->get(Chunk::CHUNK_SIZE - 1, j, k))
-                : true;
+            if (left != nullptr)
+            {
+              leftNotCovered = !(left->get(Chunk::CHUNK_SIZE - 1, j, k));
+            }
+            else
+            {
+              leftNotCovered = true;
+            }
           }
           else
           {
-            leftNotCovered = !(mBlocks[i-1][j][k]);
+            leftNotCovered = !(mBlocks[i - 1][j][k]);
           }
-          
+
           bool rightNotCovered;
           if (i == (Chunk::CHUNK_SIZE - 1))
           {
-            rightNotCovered =
-              (right != nullptr)
-                ? !(right->get(0, j, k))
-                : true;
+            if (right != nullptr)
+            {
+              rightNotCovered = !(right->get(0, j, k));
+            }
+            else
+            {
+              rightNotCovered = true;
+            }
           }
           else
           {
-            rightNotCovered = !(mBlocks[i+1][j][k]);
+            rightNotCovered = !(mBlocks[i + 1][j][k]);
           }
 
           bool backNotCovered;
           if (k == 0)
           {
-            backNotCovered =
-              (back != nullptr)
-                ? !(back->get(i, j, Chunk::CHUNK_SIZE - 1))
-                : true;
+            if (back != nullptr)
+            {
+              backNotCovered = !(back->get(i, j, Chunk::CHUNK_SIZE - 1));
+            }
+            else
+            {
+              backNotCovered = true;
+            }
           }
           else
           {
-            backNotCovered = !(mBlocks[i][j][k-1]);
+            backNotCovered = !(mBlocks[i][j][k - 1]);
           }
-          
+
           bool frontNotCovered;
           if (k == (Chunk::CHUNK_SIZE - 1))
           {
-            frontNotCovered =
-              (front != nullptr)
-                ? !(front->get(i, j, 0))
-                : true;
+            if (front != nullptr)
+            {
+              frontNotCovered = !(front->get(i, j, 0));
+            }
+            else
+            {
+              frontNotCovered = true;
+            }
           }
           else
           {
-            frontNotCovered = !(mBlocks[i][j][k+1]);
+            frontNotCovered = !(mBlocks[i][j][k + 1]);
           }
 
           // Create vertices for all 6 sides of our block.
@@ -260,8 +284,8 @@ void Chunk::update(std::shared_ptr<Chunk> down,
   // Upload the vertices.
   glGenBuffers(1, &vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-  glBufferData(
-      GL_ARRAY_BUFFER, vertices.size() * sizeof(byte4), vertices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(byte4),
+               vertices.data(), GL_STATIC_DRAW);
 }
 
 void Chunk::render(GraphicsContext& context)
