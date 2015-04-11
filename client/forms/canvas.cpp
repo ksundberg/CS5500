@@ -103,7 +103,7 @@ void GameLoopCanvas::GenerateBlocks(ChunkManager* cm)
 
 void GameLoopCanvas::GameInit()
 {
-  m_spinTimer.Start(100); // in milliseconds.
+  m_spinTimer.Start(1000.0 / 60.0); // in milliseconds.
   chunk_manager = new ChunkManager();
 
   GenerateBlocks(chunk_manager);
