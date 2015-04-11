@@ -11,8 +11,8 @@ void PhysicsEngine::Create(RectangularPrism prism)
 		{
 			for (int k = prism.getZ(); k < prism.getHeightZ(); ++k)
 			{
-				auto position = Vector3((float)i, (float)j, (float)k);
-				objList[position] = MovingObject(position);
+				std::string position = std::to_string(i) + std::to_string(j) + std::to_string(k);
+				objList[position] = MovingObject(position, Vector3((float)i, (float)j, (float)k));
 				activeList.push_back(position);
 			}
 		}
@@ -27,7 +27,7 @@ void PhysicsEngine::Destroy(RectangularPrism prism)
 		{
 			for (int k = prism.getZ(); k < prism.getHeightZ(); ++k)
 			{
-				auto position = Vector3((float)i, (float)j, (float)k);
+				std::string position = std::to_string(i) + std::to_string(j) + std::to_string(k);
 				objList.erase(position);
 				Remove(position);
 			}
@@ -48,7 +48,7 @@ void PhysicsEngine::UpdateSingle(MovingObject& obj, int dt)
 			obj.isMoving = true;
 			activeList.push_back(obj.Id);
 		}
-		auto mass = obj.mass;
+		auto mass = 30;
 		auto lastAcceleration = obj.acceleration;
 		auto velocity = obj.velocity;
 
@@ -74,7 +74,7 @@ void PhysicsEngine::UpdateSingle(MovingObject& obj, int dt)
 //set unstable = true if you want all the blocks in the list to be considered in motion
 void PhysicsEngine::Update(RectangularPrism prism, int dt, bool unstable = false)
 {
-	std::vector<Vector3> blocks;
+	std::vector<std::string> blocks;
 
 	for (int i = prism.getX(); i < prism.getLengthX(); ++i)
 	{
@@ -82,7 +82,7 @@ void PhysicsEngine::Update(RectangularPrism prism, int dt, bool unstable = false
 		{
 			for (int k = prism.getZ(); k < prism.getHeightZ(); ++k)
 			{
-				auto position = Vector3((float)i, (float)j, (float)k);
+				std::string position = std::to_string(i) + std::to_string(j) + std::to_string(k);
 				blocks.push_back(position);
 			}
 		}
@@ -117,6 +117,34 @@ void PhysicsEngine::Update(RectangularPrism prism, int dt, bool unstable = false
 	}
 }
 
+void PhysicsEngine::ApplyForce(RectangularPrism prism, Vector3 force)
+{
+	std::vector<std::string> blocks;
+
+	for (int i = prism.getX(); i < prism.getLengthX(); ++i)
+	{
+		for (int j = prism.getY(); j < prism.getWidthY(); ++j)
+		{
+			for (int k = prism.getZ(); k < prism.getHeightZ(); ++k)
+			{
+				std::string position = std::to_string(i) + std::to_string(j) + std::to_string(k);
+				blocks.push_back(position);
+			}
+		}
+	}
+
+	tbb::parallel_for(tbb::blocked_range<int>(0, blocks.size()),
+		[&](const tbb : blocked_range<int>& r)
+	{
+		for (int i = r.begin(); i < r.end(); ++i)
+		{
+			//a = F/m
+			auto obj = objList[blocks[i]];
+			obj.acceleration += force / 30;
+		}
+	});
+}
+
 void PhysicsEngine::UpdateActive(int dt)
 {
 	tbb::parallel_for(tbb::blocked_range<int>(0, activeList.size()),
@@ -129,7 +157,7 @@ void PhysicsEngine::UpdateActive(int dt)
 	});
 }
 
-void PhysicsEngine::Remove(Vector3 id)
+void PhysicsEngine::Remove(std::string id)
 {
 	for (int i = 0; i < activeList.size(); ++i)
 	{
@@ -144,7 +172,7 @@ void PhysicsEngine::Remove(Vector3 id)
 Vector3 PhysicsEngine::CalculateGravity(MovingObject obj)
 {
 	// F = ma
-	auto mass = obj.mass;
+	auto mass = 30;
 
 	float force = (mass * 9.81f) * -1.0f;
 
@@ -177,7 +205,7 @@ Vector3 PhysicsEngine::CalculateFriction(MovingObject obj)
 	// for now we'll just use 0.5 (wood on wood)
 	Vector3 direction = obj.velocity.Normalize() * -1.0f;
 
-	float friction = obj.mass * 9.81f * 0.5f;
+	float friction = 30 * 9.81f * 0.5f;
 
 	// friction will always opose the direction the object is moving
 	return direction * friction;
@@ -215,8 +243,7 @@ bool PhysicsEngine::IsFalling(MovingObject obj)
 	// This will be a stencil
 
 	// Since this datastructure doesn't exist yet...
-	auto remove_warning = (obj.velocity.z + 0.0f);
-	return remove_warning == 0.0f;
+	return obj.velocity.z < 0.0f;
 }
 
 bool PhysicsEngine::IsSliding(MovingObject obj)
@@ -232,17 +259,16 @@ void PhysicsEngine::UpdatePosition(MovingObject& obj)
 {
 	Vector3 defaultVector(0.0f, 0.0f, 0.0f);
 
-	auto newPosition = obj.Id + obj.changeInPosition;
-	MovingObject newBlock(newPosition);
+	Vector3 newPosition = obj.currentPosition + obj.changeInPosition;
+	std::string newId = std::to_string((int)newPosition.x) + std::to_string((int)newPosition.y) + std::to_string((int)newPosition.z);
+	MovingObject newBlock(newId ,newPosition);
 	newBlock.acceleration = obj.acceleration;
 	newBlock.velocity = obj.velocity;
 	newBlock.isMoving = obj.isMoving;
-	newBlock.mass = obj.mass;
 
 	obj.acceleration = defaultVector;
 	obj.velocity = defaultVector;
 	obj.isMoving = false;
-	obj.mass = 0;
 
 	objList[newBlock.Id] = newBlock;
 

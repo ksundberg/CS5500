@@ -51,6 +51,9 @@ set(common_srcs
   
   common/Physics/PhysicsEngine.cpp
   common/Physics/PhysicsEngine.h
+  
+  common/Physics/MovingObject.cpp
+  common/Physics/MovingObject.h
 
   common/player/inventory.h
   common/player/inventory.cpp

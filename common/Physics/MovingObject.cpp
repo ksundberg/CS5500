@@ -1,4 +1,4 @@
 #include "MovingObject.h"
 
-MovingObject::MovingObject(Vector3 iniPosition) : Id(iniPosition), isMoving(true)
+MovingObject::MovingObject(std::string id, Vector3 iniPosition) : Id(id), currentPosition(iniPosition), isMoving(true)
 {}

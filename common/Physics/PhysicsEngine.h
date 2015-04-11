@@ -12,6 +12,7 @@
 #include "../util/vector3.h"
 #include "../density/rectangular_prism.h"
 #include <map>
+#include <math.h>
 
 class PhysicsEngine
 {
@@ -21,6 +22,7 @@ public:
 	void UpdateActive(int dt);
 	void Create(RectangularPrism prism);
 	void Destroy(RectangularPrism prism);
+	void ApplyForce(RectangularPrism prism, Vector3 force);
 private:
 	void UpdateSingle(MovingObject& obj, int dt);
 	Vector3 CalculateGravity(MovingObject obj);
@@ -29,9 +31,9 @@ private:
 	Vector3 SumForces(MovingObject obj);
 	bool IsFalling(MovingObject obj);
 	bool IsSliding(MovingObject obj);
-	std::vector<Vector3> activeList;
-	void Remove(Vector3 id);
-	std::map<Vector3, MovingObject> objList;
+	std::vector<std::string> activeList;
+	void Remove(std::string id);
+	std::map<std::string, MovingObject> objList;
 	void UpdatePosition(MovingObject& obj);
 };
 
