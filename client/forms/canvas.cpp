@@ -164,11 +164,11 @@ void GameLoopCanvas::OnKeyDown(wxKeyEvent& event)
     moves[Direction::BACKWARD] = true;
     break;
 
-  case 'K':
+  case WXK_SPACE:
     moves[Direction::UP] = true;
     break;
 
-  case 'J':
+  case WXK_SHIFT:
     moves[Direction::DOWN] = true;
     break;
 
@@ -207,11 +207,11 @@ void GameLoopCanvas::OnKeyUp(wxKeyEvent& event)
     moves[Direction::BACKWARD] = false;
     break;
 
-  case 'K':
+  case WXK_SPACE:
     moves[Direction::UP] = false;
     break;
 
-  case 'J':
+  case WXK_SHIFT:
     moves[Direction::DOWN] = false;
     break;
 
@@ -290,10 +290,10 @@ void GameLoopCanvas::VectorUpdate(glm::vec3 angle)
         position -= right * player_speed;
         break;
       case Direction::FORWARD:
-        position += forward * player_speed;
+        position += lookat * player_speed;
         break;
       case Direction::BACKWARD:
-        position -= forward * player_speed;
+        position -= lookat * player_speed;
         break;
       case Direction::UP:
         position += up * player_speed;
