@@ -164,14 +164,8 @@ void GraphicsContext::initRendering()
   glActiveTexture(GL_TEXTURE0);
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D,
-               0,
-               GL_RGBA,
-               Texture::atlas.width,
-               Texture::atlas.height,
-               0,
-               GL_RGBA,
-               GL_UNSIGNED_BYTE,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Texture::atlas.width,
+               Texture::atlas.height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                Texture::atlas.pixel_data);
   glGenerateMipmap(GL_TEXTURE_2D);
 }

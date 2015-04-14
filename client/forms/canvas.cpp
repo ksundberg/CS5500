@@ -5,14 +5,13 @@
 
 BEGIN_EVENT_TABLE(GameLoopCanvas, wxGLCanvas)
 EVT_PAINT(GameLoopCanvas::OnPaint) EVT_KEY_DOWN(GameLoopCanvas::OnKeyDown)
-  EVT_CLOSE(GameLoopCanvas::OnClose)
-  EVT_KEY_UP(GameLoopCanvas::OnKeyUp)
-  EVT_MOTION(GameLoopCanvas::OnMouseUpdate) END_EVENT_TABLE()
+  EVT_CLOSE(GameLoopCanvas::OnClose) EVT_KEY_UP(GameLoopCanvas::OnKeyUp)
+    EVT_MOTION(GameLoopCanvas::OnMouseUpdate) END_EVENT_TABLE()
 
-  GameLoopCanvas::GameLoopCanvas(wxWindow* parent,
-                                 std::shared_ptr<World> world,
-                                 wxSize size,
-                                 int* attribList)
+      GameLoopCanvas::GameLoopCanvas(wxWindow* parent,
+                                     std::shared_ptr<World> world,
+                                     wxSize size,
+                                     int* attribList)
   : wxGLCanvas(parent,
                wxID_ANY,
                attribList,
@@ -276,24 +275,24 @@ void GameLoopCanvas::OnClose(wxCloseEvent& event)
 
 void GameLoopCanvas::activateGameLoop(bool on)
 {
-    if(on && !render_loop_on)
-    {
-        Connect( wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(GameLoopCanvas::OnIdle) );
-        render_loop_on = true;
-    }
-    else if(!on && render_loop_on)
-    {
-        Disconnect( wxEVT_IDLE, wxIdleEventHandler(GameLoopCanvas::OnIdle) );
-        render_loop_on = false;
-    }
+  if (on && !render_loop_on)
+  {
+    Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(GameLoopCanvas::OnIdle));
+    render_loop_on = true;
+  }
+  else if (!on && render_loop_on)
+  {
+    Disconnect(wxEVT_IDLE, wxIdleEventHandler(GameLoopCanvas::OnIdle));
+    render_loop_on = false;
+  }
 }
 
 void GameLoopCanvas::OnIdle(wxIdleEvent& event)
 {
-    if(render_loop_on)
-    {
-      Render();
-      Update();
-      event.RequestMore();
-    }
+  if (render_loop_on)
+  {
+    Render();
+    Update();
+    event.RequestMore();
+  }
 }

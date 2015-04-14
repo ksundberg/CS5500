@@ -16,22 +16,21 @@ enum
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   EVT_MENU(wxID_EXIT, MainWindow::OnExit)
-  EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
-  EVT_MENU(ID_Inventory, MainWindow::OnInventory)
-  EVT_MENU(ID_Dungeon, MainWindow::OnDungeonTest)
-  EVT_MENU(ID_World, MainWindow::OnDisplayWorld)
-  EVT_MENU(ID_Cubes, MainWindow::OnDisplayCubes) END_EVENT_TABLE()
+    EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
+      EVT_MENU(ID_Inventory, MainWindow::OnInventory)
+        EVT_MENU(ID_Dungeon, MainWindow::OnDungeonTest)
+          EVT_MENU(ID_World, MainWindow::OnDisplayWorld)
+            EVT_MENU(ID_Cubes, MainWindow::OnDisplayCubes) END_EVENT_TABLE()
 
-  MainWindow::MainWindow(const wxString& title,
-                         std::shared_ptr<World> world,
-                         const wxPoint& pos,
-                         const wxSize& size)
+              MainWindow::MainWindow(const wxString& title,
+                                     std::shared_ptr<World> world,
+                                     const wxPoint& pos,
+                                     const wxSize& size)
   : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
   LOG(DEBUG) << "Creating main window";
   wxMenu* menuFile = new wxMenu;
-  menuFile->Append(ID_Help,
-                   wxT("&Help...\tCtrl-H"),
+  menuFile->Append(ID_Help, wxT("&Help...\tCtrl-H"),
                    wxT("Help string shown in status bar for this menu item"));
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
@@ -83,8 +82,7 @@ void MainWindow::OnAbout(wxCommandEvent&)
 {
   LOG(DEBUG) << "About dialog prompt";
   wxMessageBox(wxT("This is an awesome project with a torus world"),
-               wxT("About Torus World"),
-               wxOK | wxICON_INFORMATION);
+               wxT("About Torus World"), wxOK | wxICON_INFORMATION);
 }
 
 void MainWindow::OnHelp(wxCommandEvent&)
