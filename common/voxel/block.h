@@ -1,7 +1,10 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include "vector3.h"
+#include "graphics.h"
+#include "IVertexContainer.h"
+
+#include <vector>
 
 enum BlockType
 {
@@ -16,26 +19,35 @@ enum BlockType
   Stone,
   Grass,
   Brick,
-  Party
+  Party,
+  Coal,
+  Iron,
+  Gravel,
+  Diamond,
+  Gold
 };
 
-class Block
+class Block : public IVContainer
 {
 public:
-  Block();
-  ~Block();
+  Block() = delete;
+  Block(glm::vec3 p, BlockType t);
+  virtual ~Block();
 
-  BlockType get();
-  void set(BlockType type);
+  // forbid copying
+  Block(Block const&) = delete;
+  Block& operator=(Block const&) = delete;
 
-  double mass;          // in kg
-  Vector3 acceleration; // in m/s^2
-  Vector3 velocity;     // in m/s
-
-private:
+  glm::vec3 position;
   BlockType type;
 
-  //		BlockType mBlockType;
+private:
+  const std::vector<byte4>& _get_vertices() const override;
+  const std::vector<GLuint>& _get_elements() const override;
+  const glm::vec3& _get_position() const override;
+
+  std::vector<byte4> _verts;
+  std::vector<GLuint> _elems;
 };
 
 #endif

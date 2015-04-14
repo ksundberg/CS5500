@@ -4,6 +4,7 @@
 #include <map>
 #include "main.h"
 #include "chunkmanager.h"
+#include "vertexviewer.h"
 
 enum class Direction
 {
@@ -18,7 +19,10 @@ enum class Direction
 class GameLoopCanvas : public wxGLCanvas
 {
 public:
-  GameLoopCanvas(wxWindow* parent, wxSize size, int* attribList = NULL);
+  GameLoopCanvas(wxWindow* parent,
+                 std::shared_ptr<World> world,
+                 wxSize size,
+                 int* attribList = NULL);
   ~GameLoopCanvas();
 
 private:
@@ -27,20 +31,25 @@ private:
   void Spin(float xSpin, float ySpin);
   void OnKeyDown(wxKeyEvent& event);
   void OnKeyUp(wxKeyEvent& event);
-  void OnGameTimer(wxTimerEvent& WXUNUSED(event));
+  void OnIdle(wxIdleEvent& event);
+  void OnClose(wxCloseEvent& event);
+  void activateGameLoop(bool on);
   void Render();
-  void Update();
+  void Update() override;
   void GameInit();
-  void GenerateBlocks(ChunkManager* cm);
   void VectorUpdate(glm::vec3 angle);
   void OnMouseUpdate(wxMouseEvent& event);
+
+  void CreateChunks();
 
   // angles of rotation around x- and y- axis
   const float player_speed = 0.7;
   bool steal_mouse;
   bool mouse_changed;
-  wxTimer m_spinTimer;
-  ChunkManager* chunk_manager;
+  bool render_loop_on;
+  std::shared_ptr<World> world;
+  std::unique_ptr<ChunkManager> chunk_manager;
+  std::unique_ptr<IRenderable> object_viewer;
   glm::vec3 position;
   glm::vec3 forward;
   glm::vec3 right;

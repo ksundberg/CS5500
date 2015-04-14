@@ -23,6 +23,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   EVT_MENU(ID_Cubes, MainWindow::OnDisplayCubes) END_EVENT_TABLE()
 
   MainWindow::MainWindow(const wxString& title,
+                         std::shared_ptr<World> world,
                          const wxPoint& pos,
                          const wxSize& size)
   : wxFrame(NULL, wxID_ANY, title, pos, size)
@@ -51,11 +52,12 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   SetMenuBar(menuBar);
   CreateStatusBar();
   SetStatusText(
-    wxT("WASD keys to move, JK to go up and down, ESC to toggle mouse."));
+    wxT("WASD keys to move, Space/Shift to go up/down, ESC to toggle mouse."));
 
   SetClientSize(600, 600);
   int lpAttribList[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 1, 0};
-  gameCanvas.reset(new GameLoopCanvas(this, GetClientSize(), lpAttribList));
+  gameCanvas = std::make_shared<GameLoopCanvas>(
+    this, world, GetClientSize(), lpAttribList);
 
   // world setup
   sizer = new wxBoxSizer(wxHORIZONTAL);

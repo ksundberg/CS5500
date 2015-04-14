@@ -39,6 +39,11 @@ BlockType ChunkManager::get(int x, int y, int z)
   return chunks[index(cmx, cmy, cmz)]->get(x, y, z);
 }
 
+void ChunkManager::set(glm::vec3 pos, BlockType type)
+{
+  set(int(pos.x), int(pos.y), int(pos.z), type);
+}
+
 void ChunkManager::set(int x, int y, int z, BlockType type)
 {
   if (outOfBounds(x,y,z))
@@ -99,6 +104,7 @@ void ChunkManager::update()
   chunksToUpdate.clear();
 }
 
+// TODO: remove drawing code from here. expose list of chunks only
 void ChunkManager::render(GraphicsContext& context, const glm::mat4& vp)
 {
   for (auto& chunk : chunks)

@@ -33,6 +33,10 @@ public:
                                            int perlinDepth) const;
   std::shared_ptr<matrix1d> createMatrix1D(int width, int perlinDepth) const;
 
+  static std::shared_ptr<matrix2d> matrix2D(int width,
+                                            int height,
+                                            int perlinDepth);
+
 private:
   void initialize(std::default_random_engine generator);
   double dot(vector3d left, vector3d right) const;

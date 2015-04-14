@@ -1,34 +1,30 @@
-#ifndef World_h
-#define World_h
+#ifndef __WORLD_H_
+#define __WORLD_H_
+
+#include "critter.h"
+#include "block.h"
+
+#include <memory>
 #include <vector>
-#include "object.h"
 
-// thread unsafe
-class Coordinate
-{
-public:
-  Coordinate& operator+=(const Coordinate&);
-  const Coordinate operator+(const Coordinate&) const;
-  Coordinate& operator-=(const Coordinate&);
-  const Coordinate operator-(const Coordinate&) const;
-  int x, y, z;
-  Coordinate(int = 0, int = 0, int = 0);
-};
-
-// thread unsafe
 class World
 {
 public:
-  Object getObject(Coordinate, Coordinate) const;
-  Object getObject(int, int, int, int, int, int) const;
-  World(int, int, int);
-  Coordinate getSize() const;
-  int getSizeX() const;
-  int getSizeY() const;
-  int getSizeZ() const;
+  static std::shared_ptr<World> Generate(int, int, int);
+
+  std::vector<std::shared_ptr<IVContainer>> Containers() const;
+
+  std::vector<std::shared_ptr<Block>> blocks;
+
+  void Update();
 
 private:
-  std::vector<std::vector<std::vector<Object>>> map;
-  int sizeX, sizeY, sizeZ;
+  // TODO: add renderable that does gl instancing instead of using the
+  // vertexviewer
+  static std::shared_ptr<Block> _critterBlock;
+  std::vector<std::shared_ptr<Critter>> critters;
+  int _size;
+  int _height;
+  std::shared_ptr<std::vector<std::vector<double>>> _noise;
 };
-#endif
+#endif //__WORLD_H_

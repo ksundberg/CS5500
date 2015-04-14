@@ -27,39 +27,35 @@ TEST_CASE("ChunkManager is a 3-dimmensional matrix of blocks under the hood.")
 
 TEST_CASE("Chunks can access and set their blocks.")
 {
-  Chunk* chunk = new Chunk(0, 0, 0);
-  chunk->set(0, 0, 0, BlockType::Ground);
-  REQUIRE(chunk->get(0, 0, 0));
-  chunk->set(0, 0, 0, BlockType::Inactive);
-  REQUIRE(!(chunk->get(0, 0, 0)));
-  delete chunk;
+  Chunk chunk(0, 0, 0);
+  chunk.set(0, 0, 0, BlockType::Ground);
+  REQUIRE(chunk.get(0, 0, 0));
+  chunk.set(0, 0, 0, BlockType::Inactive);
+  REQUIRE(!(chunk.get(0, 0, 0)));
 }
 
 TEST_CASE("Can activate and deactivate all blocks in a chunk.")
 {
-  Chunk* chunk = new Chunk(1, 4, 5);
+  Chunk chunk(1, 4, 5);
 
-  chunk->setAllBlocks(BlockType::Ground);
+  chunk.setAllBlocks(BlockType::Ground);
   // Make sure they're all active.
-  REQUIRE(chunk->get(5, 8, 2));
-  REQUIRE(chunk->get(2, 4, 9));
-  REQUIRE(chunk->get(9, 8, 7));
+  REQUIRE(chunk.get(5, 8, 2) != BlockType::Inactive);
+  REQUIRE(chunk.get(2, 4, 9) != BlockType::Inactive);
+  REQUIRE(chunk.get(9, 8, 7) != BlockType::Inactive);
 
-  chunk->setAllBlocks(BlockType::Inactive);
+  chunk.setAllBlocks(BlockType::Inactive);
   // Make sure they're all inactive.
-  REQUIRE(!(chunk->get(5, 8, 2)));
-  REQUIRE(!(chunk->get(2, 4, 9)));
-  REQUIRE(!(chunk->get(9, 8, 7)));
-
-  delete chunk;
+  REQUIRE(chunk.get(5, 8, 2) == BlockType::Inactive);
+  REQUIRE(chunk.get(2, 4, 9) == BlockType::Inactive);
+  REQUIRE(chunk.get(9, 8, 7) == BlockType::Inactive);
 }
 
 TEST_CASE("Can check if blocks are active or not.")
 {
-  auto block = new Block();
-  block->set(BlockType::Ground);
-  REQUIRE(block->get());
-  block->set(BlockType::Inactive);
-  REQUIRE(!(block->get()));
-  delete block;
+  Block block({0, 0, 0}, BlockType::Inactive);
+  block.type = BlockType::Ground;
+  REQUIRE(block.type != BlockType::Inactive);
+  block.type = BlockType::Inactive;
+  REQUIRE(block.type == BlockType::Inactive);
 }

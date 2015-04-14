@@ -1,92 +1,111 @@
+#include "logger.h"
+#include <tbb/tbb.h>
+
 #include "world.h"
-#include "object.h"
-#include <vector>
-#include <algorithm>
-Coordinate::Coordinate(int ax, int ay, int az) : x(ax), y(ay), z(az)
+#include "PerlinNoise.h"
+
+
+
+std::shared_ptr<Block> World::_critterBlock = nullptr;
+
+std::vector<std::shared_ptr<IVContainer>> World::Containers() const
 {
-}
-Coordinate& Coordinate::operator+=(const Coordinate& right)
-{
-  this->x += right.x;
-  this->y += right.y;
-  this->z += right.z;
-  return *this;
-}
-const Coordinate Coordinate::operator+(const Coordinate& right) const
-{
-  Coordinate temp = *this;
-  temp += right;
-  return temp;
-}
-Coordinate& Coordinate::operator-=(const Coordinate& right)
-{
-  this->x -= right.x;
-  this->y -= right.y;
-  this->z -= right.z;
-  return *this;
-}
-const Coordinate Coordinate::operator-(const Coordinate& right) const
-{
-  Coordinate temp = *this;
-  temp -= right;
-  return temp;
-}
-// z is up and down
-// add paralell fill
-World::World(int X, int Y, int Z) : sizeX(X), sizeY(Y), sizeZ(Z)
-{
-  std::vector<Object> list;
-  list.resize(sizeZ);
-  std::vector<std::vector<Object>> listOList;
-  listOList.resize(Y);
-  std::vector<std::vector<std::vector<Object>>> listOListOList;
-  listOListOList.resize(X);
-  // std::fill(list.begin(),list.end(), temp.getTemplate(0));
-  std::fill(listOList.begin(), listOList.end(), list);
-  std::fill(listOListOList.begin(), listOListOList.end(), listOList);
-  map = listOListOList;
+  auto containers = std::vector<std::shared_ptr<IVContainer>>();
+  for (auto c : critters)
+    containers.emplace_back(std::dynamic_pointer_cast<IVContainer>(c));
+
+  return containers;
 }
 
-// If out of bounds the object returned with have an id==-1
-Object World::getObject(Coordinate position,
-                        Coordinate offset = Coordinate(0, 0, 0)) const
+std::shared_ptr<World> World::Generate(int size, int height, int critterCount)
 {
-  position += offset;
+  std::srand(std::time(0));
+  if (_critterBlock == nullptr)
+    _critterBlock =
+      std::make_shared<Block>(glm::vec3(0, 0, 0), BlockType::Grass);
 
-  // Wrapping X, Y
-  position.x = (position.x % sizeX);
-  position.y = (position.y % sizeY);
-  // Out of bounds Z
-  if (position.z >= sizeZ || position.z < 0)
-  {
-    return Object();
-  }
+  auto world = std::make_shared<World>();
+  world->_noise = PerlinNoise::matrix2D(size, size, height);
+  world->blocks.reserve(size * size * height);
+  for (int i = 0; i < size; i++)
+    for (int j = 0; j < size; j++)
+    {
+      int h = (*world->_noise)[i][j] * height;
+      for (int k = 0; k <= h; k++)
+        world->blocks.emplace_back(std::make_shared<Block>(
+          glm::vec3(float(i), float(k), float(j)), BlockType(k)));
+    }
 
-  return map[position.x][position.y][position.z];
+  world->critters.reserve(critterCount);
+  for (int i = 0; i < critterCount; i++)
+    world->critters.emplace_back(std::make_shared<Critter>(
+      glm::vec3(int(std::rand()) % size, 0, int(std::rand()) % size),
+      std::dynamic_pointer_cast<IVContainer>(_critterBlock)));
+
+  world->_size = size;
+  world->_height = height;
+  return world;
 }
 
-Object World::getObject(
-  int posX, int posY, int posZ, int offX = 0, int offY = 0, int offZ = 0) const
-{
-  return getObject(Coordinate(posX, posY, posZ), Coordinate(offX, offY, offZ));
-}
+// Called every update loop
+tbb::queuing_rw_mutex mutex;
 
-int World::getSizeX() const
+void World::Update()
 {
-  return sizeX;
-}
+  tbb::parallel_for(
+    tbb::blocked_range<int>(0, critters.size()),
+    [=](const tbb::blocked_range<int>& ri)
+    {
+      for (int i = ri.begin(); i != ri.end(); i++)
+      {
+        auto c = critters[i];
+        auto p = c->Position();
+        if (int(p.x) <= 0 || int(p.x) >= _size)
+        {
+          c->dir.x = -c->dir.x;
+          if (p.x >= _size)
+          {
+            p.x = _size - 0.1;
+          }
+          else
+          {
+            p.x = 0.1;
+          }
+        }
+        if (int(p.z) <= 0 || int(p.z) >= _size)
+        {
+          c->dir.y = -c->dir.y;
+          if (p.z >= _size)
+            p.z = _size - 0.1;
+          else
+            p.z = 0.1;
+        }
+        if (std::rand() % 100 == 0) c->dir.x = std::rand() % 3 - 1;
+        if (std::rand() % 100 == 0) c->dir.y = std::rand() % 3 - 1;
 
-int World::getSizeY() const
-{
-  return sizeY;
-}
+        double critterYPosition = (*_noise)[int(p.x)][int(p.z)] * _height + 1;
+        c->move(glm::vec3(0.1, critterYPosition, 0.1));
 
-int World::getSizeZ() const
-{
-  return sizeZ;
-}
+        // Collision detection
+        for (auto c2 : critters)
+        {
+          tbb::queuing_rw_mutex::scoped_lock lock(mutex, false);
+          auto p1 = c->Position();
+          auto p2 = c2->Position();
 
-Coordinate World::getSize() const
-{
-  return Coordinate(sizeX, sizeY, sizeZ);
+          if ((abs(p1.x - p2.x) * 2 < 2) && (abs(p1.y - p2.y) * 2 < 2) &&
+              (abs(p1.z - p2.z) * 2 < 2))
+          {
+            if (c != c2)
+            {
+              c->dir.x *= -1;
+              c->dir.y *= -1;
+              lock.upgrade_to_writer();
+              c->move(glm::vec3(0.2, critterYPosition, 0.2));
+              break;
+            }
+          }
+        }
+      }
+    });
 }

@@ -70,7 +70,6 @@ void Chunk::update(std::shared_ptr<Chunk> down,
                    std::shared_ptr<Chunk> front)
 {
   vertices.clear();
-
   auto negSquareX = [&](int i, int j, int k, BlockType type)
   {
     // Create vertices for the X side of a block, making the square we
@@ -142,7 +141,7 @@ void Chunk::update(std::shared_ptr<Chunk> down,
       {
         auto type = mBlocks[i][j][k];
 
-        if (type)
+        if (type != Inactive)
         {
           bool downNotCovered;
           if (j == 0)

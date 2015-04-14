@@ -197,6 +197,14 @@ void setOneCell2D(const PerlinNoise* perlin,
   }
 }
 
+std::shared_ptr<matrix2d> PerlinNoise::matrix2D(int width,
+                                                int height,
+                                                int perlinDepth)
+{
+  PerlinNoise p;
+  return p.createMatrix2D(width, height, perlinDepth);
+}
+
 std::shared_ptr<matrix2d> PerlinNoise::createMatrix2D(int width,
                                                       int height,
                                                       int perlinDepth) const
