@@ -11,7 +11,7 @@ bool MyApp::OnInit()
 
   world = World::Generate(100, 11, 5);
 
-  frame = std::make_shared<MainWindow>(
+  frame = new MainWindow(
     wxT("Hello World"), world, wxPoint(50, 50), wxSize(300, 400));
   return true;
 }

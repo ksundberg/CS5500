@@ -21,7 +21,7 @@ public:
 private:
   // the GL context we use for all our mono rendering windows
   std::shared_ptr<GraphicsContext> m_glContext;
-  std::shared_ptr<MainWindow> frame;
+  MainWindow* frame;
   std::shared_ptr<World> world;
 };
 

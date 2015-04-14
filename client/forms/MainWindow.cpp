@@ -62,8 +62,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame) EVT_MENU(ID_Help, MainWindow::OnHelp)
   // world setup
   sizer = new wxBoxSizer(wxHORIZONTAL);
 
-  gridPane.reset(new GridPane(this));
-  sizer->Add(gridPane.get(), 1, wxEXPAND);
+  gridPane = new GridPane(this);
+  sizer->Add(gridPane, 1, wxEXPAND);
   sizer->Add(gameCanvas.get(), 1, wxEXPAND);
 
   SetSizer(sizer);

@@ -26,7 +26,7 @@ private:
   DECLARE_EVENT_TABLE();
 
   std::shared_ptr<wxGLCanvas> gameCanvas;
-  std::shared_ptr<GridPane> gridPane;
+  GridPane* gridPane;
   wxBoxSizer* sizer;
 };
 
