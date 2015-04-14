@@ -39,6 +39,9 @@ set(common_srcs
   common/log/logger.cpp
 
   common/noise/PerlinNoise.cpp
+  
+  common/Physics/MovingObject.cpp
+  common/Physics/MovingObject.h
 
   common/player/inventory.cpp
   common/player/Camera.cpp
