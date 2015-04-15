@@ -93,8 +93,8 @@ void World::Update()
           auto p1 = c->Position();
           auto p2 = c2->Position();
 
-          if ((abs(p1.x - p2.x) * 2 < 2) && (abs(p1.y - p2.y) * 2 < 2) &&
-              (abs(p1.z - p2.z) * 2 < 2))
+          if ((abs(int(p1.x - p2.x)) * 2 < 2) && (abs(int(p1.y - p2.y)) * 2 < 2) &&
+              (abs(int(p1.z - p2.z)) * 2 < 2))
           {
             if (c != c2)
             {
